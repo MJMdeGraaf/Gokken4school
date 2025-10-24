@@ -171,7 +171,10 @@ function placePlayers(){
   const centerX = table.clientWidth / 2;
   const centerY = table.clientHeight / 2;
   const kaartOffset = 60;
-  const radius = table.clientWidth / 2 - kaartOffset;
+  const kaartWidth = 80;
+  const kaartHeight = 120;
+// Pas radius aan zodat cirkel perfect binnen de tafel past
+const radius = Math.min(table.clientWidth, table.clientHeight) / 2 - kaartOffset;
 
   // Hoeken
   const dealerAngle = 6*Math.PI/4;       // Dealer boven
