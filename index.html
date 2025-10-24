@@ -1,38 +1,56 @@
 <!doctype html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Goksite PWS — Dashboard & Blackjack</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Goksite PWS — Multiplayer Blackjack</title>
   <style>
-    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; text-align: center; background: #0b6623; color: white; }
-    header { background: #004d1a; padding: 12px; }
-    h1 { margin: 0; }
-    .card { border-radius: 8px; padding: 16px; margin: 16px auto; max-width: 600px; background: #013a10; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
-    button { padding: 8px 14px; border-radius: 6px; border: none; margin: 6px; cursor: pointer; }
-    select { padding: 6px; border-radius: 5px; border: none; }
-    .hidden { display: none; }
-    .table { position: relative; margin: 30px auto; width: 90%; max-width: 800px; background: radial-gradient(circle, #006400 0%, #013a10 70%); border-radius: 50%; padding: 40px 0; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
-    .player-area { margin: 10px; }
-    .cards { display: flex; justify-content: center; gap: 5px; margin-top: 8px; }
-    .card-bj { width: 40px; height: 60px; background: white; color: black; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+    body { margin:0; font-family: system-ui, sans-serif; }
+    /* Dashboard Hoofdmenu */
+    #login, #dashboard, #blackjackSection { display: none; padding: 20px; text-align:center; }
+    #login { background: #f0f0f0; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+    #dashboard { background: linear-gradient(to bottom, #ffffff, #e0e0e0); height:100vh; }
+    #dashboard h2, #login h2 { margin-bottom:10px; }
+    button { padding: 10px 18px; margin: 10px; border-radius: 8px; border:none; cursor:pointer; }
+
+    /* Muziekknop */
+    #musicControl { position: absolute; top:10px; right:10px; }
+
+    /* Blackjack sectie */
+    #blackjackSection { background: #2f1e0f; height:100vh; color:white; }
+    .table-container { position:relative; width: 90%; max-width: 900px; margin: 50px auto; height:600px; }
+    .table { background: #8b5a2b; border-radius: 50%; width:100%; height:100%; position:relative; }
+    .player-area { position:absolute; text-align:center; }
+    .cards { display:flex; justify-content:center; gap:5px; margin-top:8px; }
+    .card-bj { width:80px; height:120px; background:white; color:black; border-radius:6px; display:flex; justify-content:center; align-items:center; font-weight:bold; }
+    .chair { width:40px; height:40px; background:#333; border-radius:50%; position:absolute; }
+    #controls { margin-top:20px; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Goksite PWS</h1>
-  </header>
 
-  <!-- Dashboard / hoofdmenu -->
-  <section id="dashboard" class="card">
-    <h2>Welkom, <span id="displayName">Gast</span></h2>
-    <p>Credits: <span id="credits">0</span></p>
-    <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
-    <button id="playBlackjackBtn">Speel Blackjack</button>
+  <!-- Login / Account aanmaken -->
+  <section id="login">
+    <h2>Welkom! Maak een account of log in</h2>
+    <input type="text" id="usernameInput" placeholder="Gebruikersnaam">
+    <button id="loginBtn">Login / Maak account</button>
   </section>
 
-  <!-- Blackjack sectie -->
-  <section id="blackjackSection" class="card hidden">
+  <!-- Dashboard -->
+  <section id="dashboard">
+    <h2>Welkom, <span id="displayName"></span></h2>
+    <p>Credits: <span id="credits"></span></p>
+    <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
+    <button id="playBlackjackBtn">Speel Blackjack</button>
+    <button id="logoutBtn">Uitloggen</button>
+    <audio id="bgMusic" loop>
+      <source src="https://www.bensound.com/bensound-music/bensound-summer.mp3" type="audio/mpeg">
+    </audio>
+    <button id="musicControl">Mute/Unmute</button>
+  </section>
+
+  <!-- Blackjack -->
+  <section id="blackjackSection">
     <h2>Blackjack</h2>
     <div>
       <label>Kies aantal bots:</label>
@@ -45,12 +63,10 @@
       <button id="startGame">Start spel</button>
       <button id="backToMenu">Terug naar menu</button>
     </div>
-    <div class="table" id="table">
-      <div class="dealer-area" id="dealer">
-        <h3>Dealer</h3>
-        <div class="cards" id="dealerCards"></div>
+    <div class="table-container">
+      <div class="table" id="table">
+        <!-- Stoelen + spelergebieden komen hier dynamisch -->
       </div>
-      <div id="players"></div>
     </div>
     <div id="controls">
       <button id="hitBtn">Hit</button>
@@ -60,83 +76,136 @@
   </section>
 
   <script>
-    // ===== Gebruiker & credits =====
-    let user = {name: 'Gast', credits: 500, lastDaily: null};
+    // ===== Accountsysteem =====
+    let users = JSON.parse(localStorage.getItem('users') || '{}');
+    let currentUser = null;
 
+    const loginSection = document.getElementById('login');
+    const dashboard = document.getElementById('dashboard');
+    const blackjackSection = document.getElementById('blackjackSection');
+
+    const usernameInput = document.getElementById('usernameInput');
+    const loginBtn = document.getElementById('loginBtn');
     const displayName = document.getElementById('displayName');
     const creditsEl = document.getElementById('credits');
     const claimDailyBtn = document.getElementById('claimDailyBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicControl = document.getElementById('musicControl');
 
     function renderDashboard(){
-      displayName.textContent = user.name;
-      creditsEl.textContent = user.credits;
+      displayName.textContent = currentUser.name;
+      creditsEl.textContent = currentUser.credits;
     }
+
+    loginBtn.onclick = ()=>{
+      const name = usernameInput.value.trim();
+      if(!name) return alert('Vul een gebruikersnaam in.');
+      if(!users[name]) users[name]={credits:500,lastDaily:null,name:name};
+      currentUser = users[name];
+      localStorage.setItem('users', JSON.stringify(users));
+      loginSection.style.display='none';
+      dashboard.style.display='block';
+      renderDashboard();
+      bgMusic.play().catch(()=>{});
+    };
+
+    logoutBtn.onclick = ()=>{
+      currentUser=null;
+      dashboard.style.display='none';
+      loginSection.style.display='flex';
+      bgMusic.pause();
+    };
 
     claimDailyBtn.onclick = ()=>{
       const today = new Date().toDateString();
-      if(user.lastDaily !== today){
-        user.credits += 100;
-        user.lastDaily = today;
+      if(currentUser.lastDaily !== today){
+        currentUser.credits += 100;
+        currentUser.lastDaily = today;
+        users[currentUser.name]=currentUser;
+        localStorage.setItem('users', JSON.stringify(users));
         renderDashboard();
         alert('Dagelijkse bonus van 100 credits geclaimd!');
       } else { alert('Je hebt vandaag al je bonus geclaimd.'); }
     };
 
-    renderDashboard();
+    musicControl.onclick = ()=>{ bgMusic.paused?bgMusic.play():bgMusic.pause(); };
 
     // ===== Navigatie naar Blackjack =====
-    const dashboard = document.getElementById('dashboard');
-    const blackjackSection = document.getElementById('blackjackSection');
     playBlackjackBtn.onclick = ()=>{
-      dashboard.classList.add('hidden');
-      blackjackSection.classList.remove('hidden');
+      dashboard.style.display='none';
+      blackjackSection.style.display='block';
     };
 
     const backToMenu = document.getElementById('backToMenu');
     backToMenu.onclick = ()=>{
-      blackjackSection.classList.add('hidden');
-      dashboard.classList.remove('hidden');
+      blackjackSection.style.display='none';
+      dashboard.style.display='block';
     };
 
     // ===== Blackjack logica =====
-    const suits = ['♠', '♥', '♦', '♣'];
-    const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-    let deck = [];
+    const suits=['♠','♥','♦','♣'];
+    const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    let deck=[];
 
-    function createDeck(){
-      deck = [];
-      for(let s of suits){ for(let v of values){ deck.push({suit:s,value:v}); } }
-      for(let i=deck.length-1; i>0; i--){ const j = Math.floor(Math.random()* (i+1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
-    }
-
+    function createDeck(){ deck=[]; for(let s of suits){for(let v of values){deck.push({suit:s,value:v});}} for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; } }
     function cardValue(card){ if(['J','Q','K'].includes(card.value)) return 10; if(card.value==='A') return 11; return parseInt(card.value); }
     function handValue(hand){ let total=0, aces=0; for(let c of hand){ total+=cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
 
     const startGameBtn = document.getElementById('startGame');
     const botSelect = document.getElementById('botCount');
-    const playersDiv = document.getElementById('players');
-    const dealerCardsDiv = document.getElementById('dealerCards');
+    const table = document.getElementById('table');
     const hitBtn = document.getElementById('hitBtn');
     const standBtn = document.getElementById('standBtn');
     const nextRoundBtn = document.getElementById('nextRoundBtn');
 
-    let players = [];
-    let dealer = {hand:[]};
-    let currentPlayerIndex = 0;
+    let players=[];
+    let dealer={hand:[]};
+    let currentPlayerIndex=0;
 
     function drawCard(){ return deck.pop(); }
 
-    function renderGame(){
-      dealerCardsDiv.innerHTML = dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('');
-      playersDiv.innerHTML = '';
+    function placePlayers(){
+      table.innerHTML='';
+      const totalPlayers = players.length + 1; // dealer + players
+      const radius=250;
+      const centerX=table.clientWidth/2;
+      const centerY=table.clientHeight/2;
       players.forEach((p,i)=>{
-        const div = document.createElement('div');
-        div.className = 'player-area';
-        div.innerHTML = `<h3>${p.name}${i===currentPlayerIndex?' ←':''}</h3><div class='cards'>${p.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(p.hand)}</p>`;
-        playersDiv.appendChild(div);
+        let angle;
+        if(p.bot){ angle=(i/players.length)*Math.PI; } else{ angle=Math.PI; } // user tegenover dealer
+        const x=centerX+radius*Math.cos(angle)-40;
+        const y=centerY+radius*Math.sin(angle)-60;
+        const div=document.createElement('div');
+        div.className='player-area';
+        div.style.left=x+'px';
+        div.style.top=y+'px';
+        div.innerHTML=`<h3>${p.name}${i===currentPlayerIndex?' ←':''}</h3><div class='cards'>${p.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+        // Voeg stoel toe
+        const chair=document.createElement('div');
+        chair.className='chair';
+        chair.style.left=(x+20)+'px';
+        chair.style.top=(y+80)+'px';
+        table.appendChild(chair);
+        table.appendChild(div);
       });
+      // Dealer positie boven
+      const dealerDiv=document.createElement('div');
+      dealerDiv.className='player-area';
+      dealerDiv.style.left=(table.clientWidth/2 - 40)+'px';
+      dealerDiv.style.top='20px';
+      dealerDiv.innerHTML=`<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+      // Dealer stoel
+      const dealerChair=document.createElement('div');
+      dealerChair.className='chair';
+      dealerChair.style.left=(table.clientWidth/2)+'px';
+      dealerChair.style.top='140px';
+      table.appendChild(dealerChair);
+      table.appendChild(dealerDiv);
     }
+
+    function renderGame(){ placePlayers(); }
 
     function nextPlayer(){
       currentPlayerIndex++;
@@ -185,6 +254,9 @@
     hitBtn.onclick = ()=>{ const p=players[currentPlayerIndex]; p.hand.push(drawCard()); if(handValue(p.hand)>21){ nextPlayer(); } renderGame(); };
     standBtn.onclick = ()=>{ nextPlayer(); };
     nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
+
+    // Toon login scherm bij laden
+    loginSection.style.display='flex';
   </script>
 </body>
 </html>
