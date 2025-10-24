@@ -166,44 +166,85 @@
 
     function drawCard(){ return deck.pop(); }
 
-    function placePlayers(){
-      table.innerHTML='';
-      const totalPlayers = players.length + 1; // dealer + players
-      const radius=360;
-      const centerX=table.clientWidth/2;
-      const centerY=table.clientHeight/2;
-      players.forEach((p,i)=>{
-        let angle;
-        if(p.bot){ angle=(i/players.length)*Math.PI; } else{ angle=Math.sin(0.5*Math.PI); } // user tegenover dealer
-        const x=centerX+radius*Math.cos(angle)-40;
-        const y=centerY+radius*Math.sin(angle)-60;
-        const div=document.createElement('div');
-        div.className='player-area';
-        div.style.left=x+'px';
-        div.style.top=y+'px';
-        div.innerHTML=`<h3>${p.name}${i===currentPlayerIndex?' ←':''}</h3><div class='cards'>${p.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
-        // Voeg stoel toe
-        const chair=document.createElement('div');
-        chair.className='chair';
-        chair.style.left=(x+20)+'px';
-        chair.style.top=(y+80)+'px';
-        table.appendChild(chair);
-        table.appendChild(div);
-      });
-      // Dealer positie boven
-      const dealerDiv=document.createElement('div');
-      dealerDiv.className='player-area';
-      dealerDiv.style.left=(table.clientWidth/2 - 40)+'px';
-      dealerDiv.style.top='20px';
-      dealerDiv.innerHTML=`<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
-      // Dealer stoel
-      const dealerChair=document.createElement('div');
-      dealerChair.className='chair';
-      dealerChair.style.left=(table.clientWidth/2)+'px';
-      dealerChair.style.top='140px';
-      table.appendChild(dealerChair);
-      table.appendChild(dealerDiv);
-    }
+function placePlayers(){
+  table.innerHTML = '';
+  const centerX = table.clientWidth / 2;
+  const centerY = table.clientHeight / 2;
+  const kaartOffset = 60;
+  const radius = table.clientWidth / 2 - kaartOffset;
+
+  // Hoeken
+  const dealerAngle = 0;       // Dealer boven
+  const playerAngle = Math.PI; // Speler onder
+  const botAngles = [
+      Math.PI/4,   // 45°
+      2*Math.PI/4, // 90°
+      3*Math.PI/4, // 135°
+      5*Math.PI/4, // 225°
+      6*Math.PI/4, // 270°
+      7*Math.PI/4  // 315°
+  ];
+
+  function getCirclePosition(angleRad, radius, centerX, centerY){
+      const x = centerX + radius * Math.cos(angleRad);
+      const y = centerY + radius * Math.sin(angleRad);
+      return {x, y};
+  }
+
+  // Dealer positie
+  const dealerPos = getCirclePosition(dealerAngle, radius, centerX, centerY);
+  const dealerDiv = document.createElement('div');
+  dealerDiv.className = 'player-area';
+  dealerDiv.style.left = (dealerPos.x - 40) + 'px';
+  dealerDiv.style.top = (dealerPos.y - 60) + 'px';
+  dealerDiv.innerHTML = `<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+
+  // Dealer stoel
+  const dealerChair = document.createElement('div');
+  dealerChair.className = 'chair';
+  dealerChair.style.left = (dealerPos.x) + 'px';
+  dealerChair.style.top = (dealerPos.y + 80) + 'px';
+
+  table.appendChild(dealerChair);
+  table.appendChild(dealerDiv);
+
+  // Speler positie
+  const playerPos = getCirclePosition(playerAngle, radius, centerX, centerY);
+  const playerDiv = document.createElement('div');
+  playerDiv.className = 'player-area';
+  playerDiv.style.left = (playerPos.x - 40) + 'px';
+  playerDiv.style.top = (playerPos.y - 60) + 'px';
+  playerDiv.innerHTML = `<h3>${players[0].name} ${currentPlayerIndex===0?'←':''}</h3><div class='cards'>${players[0].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+
+  const playerChair = document.createElement('div');
+  playerChair.className = 'chair';
+  playerChair.style.left = (playerPos.x) + 'px';
+  playerChair.style.top = (playerPos.y + 80) + 'px';
+
+  table.appendChild(playerChair);
+  table.appendChild(playerDiv);
+
+  // Bots
+  const botCount = players.length - 1; // exclude user
+  const bots = botAngles.slice(0, botCount);
+  for(let i=1; i<players.length; i++){
+      const pos = getCirclePosition(bots[i-1], radius, centerX, centerY);
+      const botDiv = document.createElement('div');
+      botDiv.className = 'player-area';
+      botDiv.style.left = (pos.x - 40) + 'px';
+      botDiv.style.top = (pos.y - 60) + 'px';
+      botDiv.innerHTML = `<h3>${players[i].name}</h3><div class='cards'>${players[i].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+
+      const botChair = document.createElement('div');
+      botChair.className = 'chair';
+      botChair.style.left = (pos.x) + 'px';
+      botChair.style.top = (pos.y + 80) + 'px';
+
+      table.appendChild(botChair);
+      table.appendChild(botDiv);
+  }
+}
+
 
     function renderGame(){ placePlayers(); }
 
