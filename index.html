@@ -3,39 +3,49 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Blackjack Prototype — Goksite PWS</title>
+  <title>Goksite PWS — Dashboard & Blackjack</title>
   <style>
-    body { background: #0b6623; color: white; font-family: system-ui, sans-serif; margin: 0; padding: 0; text-align: center; }
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 0; text-align: center; background: #0b6623; color: white; }
     header { background: #004d1a; padding: 12px; }
     h1 { margin: 0; }
+    .card { border-radius: 8px; padding: 16px; margin: 16px auto; max-width: 600px; background: #013a10; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+    button { padding: 8px 14px; border-radius: 6px; border: none; margin: 6px; cursor: pointer; }
+    select { padding: 6px; border-radius: 5px; border: none; }
+    .hidden { display: none; }
     .table { position: relative; margin: 30px auto; width: 90%; max-width: 800px; background: radial-gradient(circle, #006400 0%, #013a10 70%); border-radius: 50%; padding: 40px 0; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
     .player-area { margin: 10px; }
     .cards { display: flex; justify-content: center; gap: 5px; margin-top: 8px; }
-    .card { width: 40px; height: 60px; background: white; color: black; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-weight: bold; }
-    .dealer-area { margin-bottom: 30px; }
-    button { padding: 8px 14px; border-radius: 6px; border: none; margin: 6px; cursor: pointer; }
-    #controls { margin-top: 20px; }
-    select, input { padding: 5px; border-radius: 5px; border: none; }
+    .card-bj { width: 40px; height: 60px; background: white; color: black; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-weight: bold; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Blackjack — Goksite PWS</h1>
+    <h1>Goksite PWS</h1>
   </header>
 
-  <div id="setup">
-    <h2>Kies aantal bots</h2>
-    <select id="botCount">
-      <option value="0">0 bots</option>
-      <option value="1">1 bot</option>
-      <option value="2">2 bots</option>
-      <option value="3">3 bots</option>
-    </select>
-    <button id="startGame">Start spel</button>
-  </div>
+  <!-- Dashboard / hoofdmenu -->
+  <section id="dashboard" class="card">
+    <h2>Welkom, <span id="displayName">Gast</span></h2>
+    <p>Credits: <span id="credits">0</span></p>
+    <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
+    <button id="playBlackjackBtn">Speel Blackjack</button>
+  </section>
 
-  <div id="game" style="display:none">
-    <div class="table">
+  <!-- Blackjack sectie -->
+  <section id="blackjackSection" class="card hidden">
+    <h2>Blackjack</h2>
+    <div>
+      <label>Kies aantal bots:</label>
+      <select id="botCount">
+        <option value="0">0 bots</option>
+        <option value="1">1 bot</option>
+        <option value="2">2 bots</option>
+        <option value="3">3 bots</option>
+      </select>
+      <button id="startGame">Start spel</button>
+      <button id="backToMenu">Terug naar menu</button>
+    </div>
+    <div class="table" id="table">
       <div class="dealer-area" id="dealer">
         <h3>Dealer</h3>
         <div class="cards" id="dealerCards"></div>
@@ -47,9 +57,48 @@
       <button id="standBtn">Stand</button>
       <button id="nextRoundBtn" style="display:none">Volgende ronde</button>
     </div>
-  </div>
+  </section>
 
   <script>
+    // ===== Gebruiker & credits =====
+    let user = {name: 'Gast', credits: 500, lastDaily: null};
+
+    const displayName = document.getElementById('displayName');
+    const creditsEl = document.getElementById('credits');
+    const claimDailyBtn = document.getElementById('claimDailyBtn');
+    const playBlackjackBtn = document.getElementById('playBlackjackBtn');
+
+    function renderDashboard(){
+      displayName.textContent = user.name;
+      creditsEl.textContent = user.credits;
+    }
+
+    claimDailyBtn.onclick = ()=>{
+      const today = new Date().toDateString();
+      if(user.lastDaily !== today){
+        user.credits += 100;
+        user.lastDaily = today;
+        renderDashboard();
+        alert('Dagelijkse bonus van 100 credits geclaimd!');
+      } else { alert('Je hebt vandaag al je bonus geclaimd.'); }
+    };
+
+    renderDashboard();
+
+    // ===== Navigatie naar Blackjack =====
+    const dashboard = document.getElementById('dashboard');
+    const blackjackSection = document.getElementById('blackjackSection');
+    playBlackjackBtn.onclick = ()=>{
+      dashboard.classList.add('hidden');
+      blackjackSection.classList.remove('hidden');
+    };
+
+    const backToMenu = document.getElementById('backToMenu');
+    backToMenu.onclick = ()=>{
+      blackjackSection.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+    };
+
     // ===== Blackjack logica =====
     const suits = ['♠', '♥', '♦', '♣'];
     const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
@@ -57,33 +106,15 @@
 
     function createDeck(){
       deck = [];
-      for(let s of suits){
-        for(let v of values){ deck.push({suit:s, value:v}); }
-      }
-      // shuffle
-      for(let i=deck.length-1; i>0; i--){
-        const j = Math.floor(Math.random()* (i+1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-      }
+      for(let s of suits){ for(let v of values){ deck.push({suit:s,value:v}); } }
+      for(let i=deck.length-1; i>0; i--){ const j = Math.floor(Math.random()* (i+1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
     }
 
-    function cardValue(card){
-      if(['J','Q','K'].includes(card.value)) return 10;
-      if(card.value==='A') return 11;
-      return parseInt(card.value);
-    }
-
-    function handValue(hand){
-      let total = 0, aces = 0;
-      for(let c of hand){ total += cardValue(c); if(c.value==='A') aces++; }
-      while(total>21 && aces>0){ total -= 10; aces--; }
-      return total;
-    }
+    function cardValue(card){ if(['J','Q','K'].includes(card.value)) return 10; if(card.value==='A') return 11; return parseInt(card.value); }
+    function handValue(hand){ let total=0, aces=0; for(let c of hand){ total+=cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
 
     const startGameBtn = document.getElementById('startGame');
     const botSelect = document.getElementById('botCount');
-    const gameDiv = document.getElementById('game');
-    const setupDiv = document.getElementById('setup');
     const playersDiv = document.getElementById('players');
     const dealerCardsDiv = document.getElementById('dealerCards');
     const hitBtn = document.getElementById('hitBtn');
@@ -97,49 +128,35 @@
     function drawCard(){ return deck.pop(); }
 
     function renderGame(){
-      // Dealer
-      dealerCardsDiv.innerHTML = dealer.hand.map(c=>`<div class='card'>${c.value}${c.suit}</div>`).join('');
-      // Players
+      dealerCardsDiv.innerHTML = dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('');
       playersDiv.innerHTML = '';
       players.forEach((p,i)=>{
         const div = document.createElement('div');
         div.className = 'player-area';
-        div.innerHTML = `<h3>${p.name}${i===currentPlayerIndex?' ←':''}</h3><div class='cards'>${p.hand.map(c=>`<div class='card'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(p.hand)}</p>`;
+        div.innerHTML = `<h3>${p.name}${i===currentPlayerIndex?' ←':''}</h3><div class='cards'>${p.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(p.hand)}</p>`;
         playersDiv.appendChild(div);
       });
     }
 
     function nextPlayer(){
       currentPlayerIndex++;
-      if(currentPlayerIndex>=players.length){
-        dealerTurn();
-      } else if(players[currentPlayerIndex].bot){
-        botTurn(players[currentPlayerIndex]);
-      }
+      if(currentPlayerIndex>=players.length){ dealerTurn(); } else if(players[currentPlayerIndex].bot){ botTurn(players[currentPlayerIndex]); }
       renderGame();
     }
 
-    function botTurn(bot){
-      let hv = handValue(bot.hand);
-      while(hv<16){ bot.hand.push(drawCard()); hv = handValue(bot.hand); }
-      nextPlayer();
-    }
+    function botTurn(bot){ let hv = handValue(bot.hand); while(hv<16){ bot.hand.push(drawCard()); hv=handValue(bot.hand); } nextPlayer(); }
 
-    function dealerTurn(){
-      let hv = handValue(dealer.hand);
-      while(hv<17){ dealer.hand.push(drawCard()); hv = handValue(dealer.hand); }
-      checkWinners();
-    }
+    function dealerTurn(){ let hv = handValue(dealer.hand); while(hv<17){ dealer.hand.push(drawCard()); hv=handValue(dealer.hand); } checkWinners(); }
 
     function checkWinners(){
       const dealerScore = handValue(dealer.hand);
       let resultMsg = `Dealer heeft ${dealerScore}.\n`;
       players.forEach(p=>{
         const ps = handValue(p.hand);
-        if(ps>21) resultMsg += `${p.name} verliest (bust).\n`;
-        else if(dealerScore>21 || ps>dealerScore) resultMsg += `${p.name} wint!\n`;
-        else if(ps===dealerScore) resultMsg += `${p.name} gelijkspel.\n`;
-        else resultMsg += `${p.name} verliest.\n`;
+        if(ps>21) resultMsg+=`${p.name} verliest (bust).\n`;
+        else if(dealerScore>21 || ps>dealerScore) resultMsg+=`${p.name} wint!\n`;
+        else if(ps===dealerScore) resultMsg+=`${p.name} gelijkspel.\n`;
+        else resultMsg+=`${p.name} verliest.\n`;
       });
       alert(resultMsg);
       nextRoundBtn.style.display='inline';
@@ -149,39 +166,25 @@
 
     function startRound(){
       createDeck();
-      dealer.hand=[drawCard(), drawCard()];
-      players.forEach(p=>{ p.hand=[drawCard(), drawCard()]; });
+      dealer.hand=[drawCard(),drawCard()];
+      players.forEach(p=>{ p.hand=[drawCard(),drawCard()]; });
       currentPlayerIndex=0;
       renderGame();
       if(players[0].bot) botTurn(players[0]);
+      hitBtn.style.display='inline';
+      standBtn.style.display='inline';
     }
 
     startGameBtn.onclick = ()=>{
-      const botCount = parseInt(botSelect.value);
-      players = [{name:'Jij', bot:false, hand:[]}];
-      for(let i=1;i<=botCount;i++){
-        players.push({name:`Bot ${i}`, bot:true, hand:[]});
-      }
-      setupDiv.style.display='none';
-      gameDiv.style.display='block';
+      const botCount=parseInt(botSelect.value);
+      players=[{name:'Jij', bot:false, hand:[]}];
+      for(let i=1;i<=botCount;i++){ players.push({name:`Bot ${i}`, bot:true, hand:[]}); }
       startRound();
     };
 
-    hitBtn.onclick = ()=>{
-      const p = players[currentPlayerIndex];
-      p.hand.push(drawCard());
-      if(handValue(p.hand)>21){ nextPlayer(); }
-      renderGame();
-    };
-
+    hitBtn.onclick = ()=>{ const p=players[currentPlayerIndex]; p.hand.push(drawCard()); if(handValue(p.hand)>21){ nextPlayer(); } renderGame(); };
     standBtn.onclick = ()=>{ nextPlayer(); };
-
-    nextRoundBtn.onclick = ()=>{
-      nextRoundBtn.style.display='none';
-      hitBtn.style.display='inline';
-      standBtn.style.display='inline';
-      startRound();
-    };
+    nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
   </script>
 </body>
 </html>
