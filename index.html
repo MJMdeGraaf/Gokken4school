@@ -3,162 +3,185 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Goksite PWS — Prototype</title>
+  <title>Blackjack Prototype — Goksite PWS</title>
   <style>
-    :root{font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
-    body{max-width:900px;margin:32px auto;padding:16px}
-    header{display:flex;justify-content:space-between;align-items:center}
-    .card{border:1px solid #ddd;border-radius:8px;padding:16px;margin-top:16px;box-shadow:0 2px 6px rgba(0,0,0,0.04)}
-    label{display:block;margin-top:8px}
-    input[type=text]{padding:8px;width:100%;box-sizing:border-box}
-    button{padding:8px 12px;margin-top:8px;border-radius:6px;border:1px solid #ccc;background:#f5f5f5;cursor:pointer}
-    .hidden{display:none}
+    body { background: #0b6623; color: white; font-family: system-ui, sans-serif; margin: 0; padding: 0; text-align: center; }
+    header { background: #004d1a; padding: 12px; }
+    h1 { margin: 0; }
+    .table { position: relative; margin: 30px auto; width: 90%; max-width: 800px; background: radial-gradient(circle, #006400 0%, #013a10 70%); border-radius: 50%; padding: 40px 0; box-shadow: inset 0 0 50px rgba(0,0,0,0.5); }
+    .player-area { margin: 10px; }
+    .cards { display: flex; justify-content: center; gap: 5px; margin-top: 8px; }
+    .card { width: 40px; height: 60px; background: white; color: black; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+    .dealer-area { margin-bottom: 30px; }
+    button { padding: 8px 14px; border-radius: 6px; border: none; margin: 6px; cursor: pointer; }
+    #controls { margin-top: 20px; }
+    select, input { padding: 5px; border-radius: 5px; border: none; }
   </style>
 </head>
 <body>
   <header>
-    <h1>Goksite PWS — Prototype</h1>
-    <div id="userSummary">Niet ingelogd</div>
+    <h1>Blackjack — Goksite PWS</h1>
   </header>
 
-  <!-- LOGIN / REGISTER -->
-  <section class="card" id="authCard">
-    <h2>Inloggen / Maak account</h2>
-    <div id="authForms">
-      <label>Gebruikersnaam
-        <input id="usernameInput" type="text" placeholder="Typ je naam" />
-      </label>
-      <button id="loginBtn">Inloggen / Aanmaken</button>
+  <div id="setup">
+    <h2>Kies aantal bots</h2>
+    <select id="botCount">
+      <option value="0">0 bots</option>
+      <option value="1">1 bot</option>
+      <option value="2">2 bots</option>
+      <option value="3">3 bots</option>
+    </select>
+    <button id="startGame">Start spel</button>
+  </div>
+
+  <div id="game" style="display:none">
+    <div class="table">
+      <div class="dealer-area" id="dealer">
+        <h3>Dealer</h3>
+        <div class="cards" id="dealerCards"></div>
+      </div>
+      <div id="players"></div>
     </div>
-    <p style="font-size:90%">Dit is een fake-login: er wordt geen wachtwoord gebruikt en alles staat lokaal opgeslagen (LocalStorage). Perfect voor testen en PWS.</p>
-  </section>
-
-  <!-- DASHBOARD -->
-  <section class="card hidden" id="dashboard">
-    <h2>Dashboard</h2>
-    <p>Welkom, <strong id="displayName"></strong></p>
-    <p>Credits: <strong id="credits">0</strong></p>
-    <button id="claimDailyBtn">Claim dagelijkse bonus</button>
-    <button id="logoutBtn">Uitloggen</button>
-  </section>
-
-  <!-- TODO: spellen -->
-  <section class="card hidden" id="games">
-    <h2>Spellen (later toevoegen)</h2>
-    <p>Hier komen straks de spellen: roulette, kop-of-munt, enz.</p>
-  </section>
+    <div id="controls">
+      <button id="hitBtn">Hit</button>
+      <button id="standBtn">Stand</button>
+      <button id="nextRoundBtn" style="display:none">Volgende ronde</button>
+    </div>
+  </div>
 
   <script>
-    // Simpele gebruikersbeheer + dagelijkse bonus met LocalStorage
-    // Structuur in localStorage:
-    // - 'users' => JSON object met gebruikers: {username: {credits: number, lastDaily: 'ISO string'}}
-    // - 'currentUser' => username string
+    // ===== Blackjack logica =====
+    const suits = ['♠', '♥', '♦', '♣'];
+    const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    let deck = [];
 
-    const usernameInput = document.getElementById('usernameInput');
-    const loginBtn = document.getElementById('loginBtn');
-    const userSummary = document.getElementById('userSummary');
-    const authCard = document.getElementById('authCard');
-    const dashboard = document.getElementById('dashboard');
-    const displayName = document.getElementById('displayName');
-    const creditsEl = document.getElementById('credits');
-    const claimDailyBtn = document.getElementById('claimDailyBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    function loadUsers(){
-      return JSON.parse(localStorage.getItem('users') || '{}');
-    }
-    function saveUsers(users){
-      localStorage.setItem('users', JSON.stringify(users));
-    }
-    function setCurrentUser(username){
-      localStorage.setItem('currentUser', username);
-    }
-    function getCurrentUser(){
-      return localStorage.getItem('currentUser');
-    }
-
-    function showLoggedOut(){
-      userSummary.textContent = 'Niet ingelogd';
-      authCard.classList.remove('hidden');
-      dashboard.classList.add('hidden');
-      document.getElementById('games').classList.add('hidden');
-    }
-
-    function showDashboardFor(username){
-      const users = loadUsers();
-      const u = users[username];
-      userSummary.textContent = username + ' — ' + u.credits + ' credits';
-      authCard.classList.add('hidden');
-      dashboard.classList.remove('hidden');
-      document.getElementById('games').classList.remove('hidden');
-      displayName.textContent = username;
-      creditsEl.textContent = u.credits;
-    }
-
-    function createOrGetUser(username){
-      const users = loadUsers();
-      if(!users[username]){
-        users[username] = {credits: 500, lastDaily: null}; // nieuw account krijgt startcredits
-        saveUsers(users);
+    function createDeck(){
+      deck = [];
+      for(let s of suits){
+        for(let v of values){ deck.push({suit:s, value:v}); }
       }
-      return users[username];
-    }
-
-    function claimDailyFor(username){
-      const users = loadUsers();
-      const user = users[username];
-      const now = new Date();
-      const last = user.lastDaily ? new Date(user.lastDaily) : null;
-      // Vergelijk op datum (toDateString)
-      if(!last || last.toDateString() !== now.toDateString()){
-        user.credits += 100; // dagelijkse bonus
-        user.lastDaily = now.toISOString();
-        saveUsers(users);
-        creditsEl.textContent = user.credits;
-        userSummary.textContent = username + ' — ' + user.credits + ' credits';
-        alert('Dagelijkse bonus geclaimd: +100 credits');
-      } else {
-        alert('Je hebt vandaag al je bonus geclaimd.');
+      // shuffle
+      for(let i=deck.length-1; i>0; i--){
+        const j = Math.floor(Math.random()* (i+1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
       }
     }
 
-    // Event handlers
-    loginBtn.addEventListener('click', ()=>{
-      const name = usernameInput.value.trim();
-      if(!name){ alert('Vul een gebruikersnaam in'); return; }
-      createOrGetUser(name);
-      setCurrentUser(name);
-      showDashboardFor(name);
-    });
+    function cardValue(card){
+      if(['J','Q','K'].includes(card.value)) return 10;
+      if(card.value==='A') return 11;
+      return parseInt(card.value);
+    }
 
-    claimDailyBtn.addEventListener('click', ()=>{
-      const username = getCurrentUser();
-      if(!username) return showLoggedOut();
-      claimDailyFor(username);
-    });
+    function handValue(hand){
+      let total = 0, aces = 0;
+      for(let c of hand){ total += cardValue(c); if(c.value==='A') aces++; }
+      while(total>21 && aces>0){ total -= 10; aces--; }
+      return total;
+    }
 
-    logoutBtn.addEventListener('click', ()=>{
-      localStorage.removeItem('currentUser');
-      showLoggedOut();
-    });
+    const startGameBtn = document.getElementById('startGame');
+    const botSelect = document.getElementById('botCount');
+    const gameDiv = document.getElementById('game');
+    const setupDiv = document.getElementById('setup');
+    const playersDiv = document.getElementById('players');
+    const dealerCardsDiv = document.getElementById('dealerCards');
+    const hitBtn = document.getElementById('hitBtn');
+    const standBtn = document.getElementById('standBtn');
+    const nextRoundBtn = document.getElementById('nextRoundBtn');
 
-    // Auto-login als er al een gebruiker is
-    window.addEventListener('load', ()=>{
-      const username = getCurrentUser();
-      if(username){
-        // Zorg dat user bestaat (backwards compat)
-        createOrGetUser(username);
-        showDashboardFor(username);
+    let players = [];
+    let dealer = {hand:[]};
+    let currentPlayerIndex = 0;
 
-        // Auto-claim daily bij eerste load op dag (optioneel):
-        // claimDailyFor(username);
-      } else {
-        showLoggedOut();
+    function drawCard(){ return deck.pop(); }
+
+    function renderGame(){
+      // Dealer
+      dealerCardsDiv.innerHTML = dealer.hand.map(c=>`<div class='card'>${c.value}${c.suit}</div>`).join('');
+      // Players
+      playersDiv.innerHTML = '';
+      players.forEach((p,i)=>{
+        const div = document.createElement('div');
+        div.className = 'player-area';
+        div.innerHTML = `<h3>${p.name}${i===currentPlayerIndex?' ←':''}</h3><div class='cards'>${p.hand.map(c=>`<div class='card'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(p.hand)}</p>`;
+        playersDiv.appendChild(div);
+      });
+    }
+
+    function nextPlayer(){
+      currentPlayerIndex++;
+      if(currentPlayerIndex>=players.length){
+        dealerTurn();
+      } else if(players[currentPlayerIndex].bot){
+        botTurn(players[currentPlayerIndex]);
       }
-    });
+      renderGame();
+    }
 
-    // Voor debug: console commands
-    // Use loadUsers(), saveUsers({...}), setCurrentUser('name') via console if je wilt testen.
+    function botTurn(bot){
+      let hv = handValue(bot.hand);
+      while(hv<16){ bot.hand.push(drawCard()); hv = handValue(bot.hand); }
+      nextPlayer();
+    }
+
+    function dealerTurn(){
+      let hv = handValue(dealer.hand);
+      while(hv<17){ dealer.hand.push(drawCard()); hv = handValue(dealer.hand); }
+      checkWinners();
+    }
+
+    function checkWinners(){
+      const dealerScore = handValue(dealer.hand);
+      let resultMsg = `Dealer heeft ${dealerScore}.\n`;
+      players.forEach(p=>{
+        const ps = handValue(p.hand);
+        if(ps>21) resultMsg += `${p.name} verliest (bust).\n`;
+        else if(dealerScore>21 || ps>dealerScore) resultMsg += `${p.name} wint!\n`;
+        else if(ps===dealerScore) resultMsg += `${p.name} gelijkspel.\n`;
+        else resultMsg += `${p.name} verliest.\n`;
+      });
+      alert(resultMsg);
+      nextRoundBtn.style.display='inline';
+      hitBtn.style.display='none';
+      standBtn.style.display='none';
+    }
+
+    function startRound(){
+      createDeck();
+      dealer.hand=[drawCard(), drawCard()];
+      players.forEach(p=>{ p.hand=[drawCard(), drawCard()]; });
+      currentPlayerIndex=0;
+      renderGame();
+      if(players[0].bot) botTurn(players[0]);
+    }
+
+    startGameBtn.onclick = ()=>{
+      const botCount = parseInt(botSelect.value);
+      players = [{name:'Jij', bot:false, hand:[]}];
+      for(let i=1;i<=botCount;i++){
+        players.push({name:`Bot ${i}`, bot:true, hand:[]});
+      }
+      setupDiv.style.display='none';
+      gameDiv.style.display='block';
+      startRound();
+    };
+
+    hitBtn.onclick = ()=>{
+      const p = players[currentPlayerIndex];
+      p.hand.push(drawCard());
+      if(handValue(p.hand)>21){ nextPlayer(); }
+      renderGame();
+    };
+
+    standBtn.onclick = ()=>{ nextPlayer(); };
+
+    nextRoundBtn.onclick = ()=>{
+      nextRoundBtn.style.display='none';
+      hitBtn.style.display='inline';
+      standBtn.style.display='inline';
+      startRound();
+    };
   </script>
 </body>
 </html>
