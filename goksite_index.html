@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Goksite PWS — Prototype</title>
+  <style>
+    :root{font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;}
+    body{max-width:900px;margin:32px auto;padding:16px}
+    header{display:flex;justify-content:space-between;align-items:center}
+    .card{border:1px solid #ddd;border-radius:8px;padding:16px;margin-top:16px;box-shadow:0 2px 6px rgba(0,0,0,0.04)}
+    label{display:block;margin-top:8px}
+    input[type=text]{padding:8px;width:100%;box-sizing:border-box}
+    button{padding:8px 12px;margin-top:8px;border-radius:6px;border:1px solid #ccc;background:#f5f5f5;cursor:pointer}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Goksite PWS — Prototype</h1>
+    <div id="userSummary">Niet ingelogd</div>
+  </header>
+
+  <!-- LOGIN / REGISTER -->
+  <section class="card" id="authCard">
+    <h2>Inloggen / Maak account</h2>
+    <div id="authForms">
+      <label>Gebruikersnaam
+        <input id="usernameInput" type="text" placeholder="Typ je naam" />
+      </label>
+      <button id="loginBtn">Inloggen / Aanmaken</button>
+    </div>
+    <p style="font-size:90%">Dit is een fake-login: er wordt geen wachtwoord gebruikt en alles staat lokaal opgeslagen (LocalStorage). Perfect voor testen en PWS.</p>
+  </section>
+
+  <!-- DASHBOARD -->
+  <section class="card hidden" id="dashboard">
+    <h2>Dashboard</h2>
+    <p>Welkom, <strong id="displayName"></strong></p>
+    <p>Credits: <strong id="credits">0</strong></p>
+    <button id="claimDailyBtn">Claim dagelijkse bonus</button>
+    <button id="logoutBtn">Uitloggen</button>
+  </section>
+
+  <!-- TODO: spellen -->
+  <section class="card hidden" id="games">
+    <h2>Spellen (later toevoegen)</h2>
+    <p>Hier komen straks de spellen: roulette, kop-of-munt, enz.</p>
+  </section>
+
+  <script>
+    // Simpele gebruikersbeheer + dagelijkse bonus met LocalStorage
+    // Structuur in localStorage:
+    // - 'users' => JSON object met gebruikers: {username: {credits: number, lastDaily: 'ISO string'}}
+    // - 'currentUser' => username string
+
+    const usernameInput = document.getElementById('usernameInput');
+    const loginBtn = document.getElementById('loginBtn');
+    const userSummary = document.getElementById('userSummary');
+    const authCard = document.getElementById('authCard');
+    const dashboard = document.getElementById('dashboard');
+    const displayName = document.getElementById('displayName');
+    const creditsEl = document.getElementById('credits');
+    const claimDailyBtn = document.getElementById('claimDailyBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    function loadUsers(){
+      return JSON.parse(localStorage.getItem('users') || '{}');
+    }
+    function saveUsers(users){
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+    function setCurrentUser(username){
+      localStorage.setItem('currentUser', username);
+    }
+    function getCurrentUser(){
+      return localStorage.getItem('currentUser');
+    }
+
+    function showLoggedOut(){
+      userSummary.textContent = 'Niet ingelogd';
+      authCard.classList.remove('hidden');
+      dashboard.classList.add('hidden');
+      document.getElementById('games').classList.add('hidden');
+    }
+
+    function showDashboardFor(username){
+      const users = loadUsers();
+      const u = users[username];
+      userSummary.textContent = username + ' — ' + u.credits + ' credits';
+      authCard.classList.add('hidden');
+      dashboard.classList.remove('hidden');
+      document.getElementById('games').classList.remove('hidden');
+      displayName.textContent = username;
+      creditsEl.textContent = u.credits;
+    }
+
+    function createOrGetUser(username){
+      const users = loadUsers();
+      if(!users[username]){
+        users[username] = {credits: 500, lastDaily: null}; // nieuw account krijgt startcredits
+        saveUsers(users);
+      }
+      return users[username];
+    }
+
+    function claimDailyFor(username){
+      const users = loadUsers();
+      const user = users[username];
+      const now = new Date();
+      const last = user.lastDaily ? new Date(user.lastDaily) : null;
+      // Vergelijk op datum (toDateString)
+      if(!last || last.toDateString() !== now.toDateString()){
+        user.credits += 100; // dagelijkse bonus
+        user.lastDaily = now.toISOString();
+        saveUsers(users);
+        creditsEl.textContent = user.credits;
+        userSummary.textContent = username + ' — ' + user.credits + ' credits';
+        alert('Dagelijkse bonus geclaimd: +100 credits');
+      } else {
+        alert('Je hebt vandaag al je bonus geclaimd.');
+      }
+    }
+
+    // Event handlers
+    loginBtn.addEventListener('click', ()=>{
+      const name = usernameInput.value.trim();
+      if(!name){ alert('Vul een gebruikersnaam in'); return; }
+      createOrGetUser(name);
+      setCurrentUser(name);
+      showDashboardFor(name);
+    });
+
+    claimDailyBtn.addEventListener('click', ()=>{
+      const username = getCurrentUser();
+      if(!username) return showLoggedOut();
+      claimDailyFor(username);
+    });
+
+    logoutBtn.addEventListener('click', ()=>{
+      localStorage.removeItem('currentUser');
+      showLoggedOut();
+    });
+
+    // Auto-login als er al een gebruiker is
+    window.addEventListener('load', ()=>{
+      const username = getCurrentUser();
+      if(username){
+        // Zorg dat user bestaat (backwards compat)
+        createOrGetUser(username);
+        showDashboardFor(username);
+
+        // Auto-claim daily bij eerste load op dag (optioneel):
+        // claimDailyFor(username);
+      } else {
+        showLoggedOut();
+      }
+    });
+
+    // Voor debug: console commands
+    // Use loadUsers(), saveUsers({...}), setCurrentUser('name') via console if je wilt testen.
+  </script>
+</body>
+</html>
