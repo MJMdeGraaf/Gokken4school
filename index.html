@@ -6,115 +6,127 @@
   <title>Goksite PWS — Multiplayer Blackjack</title>
   <style>
     /* ============================
-   LEADERBOARD TAB STYLE
-   ============================ */
-#lb-tab{
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-    background: gold;
-    padding: 12px 20px;
-    border-radius: 16px;
-    cursor: pointer;
-    font-weight: bold;
-    box-shadow: 0 0 10px rgba(0,0,0,0.4);
-    z-index: 9999;
-}
+       LEADERBOARD TAB STYLE
+       ============================ */
+    #lb-tab{
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        background: gold;
+        padding: 12px 20px;
+        border-radius: 16px;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        z-index: 9999;
+    }
 
-/* ============================
-   POPUP WINDOW
-   ============================ */
-#lb-popup{
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 350px;
-    height: 450px;
-    background: rgba(0,0,0,0.80);
-    border-radius: 20px 0 0 0;
-    display: none;
-    z-index: 99999;
-    color: white;
-}
+    /* ============================
+       POPUP WINDOW
+       ============================ */
+    #lb-popup{
+        position: fixed;
+        bottom: 0;
+        right: 0;
+        width: 360px;
+        height: 460px;
+        background: rgba(0,0,0,0.88);
+        border-radius: 20px 0 0 0;
+        display: none;
+        z-index: 99999;
+        color: white;
+    }
 
-#lb-popup-inner{
-    padding: 20px;
-    height: 100%;
-    position: relative;
-}
+    #lb-popup-inner{
+        padding: 18px;
+        height: 100%;
+        position: relative;
+    }
 
-/* ============================
-   ARROWS
-   ============================ */
-.lb-arrow{
-    position: absolute;
-    top: 15px;
-    font-size: 26px;
-    cursor: pointer;
-    user-select: none;
-}
-#lb-left{ left: 10px; }
-#lb-right{ right: 10px; }
+    /* ============================
+       ARROWS
+       ============================ */
+    .lb-arrow{
+        position: absolute;
+        top: 12px;
+        font-size: 26px;
+        cursor: pointer;
+        user-select: none;
+    }
+    #lb-left{ left: 10px; }
+    #lb-right{ right: 10px; }
 
-/* ============================
-   CONTENT AREA
-   ============================ */
-#lb-content{
-    margin-top: 60px;
-    height: 330px;
-    overflow-y: auto;
-    font-size: 18px;
-}
+    /* ============================
+       CONTENT AREA
+       ============================ */
+    #lb-content{
+        margin-top: 52px;
+        height: 330px;
+        overflow-y: auto;
+        font-size: 16px;
+    }
 
-#lb-close{
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 8px 20px;
-    border-radius: 10px;
-    cursor: pointer;
-}
+    #lb-close{
+        position: absolute;
+        bottom: 14px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 8px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
 
+    /* ============================
+       Music menu style
+       ============================ */
+    #musicMenu{
+      position: fixed;
+      right: 20px;
+      bottom: 70px;
+      width: 300px;
+      background: rgba(0,0,0,0.92);
+      color: white;
+      padding: 15px;
+      border-radius: 12px;
+      display: none;
+      z-index: 99999;
+    }
+
+    #musicMenuInner{
+      text-align: center;
+    }
+
+    #musicMenu input[type=range]{
+      width: 80%;
+    }
+
+    /* ============================
+       Rest of page
+       ============================ */
     body { margin:0; font-family: system-ui, sans-serif; }
     /* Dashboard Hoofdmenu */
     #login, #dashboard, #blackjackSection { display: none; padding: 20px; text-align:center; }
-    #login { background: #f0f0f0; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+    #login { background: #f0f0f0; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
     #dashboard { background: linear-gradient(to bottom, #ffffff, #e0e0e0); height:100vh; }
     #dashboard h2, #login h2 { margin-bottom:10px; }
-    button { padding: 10px 18px; margin: 10px; border-radius: 8px; border:none; cursor:pointer; }
-
-    /* Muziekknop */
-    #musicMenu{
-  position: fixed;
-  right: 20px;
-  bottom: 70px;
-  width: 300px;
-  background: rgba(0,0,0,0.8);
-  color: white;
-  padding: 15px;
-  border-radius: 12px;
-  display: none;
-  z-index: 99999;
-}
-
-#musicMenuInner{
-  text-align: center;
-}
-
-#musicMenu input[type=range]{
-  width: 80%;
-}
+    button { padding: 10px 14px; margin: 6px; border-radius: 8px; border:none; cursor:pointer; }
 
     /* Blackjack sectie */
     #blackjackSection { background: #2f1e0f; height:100vh; color:white; }
-    .table-container { position:relative; width: 90%; max-width: 900px; margin: 50px auto; height:600px; }
+    .table-container { position:relative; width: 90%; max-width: 900px; margin: 36px auto; height:520px; }
     .table { background: #8b5a2b; border-radius: 50%; width:100%; height:100%; position:relative; }
-    .player-area { position:absolute; text-align:center; }
-    .cards { display:flex; justify-content:center; gap:5px; margin-top:8px; }
+    .player-area { position:absolute; text-align:center; color: white; }
+    .cards { display:flex; justify-content:center; gap:8px; margin-top:8px; }
     .card-bj { width:80px; height:120px; background:white; color:black; border-radius:6px; display:flex; justify-content:center; align-items:center; font-weight:bold; }
-    .chair { width:40px; height:40px; background:#333; border-radius:50%; position:absolute; }
+    .chair { width:40px; height:40px; background:#333; border-radius:50%; position:absolute; box-shadow:inset 0 -4px 6px rgba(0,0,0,0.4); }
     #controls { margin-top:20px; }
+
+    /* small responsive */
+    @media (max-width:600px){
+      #lb-popup { width: 100%; right:0; left:0; height: 50vh; border-radius: 12px 12px 0 0;}
+      .card-bj{ width:56px; height:84px; }
+      .table-container{ height:360px; }
+    }
   </style>
 </head>
 <body>
@@ -123,6 +135,7 @@
   <section id="login">
     <h2>Welkom! Maak een account of log in</h2>
     <input type="text" id="usernameInput" placeholder="Gebruikersnaam">
+    <input type="password" id="passwordInput" placeholder="Wachtwoord">
     <button id="loginBtn">Login / Maak account</button>
   </section>
 
@@ -132,14 +145,18 @@
     <p>Credits: <span id="credits"></span></p>
     <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
     <button id="playBlackjackBtn">Speel Blackjack</button>
+    <button id="openLeaderboardsBtn">Leaderboards</button>
     <button id="logoutBtn">Uitloggen</button>
-    <audio id="bgMusic" loop>
-  <source src="https://cdn.pixabay.com/audio/2023/03/07/audio_2ea36d1deb.mp3" type="audio/mpeg"> <!-- Funky upbeat -->
-  <source src="https://cdn.pixabay.com/audio/2023/03/15/audio_e3bbcbfce7.mp3" type="audio/mpeg"> <!-- Electronic chill -->
-  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8f17fc4b42.mp3" type="audio/mpeg"> <!-- Chill lounge -->
-</audio>
-<button id="musicControl">🎵 Muziek</button>
 
+    <!-- Music control -->
+    <div style="margin-top:12px;">
+      <audio id="bgMusic" loop>
+        <source src="https://cdn.pixabay.com/audio/2023/03/07/audio_2ea36d1deb.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/audio/2023/03/15/audio_e3bbcbfce7.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8f17fc4b42.mp3" type="audio/mpeg">
+      </audio>
+      <button id="musicControl">🎵 Muziek</button>
+    </div>
   </section>
 
   <!-- Blackjack -->
@@ -152,6 +169,10 @@
         <option value="1">1 bot</option>
         <option value="2">2 bots</option>
         <option value="3">3 bots</option>
+        <option value="4">4 bots</option>
+        <option value="5">5 bots</option>
+        <option value="6">6 bots</option>
+        <option value="7">7 bots</option>
       </select>
       <button id="startGame">Start spel</button>
       <button id="backToMenu">Terug naar menu</button>
@@ -168,84 +189,86 @@
     </div>
   </section>
 
-  <script>
-    // ===== Accountsysteem =====
-    let users = JSON.parse(localStorage.getItem('users') || '{}');
-    let currentUser = null;
+  <!-- Leaderboard floating tab -->
+  <div id="lb-tab">🏆 Leaderboard</div>
 
+  <!-- Leaderboard popup -->
+  <div id="lb-popup">
+      <div id="lb-popup-inner">
+          <div id="lb-left" class="lb-arrow">←</div>
+          <h2 id="lb-title">All-Time Earnings</h2>
+          <div id="lb-content"></div>
+          <div id="lb-right" class="lb-arrow">→</div>
+          <button id="lb-close">Sluiten</button>
+      </div>
+  </div>
+
+  <!-- MUSIC MENU -->
+  <div id="musicMenu">
+    <div id="musicMenuInner">
+        <h3>Muziekinstellingen</h3>
+
+        <label>Volume:</label><br>
+        <input type="range" id="musicVolume" min="0" max="1" step="0.01">
+
+        <br><br>
+
+        <label>Muziek selecteren:</label>
+        <select id="musicTrackSelect">
+            <option value="0">Funky Upbeat</option>
+            <option value="1">Electronic Chill</option>
+            <option value="2">Lounge Vibes</option>
+        </select>
+
+        <br><br>
+
+        <button id="muteBtn">Mute / Unmute</button>
+        <br><br>
+
+        <button id="closeMusicMenu">Sluiten</button>
+    </div>
+  </div>
+
+  <script>
+    // ====================
+    // Data & helpers
+    // ====================
+    // users is keyed by lowercase username
+    let users = JSON.parse(localStorage.getItem('users') || '{}');
+    let currentUser = null; // will hold the user object (from users[key])
+    function saveUsers(){ localStorage.setItem('users', JSON.stringify(users)); }
+
+    // Helper to get lowercase key for a display name
+    function keyForName(name){
+      return name.trim().toLowerCase();
+    }
+
+    // ====================
+    // UI refs
+    // ====================
     const loginSection = document.getElementById('login');
     const dashboard = document.getElementById('dashboard');
     const blackjackSection = document.getElementById('blackjackSection');
 
     const usernameInput = document.getElementById('usernameInput');
+    const passwordInput = document.getElementById('passwordInput');
     const loginBtn = document.getElementById('loginBtn');
     const displayName = document.getElementById('displayName');
     const creditsEl = document.getElementById('credits');
     const claimDailyBtn = document.getElementById('claimDailyBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
+    const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
+
     const bgMusic = document.getElementById('bgMusic');
     const musicControl = document.getElementById('musicControl');
+    const musicMenu = document.getElementById('musicMenu');
+    const musicVolume = document.getElementById('musicVolume');
+    const musicTrackSelect = document.getElementById('musicTrackSelect');
+    const closeMusicMenu = document.getElementById('closeMusicMenu');
+    const muteBtn = document.getElementById('muteBtn');
 
-    function renderDashboard(){
-      displayName.textContent = currentUser.name;
-      creditsEl.textContent = currentUser.credits;
-    }
-
-    loginBtn.onclick = ()=>{
-      const name = usernameInput.value.trim();
-      if(!name) return alert('Vul een gebruikersnaam in.');
-      if(!users[name]) users[name]={credits:500,lastDaily:null,name:name};
-      currentUser = users[name];
-      localStorage.setItem('users', JSON.stringify(users));
-      loginSection.style.display='none';
-      dashboard.style.display='block';
-      renderDashboard();
-      bgMusic.play().catch(()=>{});
-    };
-
-    logoutBtn.onclick = ()=>{
-      currentUser=null;
-      dashboard.style.display='none';
-      loginSection.style.display='flex';
-      bgMusic.pause();
-    };
-
-    claimDailyBtn.onclick = ()=>{
-      const today = new Date().toDateString();
-      if(currentUser.lastDaily !== today){
-        currentUser.credits += 100;
-        currentUser.lastDaily = today;
-        users[currentUser.name]=currentUser;
-        localStorage.setItem('users', JSON.stringify(users));
-        renderDashboard();
-        alert('Dagelijkse bonus van 100 credits geclaimd!');
-      } else { alert('Je hebt vandaag al je bonus geclaimd.'); }
-    };
-
-    musicControl.onclick = ()=>{ bgMusic.paused?bgMusic.play():bgMusic.pause(); };
-
-    // ===== Navigatie naar Blackjack =====
-    playBlackjackBtn.onclick = ()=>{
-      dashboard.style.display='none';
-      blackjackSection.style.display='block';
-    };
-
-    const backToMenu = document.getElementById('backToMenu');
-    backToMenu.onclick = ()=>{
-      blackjackSection.style.display='none';
-      dashboard.style.display='block';
-    };
-
-    // ===== Blackjack logica =====
-    const suits=['♠','♥','♦','♣'];
-    const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-    let deck=[];
-
-    function createDeck(){ deck=[]; for(let s of suits){for(let v of values){deck.push({suit:s,value:v});}} for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; } }
-    function cardValue(card){ if(['J','Q','K'].includes(card.value)) return 10; if(card.value==='A') return 11; return parseInt(card.value); }
-    function handValue(hand){ let total=0, aces=0; for(let c of hand){ total+=cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
-
+    // Blackjack refs
     const startGameBtn = document.getElementById('startGame');
     const botSelect = document.getElementById('botCount');
     const table = document.getElementById('table');
@@ -253,307 +276,397 @@
     const standBtn = document.getElementById('standBtn');
     const nextRoundBtn = document.getElementById('nextRoundBtn');
 
+    // Leaderboard refs
+    const lbTab = document.getElementById('lb-tab');
+    const lbPopup = document.getElementById('lb-popup');
+    const lbLeft = document.getElementById('lb-left');
+    const lbRight = document.getElementById('lb-right');
+    const lbClose = document.getElementById('lb-close');
+    const lbTitle = document.getElementById('lb-title');
+    const lbContent = document.getElementById('lb-content');
+
+    // ====================
+    // Login / accounts (case-insensitive usernames)
+    // ====================
+    loginSection.style.display = 'flex';
+
+    loginBtn.onclick = () => {
+      const rawName = usernameInput.value.trim();
+      const passwd = passwordInput.value.trim();
+      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+
+      const key = keyForName(rawName);
+
+      if(!users[key]){
+        // create account
+        users[key] = {
+          name: rawName,       // original display
+          password: passwd,
+          credits: 500,
+          lastDaily: null,
+          wins: 0,
+          losses: 0,
+          totalEarned: 0,
+          gamesPlayed: 0,
+          key: key
+        };
+        alert('Account aangemaakt!');
+      } else {
+        // exists: verify password
+        if(users[key].password !== passwd) return alert('Wachtwoord onjuist.');
+      }
+
+      currentUser = users[key];
+      saveUsers();
+      showDashboard();
+      // try play music
+      bgMusic.play().catch(()=>{});
+    };
+
+    function showDashboard(){
+      loginSection.style.display = 'none';
+      blackjackSection.style.display = 'none';
+      dashboard.style.display = 'block';
+      renderDashboard();
+    }
+
+    function renderDashboard(){
+      if(!currentUser) return;
+      displayName.textContent = currentUser.name;
+      creditsEl.textContent = currentUser.credits;
+    }
+
+    logoutBtn.onclick = () => {
+      currentUser = null;
+      dashboard.style.display = 'none';
+      loginSection.style.display = 'flex';
+      bgMusic.pause();
+    };
+
+    claimDailyBtn.onclick = ()=> {
+      if(!currentUser) return;
+      const t = new Date().toDateString();
+      if(currentUser.lastDaily !== t){
+        currentUser.credits += 100;
+        currentUser.lastDaily = t;
+        users[currentUser.key] = currentUser;
+        saveUsers();
+        renderDashboard();
+        alert('Dagelijkse bonus geclaimd: +100 credits');
+      } else {
+        alert('Je hebt vandaag al je bonus geclaimd.');
+      }
+    };
+
+    // Leaderboards button in dashboard opens popup with earnings by default
+    openLeaderboardsBtn.onclick = ()=> {
+      lbIndex = 0;
+      openLeaderboard();
+    };
+
+    // ====================
+    // Music menu
+    // ====================
+    // default volume
+    musicVolume.value = 0.4;
+    bgMusic.volume = 0.4;
+
+    musicControl.onclick = () => {
+      musicMenu.style.display = musicMenu.style.display === 'block' ? 'none' : 'block';
+      // populate current track selection if needed
+    };
+
+    musicVolume.oninput = () => {
+      bgMusic.volume = parseFloat(musicVolume.value);
+    };
+
+    musicTrackSelect.onchange = () => {
+      const index = parseInt(musicTrackSelect.value);
+      // choose source element if present
+      const sources = bgMusic.querySelectorAll('source');
+      if(sources[index]) {
+        bgMusic.src = sources[index].src;
+        bgMusic.play().catch(()=>{});
+      }
+    };
+
+    muteBtn.onclick = () => {
+      bgMusic.muted = !bgMusic.muted;
+      muteBtn.textContent = bgMusic.muted ? 'Unmute' : 'Mute / Unmute';
+    };
+
+    closeMusicMenu.onclick = ()=> { musicMenu.style.display = 'none'; };
+
+    // ====================
+    // Blackjack logic
+    // ====================
+    const suits=['♠','♥','♦','♣'];
+    const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    let deck=[];
+
+    function createDeck(){
+      deck = [];
+      for(let s of suits) for(let v of values) deck.push({suit:s, value:v});
+      // shuffle
+      for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
+    }
+    function cardValue(card){ if(['J','Q','K'].includes(card.value)) return 10; if(card.value==='A') return 11; return parseInt(card.value); }
+    function handValue(hand){ let total=0, aces=0; for(let c of hand){ total += cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
+    function drawCard(){ return deck.pop(); }
+
     let players=[];
     let dealer={hand:[]};
     let currentPlayerIndex=0;
 
-    function drawCard(){ return deck.pop(); }
+    // Positioning & rendering (uses same circle for dealer, player and bots)
+    function placePlayers(){
+      table.innerHTML = '';
+      const centerX = table.clientWidth / 2;
+      const centerY = table.clientHeight / 2;
+      const kaartOffset = 60;
+      const kaartWidth = 80;
+      const kaartHeight = 120;
+      const radius = Math.min(table.clientWidth, table.clientHeight) / 2 - kaartOffset;
 
-function placePlayers(){
-  table.innerHTML = '';
-  const centerX = table.clientWidth / 2;
-  const centerY = table.clientHeight / 2;
-  const kaartOffset = 60;
-  const kaartWidth = 80;
-  const kaartHeight = 120;
-// Pas radius aan zodat cirkel perfect binnen de tafel past
-const radius = Math.min(table.clientWidth, table.clientHeight) / 2 - kaartOffset;
+      // angles: dealer at 0, player at pi, bots on pi/4 increments
+      const dealerAngle = 0;
+      const playerAngle = Math.PI;
+      const botAngles = [Math.PI/4, 2*Math.PI/4, 3*Math.PI/4, 5*Math.PI/4, 6*Math.PI/4, 7*Math.PI/4];
 
-  // Hoeken
-  const dealerAngle = 6*Math.PI/4;       // Dealer boven
-  const playerAngle = 2*Math.PI/4; // Speler onder
-  const botAngles = [
-      0,// 0°
-      Math.PI/4,   // 45°
-      3*Math.PI/4, // 135°
-      4*Math.PI/4, // 180°
-      5*Math.PI/4, // 225°
-      7*Math.PI/4  // 315°  
-  ];
+      function pos(angle){
+         return { x: centerX + radius * Math.cos(angle) - kaartWidth/2,
+                  y: centerY + radius * Math.sin(angle) - kaartHeight/2 };
+      }
 
-  function getCirclePosition(angleRad, radius, centerX, centerY){
-      const x = centerX + radius * Math.cos(angleRad);
-      const y = centerY + radius * Math.sin(angleRad);
-      return {x, y};
-  }
+      // dealer
+      const dPos = pos(dealerAngle);
+      const dealerDiv = document.createElement('div');
+      dealerDiv.className = 'player-area';
+      dealerDiv.style.left = dPos.x + 'px';
+      dealerDiv.style.top = dPos.y + 'px';
+      dealerDiv.innerHTML = `<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+      const dealerChair = document.createElement('div');
+      dealerChair.className = 'chair';
+      dealerChair.style.left = (dPos.x + kaartWidth/2) + 'px';
+      dealerChair.style.top = (dPos.y + kaartHeight) + 'px';
+      table.appendChild(dealerChair);
+      table.appendChild(dealerDiv);
 
-  // Dealer positie
-  const dealerPos = getCirclePosition(dealerAngle, radius, centerX, centerY);
-  const dealerDiv = document.createElement('div');
-  dealerDiv.className = 'player-area';
-  dealerDiv.style.left = (dealerPos.x - 40) + 'px';
-  dealerDiv.style.top = (dealerPos.y - 60) + 'px';
-  dealerDiv.innerHTML = `<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+      // player (always players[0])
+      if(players.length>0){
+        const pPos = pos(playerAngle);
+        const pDiv = document.createElement('div');
+        pDiv.className = 'player-area';
+        pDiv.style.left = pPos.x + 'px';
+        pDiv.style.top = pPos.y + 'px';
+        pDiv.innerHTML = `<h3>${players[0].name} ${currentPlayerIndex===0?'←':''}</h3><div class='cards'>${players[0].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[0].hand)}</p>`;
+        const pChair = document.createElement('div');
+        pChair.className = 'chair';
+        pChair.style.left = (pPos.x + kaartWidth/2) + 'px';
+        pChair.style.top = (pPos.y + kaartHeight) + 'px';
+        table.appendChild(pChair);
+        table.appendChild(pDiv);
+      }
 
-  // Dealer stoel
-  const dealerChair = document.createElement('div');
-  dealerChair.className = 'chair';
-  dealerChair.style.left = (dealerPos.x) + 'px';
-  dealerChair.style.top = (dealerPos.y + 80) + 'px';
-
-  table.appendChild(dealerChair);
-  table.appendChild(dealerDiv);
-
-  // Speler positie
-  const playerPos = getCirclePosition(playerAngle, radius, centerX, centerY);
-  const playerDiv = document.createElement('div');
-  playerDiv.className = 'player-area';
-  playerDiv.style.left = (playerPos.x - 40) + 'px';
-  playerDiv.style.top = (playerPos.y - 60) + 'px';
-  playerDiv.innerHTML = `<h3>${players[0].name} ${currentPlayerIndex===0?'←':''}</h3><div class='cards'>${players[0].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
-
-  const playerChair = document.createElement('div');
-  playerChair.className = 'chair';
-  playerChair.style.left = (playerPos.x) + 'px';
-  playerChair.style.top = (playerPos.y + 80) + 'px';
-
-  table.appendChild(playerChair);
-  table.appendChild(playerDiv);
-
-  // Bots
-  const botCount = players.length - 1; // exclude user
-  const bots = botAngles.slice(0, botCount);
-  for(let i=1; i<players.length; i++){
-      const pos = getCirclePosition(bots[i-1], radius, centerX, centerY);
-      const botDiv = document.createElement('div');
-      botDiv.className = 'player-area';
-      botDiv.style.left = (pos.x - 40) + 'px';
-      botDiv.style.top = (pos.y - 60) + 'px';
-      botDiv.innerHTML = `<h3>${players[i].name}</h3><div class='cards'>${players[i].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
-
-      const botChair = document.createElement('div');
-      botChair.className = 'chair';
-      botChair.style.left = (pos.x) + 'px';
-      botChair.style.top = (pos.y + 80) + 'px';
-
-      table.appendChild(botChair);
-      table.appendChild(botDiv);
-  }
-}
-
+      // bots
+      const botCount = Math.max(0, players.length - 1);
+      const botAnglesUsed = botAngles.slice(0, botCount);
+      for(let i=1;i<players.length;i++){
+        const posi = pos(botAnglesUsed[i-1]);
+        const bDiv = document.createElement('div');
+        bDiv.className = 'player-area';
+        bDiv.style.left = posi.x + 'px';
+        bDiv.style.top = posi.y + 'px';
+        bDiv.innerHTML = `<h3>${players[i].name}</h3><div class='cards'>${players[i].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[i].hand)}</p>`;
+        const bChair = document.createElement('div');
+        bChair.className = 'chair';
+        bChair.style.left = (posi.x + kaartWidth/2) + 'px';
+        bChair.style.top = (posi.y + kaartHeight) + 'px';
+        table.appendChild(bChair);
+        table.appendChild(bDiv);
+      }
+    }
 
     function renderGame(){ placePlayers(); }
 
     function nextPlayer(){
       currentPlayerIndex++;
-      if(currentPlayerIndex>=players.length){ dealerTurn(); } else if(players[currentPlayerIndex].bot){ botTurn(players[currentPlayerIndex]); }
+      if(currentPlayerIndex >= players.length){
+        dealerTurn();
+      } else if(players[currentPlayerIndex].bot){
+        botTurn(players[currentPlayerIndex]);
+      }
       renderGame();
     }
 
-    function botTurn(bot){ let hv = handValue(bot.hand); while(hv<16){ bot.hand.push(drawCard()); hv=handValue(bot.hand); } nextPlayer(); }
+    function botTurn(bot){
+      let hv = handValue(bot.hand);
+      while(hv < 16){
+        bot.hand.push(drawCard());
+        hv = handValue(bot.hand);
+      }
+      nextPlayer();
+    }
 
-    function dealerTurn(){ let hv = handValue(dealer.hand); while(hv<17){ dealer.hand.push(drawCard()); hv=handValue(dealer.hand); } checkWinners(); }
+    function dealerTurn(){
+      let hv = handValue(dealer.hand);
+      while(hv < 17){
+        dealer.hand.push(drawCard());
+        hv = handValue(dealer.hand);
+      }
+      checkWinners();
+    }
 
     function checkWinners(){
       const dealerScore = handValue(dealer.hand);
       let resultMsg = `Dealer heeft ${dealerScore}.\n`;
-      players.forEach(p=>{
+      // iterate players and update results and credits & stats for real player
+      for(let i=0;i<players.length;i++){
+        const p = players[i];
         const ps = handValue(p.hand);
-        if(ps>21) resultMsg+=`${p.name} verliest (bust).\n`;
-        else if(dealerScore>21 || ps>dealerScore) resultMsg+=`${p.name} wint!\n`;
-        else if(ps===dealerScore) resultMsg+=`${p.name} gelijkspel.\n`;
-        else resultMsg+=`${p.name} verliest.\n`;
-      });
+        let outcome = 'lose';
+        if(ps > 21){
+          resultMsg += `${p.name} verliest (bust).\n`;
+          outcome = 'lose';
+        } else if(dealerScore > 21 || ps > dealerScore){
+          resultMsg += `${p.name} wint!\n`;
+          outcome = 'win';
+        } else if(ps === dealerScore){
+          resultMsg += `${p.name} gelijkspel.\n`;
+          outcome = 'push';
+        } else {
+          resultMsg += `${p.name} verliest.\n`;
+          outcome = 'lose';
+        }
+
+        // update credits & stats for the human player only (players[0])
+        if(i === 0 && currentUser){
+          // define award: win +100, push 0, lose -100
+          let delta = 0;
+          if(outcome === 'win') delta = 100;
+          else if(outcome === 'lose') delta = -100;
+          else delta = 0;
+
+          currentUser.credits += delta;
+          // update user stats
+          currentUser.gamesPlayed = (currentUser.gamesPlayed || 0) + 1;
+          if(outcome === 'win'){ currentUser.wins = (currentUser.wins||0)+1; currentUser.totalEarned = (currentUser.totalEarned||0) + Math.max(0, delta); }
+          else if(outcome === 'lose'){ currentUser.losses = (currentUser.losses||0)+1; currentUser.totalEarned = (currentUser.totalEarned||0) + Math.max(0, delta); }
+          // push to users store
+          users[currentUser.key] = currentUser;
+          saveUsers();
+          renderDashboard();
+        }
+      }
+
       alert(resultMsg);
-      nextRoundBtn.style.display='inline';
-      hitBtn.style.display='none';
-      standBtn.style.display='none';
+      nextRoundBtn.style.display = 'inline';
+      hitBtn.style.display = 'none';
+      standBtn.style.display = 'none';
+
+      // update global leaderboard storage (we use users object directly)
+      // no extra call needed because we saved users above when player changed
     }
 
     function startRound(){
       createDeck();
-      dealer.hand=[drawCard(),drawCard()];
-      players.forEach(p=>{ p.hand=[drawCard(),drawCard()]; });
-      currentPlayerIndex=0;
+      dealer.hand = [drawCard(), drawCard()];
+      players.forEach(p => p.hand = [drawCard(), drawCard()]);
+      currentPlayerIndex = 0;
       renderGame();
-      if(players[0].bot) botTurn(players[0]);
-      hitBtn.style.display='inline';
-      standBtn.style.display='inline';
+      // if first player is bot, let it play
+      if(players[0] && players[0].bot) botTurn(players[0]);
+      hitBtn.style.display = 'inline';
+      standBtn.style.display = 'inline';
     }
 
-    startGameBtn.onclick = ()=>{
-      const botCount=parseInt(botSelect.value);
-      players=[{name:'Jij', bot:false, hand:[]}];
-      for(let i=1;i<=botCount;i++){ players.push({name:`Bot ${i}`, bot:true, hand:[]}); }
+    startGameBtn.onclick = () => {
+      const botCount = parseInt(botSelect.value);
+      // players[0] is the human player, set to currentUser's display name
+      const humanName = currentUser ? currentUser.name : 'Jij';
+      players = [{ name: humanName, bot: false, hand: [] }];
+      for(let i=1;i<=botCount;i++){
+        players.push({ name: `Bot ${i}`, bot: true, hand: [] });
+      }
       startRound();
     };
 
-    hitBtn.onclick = ()=>{ const p=players[currentPlayerIndex]; p.hand.push(drawCard()); if(handValue(p.hand)>21){ nextPlayer(); } renderGame(); };
-    standBtn.onclick = ()=>{ nextPlayer(); };
-    nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
+    hitBtn.onclick = () => {
+      const p = players[currentPlayerIndex];
+      p.hand.push(drawCard());
+      if(handValue(p.hand) > 21) { nextPlayer(); }
+      renderGame();
+    };
 
-    // Toon login scherm bij laden
-    loginSection.style.display='flex';
-    /* ===============================================
-   POPUP LEADERBOARD (TOP 10 + EIGEN POSITIE)
-   =============================================== */
+    standBtn.onclick = () => { nextPlayer(); };
+    nextRoundBtn.onclick = () => { nextRoundBtn.style.display='none'; startRound(); };
 
-let lbIndex = 0; 
-const lbTypes = ["earnings", "winrate"];
+    // ====================
+    // Leaderboard popup logic
+    // ====================
+    let lbIndex = 0;
+    const lbTypes = ['earnings','winrate'];
 
-document.getElementById("lb-tab").onclick = () => {
-    lbIndex = 0; 
-    openLeaderboard();
-};
-
-document.getElementById("lb-close").onclick = () => {
-    document.getElementById("lb-popup").style.display = "none";
-};
-
-document.getElementById("lb-left").onclick = () => {
-    lbIndex = (lbIndex - 1 + lbTypes.length) % lbTypes.length;
-    openLeaderboard();
-};
-
-document.getElementById("lb-right").onclick = () => {
-    lbIndex = (lbIndex + 1) % lbTypes.length;
-    openLeaderboard();
-};
-
-function openLeaderboard(){
-    const popup = document.getElementById("lb-popup");
-    popup.style.display = "block";
-
-    const type = lbTypes[lbIndex];
-    const title = document.getElementById("lb-title");
-    const content = document.getElementById("lb-content");
-
-    const stats = loadStats();
-    const entries = Object.entries(stats);
-
-    // Earnings sortering
-    if(type === "earnings"){
-        title.innerText = "All-Time Earnings";
-        entries.sort((a,b)=>b[1].earnings - a[1].earnings);
+    function loadUsersArray(){
+      // convert users map into array of objects for leaderboard sorting
+      return Object.entries(users).map(([k,u]) => ({ key: k, name: u.name, totalEarned: u.totalEarned||0, wins: u.wins||0, losses: u.losses||0, games: u.gamesPlayed||0 }));
     }
-    // Winrate sortering
-    else {
-        title.innerText = "Win Percentage";
-        entries.sort((a,b)=>{
-            const wa = a[1].wins / Math.max(1,(a[1].wins+a[1].losses));
-            const wb = b[1].wins / Math.max(1,(b[1].wins+b[1].losses));
-            return wb - wa;
+
+    function openLeaderboard(){
+      lbPopup.style.display = 'block';
+      const type = lbTypes[lbIndex];
+      lbTitle.textContent = type === 'earnings' ? 'All-Time Earnings' : 'Win Percentage';
+      const arr = loadUsersArray();
+
+      if(type === 'earnings'){
+        arr.sort((a,b)=>b.totalEarned - a.totalEarned);
+      } else {
+        arr.sort((a,b)=>{
+          const ra = a.games? (a.wins / a.games) : 0;
+          const rb = b.games? (b.wins / b.games) : 0;
+          return rb - ra;
         });
+      }
+
+      // Build HTML: top 10 and then own rank if outside
+      let html = '';
+      const top = arr.slice(0,10);
+      top.forEach((u,i)=>{
+        const isYou = currentUser && (u.key === currentUser.key);
+        html += `<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%') }</div>`;
+      });
+
+      // find own rank
+      let yourRank = -1;
+      if(currentUser){
+        yourRank = arr.findIndex(x => x.key === currentUser.key);
+      }
+      if(yourRank > 9){
+        const u = arr[yourRank];
+        html += `<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`;
+      } else if(yourRank === -1 && currentUser){
+        html += `<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`;
+      }
+
+      lbContent.innerHTML = html;
     }
 
-    const username = currentUser;
-    let rank = entries.findIndex(([u]) => u === username) + 1;
+    lbTab.onclick = ()=> { lbIndex = 0; openLeaderboard(); };
+    lbClose.onclick = ()=> { lbPopup.style.display = 'none'; };
+    lbLeft.onclick = ()=> { lbIndex = (lbIndex - 1 + lbTypes.length) % lbTypes.length; openLeaderboard(); };
+    lbRight.onclick = ()=> { lbIndex = (lbIndex + 1) % lbTypes.length; openLeaderboard(); };
 
-    let html = "";
+    // Ensure dashboard leaderboard button opens popup as well
+    // openLeaderboardsBtn already wired earlier
 
-    // Top 10 tonen
-    entries.slice(0,10).forEach(([user,data],i)=>{
-        let extra = user === username ? " <strong>(jij)</strong>" : "";
-        html += `<div>#${i+1} — <strong>${user}</strong>${extra}</div>`;
-    });
+    // ====================
+    // Init view
+    // ====================
+    // Show login on load (unless you want auto-login)
+    loginSection.style.display = 'flex';
 
-    // Als speler buiten top 10 valt
-    if(rank > 10){
-        const [u,data] = entries[rank-1];
-        html += `
-            <hr>
-            <div>#${rank} — <strong>${u}</strong> (jij)</div>
-        `;
-    }
-
-    content.innerHTML = html;
-}
-// MUSIC MENU
-const musicMenu = document.getElementById("musicMenu");
-const musicControl = document.getElementById("musicControl");
-const musicVolume = document.getElementById("musicVolume");
-const musicTrackSelect = document.getElementById("musicTrackSelect");
-const closeMusicMenu = document.getElementById("closeMusicMenu");
-const muteBtn = document.getElementById("muteBtn");
-const bgMusic = document.getElementById("bgMusic");
-
-// Open menu
-musicControl.onclick = () => {
-    musicMenu.style.display = musicMenu.style.display === "block" ? "none" : "block";
-};
-
-// Volume slider
-musicVolume.oninput = () => {
-    bgMusic.volume = musicVolume.value;
-};
-
-// Track wisselen
-musicTrackSelect.onchange = () => {
-    const index = parseInt(musicTrackSelect.value);
-    bgMusic.src = bgMusic.children[index].src;
-    bgMusic.play();
-};
-
-// Mute
-muteBtn.onclick = () => {
-    bgMusic.muted = !bgMusic.muted;
-};
-
-// Sluiten
-closeMusicMenu.onclick = () => {
-    musicMenu.style.display = "none";
-};
-
-// Standaard volume
-musicVolume.value = 0.4;
-bgMusic.volume = 0.4;
+    // Optional: if a user was last logged in and you want to auto-login, implement here.
 
   </script>
-  <!-- ============================
-     LEADERBOARD FLOATING TAB
-     ============================ -->
-<div id="lb-tab">🏆 Leaderboard</div>
-
-<!-- ============================
-     LEADERBOARD POPUP
-     ============================ -->
-<div id="lb-popup">
-    <div id="lb-popup-inner">
-        <div id="lb-left" class="lb-arrow">←</div>
-
-        <h2 id="lb-title">All-Time Earnings</h2>
-
-        <div id="lb-content"></div>
-
-        <div id="lb-right" class="lb-arrow">→</div>
-
-        <button id="lb-close">Sluiten</button>
-    </div>
-</div>
-<!-- MUSIC MENU -->
-<div id="musicMenu">
-  <div id="musicMenuInner">
-      <h3>Muziekinstellingen</h3>
-
-      <label>Volume:</label><br>
-      <input type="range" id="musicVolume" min="0" max="1" step="0.01">
-
-      <br><br>
-
-      <label>Muziek selecteren:</label>
-      <select id="musicTrackSelect">
-          <option value="0">Funky Upbeat</option>
-          <option value="1">Electronic Chill</option>
-          <option value="2">Lounge Vibes</option>
-      </select>
-
-      <br><br>
-
-      <button id="muteBtn">Mute / Unmute</button>
-      <br><br>
-
-      <button id="closeMusicMenu">Sluiten</button>
-  </div>
-</div>
 </body>
 </html>
