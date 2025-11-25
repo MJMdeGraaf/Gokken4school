@@ -85,7 +85,26 @@
     button { padding: 10px 18px; margin: 10px; border-radius: 8px; border:none; cursor:pointer; }
 
     /* Muziekknop */
-    #musicControl { position: absolute; top:10px; right:10px; }
+    #musicMenu{
+  position: fixed;
+  right: 20px;
+  bottom: 70px;
+  width: 300px;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 15px;
+  border-radius: 12px;
+  display: none;
+  z-index: 99999;
+}
+
+#musicMenuInner{
+  text-align: center;
+}
+
+#musicMenu input[type=range]{
+  width: 80%;
+}
 
     /* Blackjack sectie */
     #blackjackSection { background: #2f1e0f; height:100vh; color:white; }
@@ -449,6 +468,46 @@ function openLeaderboard(){
 
     content.innerHTML = html;
 }
+// MUSIC MENU
+const musicMenu = document.getElementById("musicMenu");
+const musicControl = document.getElementById("musicControl");
+const musicVolume = document.getElementById("musicVolume");
+const musicTrackSelect = document.getElementById("musicTrackSelect");
+const closeMusicMenu = document.getElementById("closeMusicMenu");
+const muteBtn = document.getElementById("muteBtn");
+const bgMusic = document.getElementById("bgMusic");
+
+// Open menu
+musicControl.onclick = () => {
+    musicMenu.style.display = musicMenu.style.display === "block" ? "none" : "block";
+};
+
+// Volume slider
+musicVolume.oninput = () => {
+    bgMusic.volume = musicVolume.value;
+};
+
+// Track wisselen
+musicTrackSelect.onchange = () => {
+    const index = parseInt(musicTrackSelect.value);
+    bgMusic.src = bgMusic.children[index].src;
+    bgMusic.play();
+};
+
+// Mute
+muteBtn.onclick = () => {
+    bgMusic.muted = !bgMusic.muted;
+};
+
+// Sluiten
+closeMusicMenu.onclick = () => {
+    musicMenu.style.display = "none";
+};
+
+// Standaard volume
+musicVolume.value = 0.4;
+bgMusic.volume = 0.4;
+
   </script>
   <!-- ============================
      LEADERBOARD FLOATING TAB
@@ -470,6 +529,31 @@ function openLeaderboard(){
 
         <button id="lb-close">Sluiten</button>
     </div>
+</div>
+<!-- MUSIC MENU -->
+<div id="musicMenu">
+  <div id="musicMenuInner">
+      <h3>Muziekinstellingen</h3>
+
+      <label>Volume:</label><br>
+      <input type="range" id="musicVolume" min="0" max="1" step="0.01">
+
+      <br><br>
+
+      <label>Muziek selecteren:</label>
+      <select id="musicTrackSelect">
+          <option value="0">Funky Upbeat</option>
+          <option value="1">Electronic Chill</option>
+          <option value="2">Lounge Vibes</option>
+      </select>
+
+      <br><br>
+
+      <button id="muteBtn">Mute / Unmute</button>
+      <br><br>
+
+      <button id="closeMusicMenu">Sluiten</button>
+  </div>
 </div>
 </body>
 </html>
