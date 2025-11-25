@@ -5,9 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Goksite PWS — Multiplayer Blackjack</title>
   <style>
-    /* ============================
-       LEADERBOARD TAB STYLE
-       ============================ */
+    /* ============================ LEADERBOARD TAB STYLE ============================ */
     #lb-tab{
         position: fixed;
         right: 20px;
@@ -21,9 +19,7 @@
         z-index: 9999;
     }
 
-    /* ============================
-       POPUP WINDOW
-       ============================ */
+    /* ============================ POPUP WINDOW ============================ */
     #lb-popup{
         position: fixed;
         bottom: 0;
@@ -43,9 +39,7 @@
         position: relative;
     }
 
-    /* ============================
-       ARROWS
-       ============================ */
+    /* ============================ ARROWS ============================ */
     .lb-arrow{
         position: absolute;
         top: 12px;
@@ -56,9 +50,7 @@
     #lb-left{ left: 10px; }
     #lb-right{ right: 10px; }
 
-    /* ============================
-       CONTENT AREA
-       ============================ */
+    /* ============================ CONTENT AREA ============================ */
     #lb-content{
         margin-top: 52px;
         height: 330px;
@@ -76,9 +68,7 @@
         cursor: pointer;
     }
 
-    /* ============================
-       Music menu style
-       ============================ */
+    /* ============================ Music menu style ============================ */
     #musicMenu{
       position: fixed;
       right: 20px;
@@ -100,11 +90,8 @@
       width: 80%;
     }
 
-    /* ============================
-       Rest of page
-       ============================ */
+    /* ============================ Rest of page ============================ */
     body { margin:0; font-family: system-ui, sans-serif; }
-    /* Dashboard Hoofdmenu */
     #login, #dashboard, #blackjackSection { display: none; padding: 20px; text-align:center; }
     #login { background: #f0f0f0; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
     #dashboard { background: linear-gradient(to bottom, #ffffff, #e0e0e0); height:100vh; }
@@ -138,9 +125,6 @@
     <input type="password" id="passwordInput" placeholder="Wachtwoord">
     <button id="loginBtn">Login</button>
     <button id="createAccountBtn">Account aanmaken</button>
-  </section>
-
-
   </section>
 
   <!-- Dashboard -->
@@ -177,7 +161,9 @@
         <option value="5">5 bots</option>
         <option value="6">6 bots</option>
         <option value="7">7 bots</option>
-      </select>
+      </select><br><br>
+      <label>Inzet (credits):</label>
+      <input type="number" id="betAmount" min="1" value="100">
       <button id="startGame">Start spel</button>
       <button id="backToMenu">Terug naar menu</button>
     </div>
@@ -211,45 +197,30 @@
   <div id="musicMenu">
     <div id="musicMenuInner">
         <h3>Muziekinstellingen</h3>
-
         <label>Volume:</label><br>
         <input type="range" id="musicVolume" min="0" max="1" step="0.01">
-
         <br><br>
-
         <label>Muziek selecteren:</label>
         <select id="musicTrackSelect">
             <option value="0">Funky Upbeat</option>
             <option value="1">Electronic Chill</option>
             <option value="2">Lounge Vibes</option>
         </select>
-
         <br><br>
-
-        <button id="muteBtn">Mute / Unmute</button>
+        <button id="muteBtn">🎵 Mute</button>
         <br><br>
-
         <button id="closeMusicMenu">Sluiten</button>
     </div>
   </div>
 
   <script>
-    // ====================
-    // Data & helpers
-    // ====================
-    // users is keyed by lowercase username
+    // ==================== Data & helpers ====================
     let users = JSON.parse(localStorage.getItem('users') || '{}');
     let currentUser = null; // will hold the user object (from users[key])
     function saveUsers(){ localStorage.setItem('users', JSON.stringify(users)); }
+    function keyForName(name){ return name.trim().toLowerCase(); }
 
-    // Helper to get lowercase key for a display name
-    function keyForName(name){
-      return name.trim().toLowerCase();
-    }
-
-    // ====================
-    // UI refs
-    // ====================
+    // ==================== UI refs ====================
     const loginSection = document.getElementById('login');
     const dashboard = document.getElementById('dashboard');
     const blackjackSection = document.getElementById('blackjackSection');
@@ -257,6 +228,7 @@
     const usernameInput = document.getElementById('usernameInput');
     const passwordInput = document.getElementById('passwordInput');
     const loginBtn = document.getElementById('loginBtn');
+    const createAccountBtn = document.getElementById('createAccountBtn');
     const displayName = document.getElementById('displayName');
     const creditsEl = document.getElementById('credits');
     const claimDailyBtn = document.getElementById('claimDailyBtn');
@@ -275,10 +247,12 @@
     // Blackjack refs
     const startGameBtn = document.getElementById('startGame');
     const botSelect = document.getElementById('botCount');
+    const betAmountInput = document.getElementById('betAmount');
     const table = document.getElementById('table');
     const hitBtn = document.getElementById('hitBtn');
     const standBtn = document.getElementById('standBtn');
     const nextRoundBtn = document.getElementById('nextRoundBtn');
+    const backToMenuBtn = document.getElementById('backToMenu');
 
     // Leaderboard refs
     const lbTab = document.getElementById('lb-tab');
@@ -289,67 +263,54 @@
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
 
-   const passwordInput = document.getElementById('passwordInput');
-const createAccountBtn = document.getElementById('createAccountBtn');
+    function normalizeUsername(name){ return name.trim().toLowerCase(); }
 
-function normalizeUsername(name) {
-    return name.trim().toLowerCase(); // hoofdletters negeren
-}
+    // ==================== Login ====================
+    loginBtn.onclick = ()=>{
+        const name = normalizeUsername(usernameInput.value);
+        const password = passwordInput.value;
+        if(!name || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
 
-// LOGIN
-loginBtn.onclick = ()=>{
-    const name = normalizeUsername(usernameInput.value);
-    const password = passwordInput.value;
-    if(!name || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
+        if(!users[name]) return alert('Account bestaat niet.');
+        if(users[name].password !== password) return alert('Wachtwoord verkeerd.');
 
-    if(!users[name]) return alert('Account bestaat niet.');
-    if(users[name].password !== password) return alert('Wachtwoord verkeerd.');
-
-    currentUser = users[name];
-    localStorage.setItem('users', JSON.stringify(users));
-    loginSection.style.display='none';
-    dashboard.style.display='block';
-    renderDashboard();
-    bgMusic.play().catch(()=>{});
-};
-
-// CREATE ACCOUNT
-createAccountBtn.onclick = ()=>{
-    const name = normalizeUsername(usernameInput.value);
-    const password = passwordInput.value;
-    if(!name || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
-
-    if(users[name]) return alert('Account bestaat al.');
-
-    users[name] = {
-        name: usernameInput.value.trim(), // originele display
-        password: password,
-        credits: 500,
-        lastDaily: null,
-        wins: 0,
-        losses: 0,
-        totalEarned: 0,
-        gamesPlayed: 0
+        currentUser = users[name];
+        if(!currentUser.key) currentUser.key = name;
+        saveUsers();
+        loginSection.style.display='none';
+        dashboard.style.display='block';
+        renderDashboard();
+        bgMusic.play().catch(()=>{});
     };
 
-    currentUser = users[name];
-    localStorage.setItem('users', JSON.stringify(users));
-    loginSection.style.display='none';
-    dashboard.style.display='block';
-    renderDashboard();
-    bgMusic.play().catch(()=>{});
-};
-      // try play music
-      bgMusic.play().catch(()=>{});
+    // ==================== Create Account ====================
+    createAccountBtn.onclick = ()=>{
+        const name = normalizeUsername(usernameInput.value);
+        const password = passwordInput.value;
+        if(!name || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
+        if(users[name]) return alert('Account bestaat al.');
+
+        users[name] = {
+            name: usernameInput.value.trim(),
+            password: password,
+            credits: 500,
+            lastDaily: null,
+            wins: 0,
+            losses: 0,
+            totalEarned: 0,
+            gamesPlayed: 0,
+            key: name
+        };
+
+        currentUser = users[name];
+        saveUsers();
+        loginSection.style.display='none';
+        dashboard.style.display='block';
+        renderDashboard();
+        bgMusic.play().catch(()=>{});
     };
 
-    function showDashboard(){
-      loginSection.style.display = 'none';
-      blackjackSection.style.display = 'none';
-      dashboard.style.display = 'block';
-      renderDashboard();
-    }
-
+    // ==================== Dashboard ====================
     function renderDashboard(){
       if(!currentUser) return;
       displayName.textContent = currentUser.name;
@@ -363,7 +324,7 @@ createAccountBtn.onclick = ()=>{
       bgMusic.pause();
     };
 
-    claimDailyBtn.onclick = ()=> {
+    claimDailyBtn.onclick = ()=>{
       if(!currentUser) return;
       const t = new Date().toDateString();
       if(currentUser.lastDaily !== t){
@@ -378,132 +339,103 @@ createAccountBtn.onclick = ()=>{
       }
     };
 
-    // Leaderboards button in dashboard opens popup with earnings by default
-    openLeaderboardsBtn.onclick = ()=> {
-      lbIndex = 0;
-      openLeaderboard();
+    playBlackjackBtn.onclick = ()=>{
+      dashboard.style.display='none';
+      blackjackSection.style.display='block';
     };
 
-    // ====================
-    // Music menu
-    // ====================
-    // default volume
+    backToMenuBtn.onclick = ()=>{
+      blackjackSection.style.display='none';
+      dashboard.style.display='block';
+    };
+
+    // ==================== Music menu ====================
     musicVolume.value = 0.4;
     bgMusic.volume = 0.4;
 
-    musicControl.onclick = () => {
-      musicMenu.style.display = musicMenu.style.display === 'block' ? 'none' : 'block';
-      // populate current track selection if needed
-    };
-
-    musicVolume.oninput = () => {
-      bgMusic.volume = parseFloat(musicVolume.value);
-    };
-
-    musicTrackSelect.onchange = () => {
+    musicControl.onclick = () => { musicMenu.style.display = (musicMenu.style.display==='block'?'none':'block'); };
+    musicVolume.oninput = ()=>{ bgMusic.volume = parseFloat(musicVolume.value); };
+    musicTrackSelect.onchange = ()=>{
       const index = parseInt(musicTrackSelect.value);
-      // choose source element if present
       const sources = bgMusic.querySelectorAll('source');
-      if(sources[index]) {
+      if(sources[index]){
+        bgMusic.pause();
         bgMusic.src = sources[index].src;
+        bgMusic.load();
         bgMusic.play().catch(()=>{});
       }
     };
+    muteBtn.onclick = ()=>{ bgMusic.muted = !bgMusic.muted; muteBtn.textContent = bgMusic.muted ? '🔇 Unmute' : '🎵 Mute'; };
+    closeMusicMenu.onclick = ()=>{ musicMenu.style.display='none'; };
 
-    muteBtn.onclick = () => {
-      bgMusic.muted = !bgMusic.muted;
-      muteBtn.textContent = bgMusic.muted ? 'Unmute' : 'Mute / Unmute';
-    };
-
-    closeMusicMenu.onclick = ()=> { musicMenu.style.display = 'none'; };
-
-    // ====================
-    // Blackjack logic
-    // ====================
+    // ==================== Blackjack logic ====================
     const suits=['♠','♥','♦','♣'];
     const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
     let deck=[];
 
     function createDeck(){
-      deck = [];
+      deck=[];
       for(let s of suits) for(let v of values) deck.push({suit:s, value:v});
-      // shuffle
       for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
     }
     function cardValue(card){ if(['J','Q','K'].includes(card.value)) return 10; if(card.value==='A') return 11; return parseInt(card.value); }
-    function handValue(hand){ let total=0, aces=0; for(let c of hand){ total += cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
+    function handValue(hand){ let total=0, aces=0; for(let c of hand){ total+=cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
     function drawCard(){ return deck.pop(); }
 
-    let players=[];
+    let players=[]; // includes human and bots
     let dealer={hand:[]};
     let currentPlayerIndex=0;
+    let currentBet = 100;
 
-    // Positioning & rendering (uses same circle for dealer, player and bots)
     function placePlayers(){
       table.innerHTML = '';
-      const centerX = table.clientWidth / 2;
-      const centerY = table.clientHeight / 2;
+      const centerX = table.clientWidth/2;
+      const centerY = table.clientHeight/2;
       const kaartOffset = 60;
       const kaartWidth = 80;
       const kaartHeight = 120;
-      const radius = Math.min(table.clientWidth, table.clientHeight) / 2 - kaartOffset;
+      const radius = Math.min(table.clientWidth, table.clientHeight)/2 - kaartOffset;
 
-      // angles: dealer at 0, player at pi, bots on pi/4 increments
       const dealerAngle = 0;
       const playerAngle = Math.PI;
-      const botAngles = [Math.PI/4, 2*Math.PI/4, 3*Math.PI/4, 5*Math.PI/4, 6*Math.PI/4, 7*Math.PI/4];
+      const botAngles = [Math.PI/4,2*Math.PI/4,3*Math.PI/4,5*Math.PI/4,6*Math.PI/4,7*Math.PI/4];
 
-      function pos(angle){
-         return { x: centerX + radius * Math.cos(angle) - kaartWidth/2,
-                  y: centerY + radius * Math.sin(angle) - kaartHeight/2 };
-      }
+      function pos(angle){ return { x:centerX + radius*Math.cos(angle) - kaartWidth/2, y:centerY + radius*Math.sin(angle) - kaartHeight/2 }; }
 
       // dealer
       const dPos = pos(dealerAngle);
       const dealerDiv = document.createElement('div');
-      dealerDiv.className = 'player-area';
-      dealerDiv.style.left = dPos.x + 'px';
-      dealerDiv.style.top = dPos.y + 'px';
-      dealerDiv.innerHTML = `<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
-      const dealerChair = document.createElement('div');
-      dealerChair.className = 'chair';
-      dealerChair.style.left = (dPos.x + kaartWidth/2) + 'px';
-      dealerChair.style.top = (dPos.y + kaartHeight) + 'px';
-      table.appendChild(dealerChair);
-      table.appendChild(dealerDiv);
+      dealerDiv.className='player-area';
+      dealerDiv.style.left=dPos.x+'px';
+      dealerDiv.style.top=dPos.y+'px';
+      dealerDiv.innerHTML=`<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+      const dealerChair=document.createElement('div'); dealerChair.className='chair'; dealerChair.style.left=(dPos.x+kaartWidth/2)+'px'; dealerChair.style.top=(dPos.y+kaartHeight)+'px';
+      table.appendChild(dealerChair); table.appendChild(dealerDiv);
 
-      // player (always players[0])
+      // human
       if(players.length>0){
-        const pPos = pos(playerAngle);
-        const pDiv = document.createElement('div');
-        pDiv.className = 'player-area';
-        pDiv.style.left = pPos.x + 'px';
-        pDiv.style.top = pPos.y + 'px';
-        pDiv.innerHTML = `<h3>${players[0].name} ${currentPlayerIndex===0?'←':''}</h3><div class='cards'>${players[0].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[0].hand)}</p>`;
-        const pChair = document.createElement('div');
-        pChair.className = 'chair';
-        pChair.style.left = (pPos.x + kaartWidth/2) + 'px';
-        pChair.style.top = (pPos.y + kaartHeight) + 'px';
-        table.appendChild(pChair);
-        table.appendChild(pDiv);
+        const pPos=pos(playerAngle);
+        const pDiv=document.createElement('div');
+        pDiv.className='player-area';
+        pDiv.style.left=pPos.x+'px';
+        pDiv.style.top=pPos.y+'px';
+        pDiv.innerHTML=`<h3>${players[0].name} ${currentPlayerIndex===0?'←':''}</h3><div class='cards'>${players[0].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[0].hand)}</p>`;
+        const pChair=document.createElement('div'); pChair.className='chair'; pChair.style.left=(pPos.x+kaartWidth/2)+'px'; pChair.style.top=(pPos.y+kaartHeight)+'px';
+        table.appendChild(pChair); table.appendChild(pDiv);
       }
 
       // bots
-      const botCount = Math.max(0, players.length - 1);
-      const botAnglesUsed = botAngles.slice(0, botCount);
+      const botCount = Math.max(0,players.length-1);
+      const botAnglesUsed=botAngles.slice(0,botCount);
       for(let i=1;i<players.length;i++){
-        const posi = pos(botAnglesUsed[i-1]);
-        const bDiv = document.createElement('div');
-        bDiv.className = 'player-area';
-        bDiv.style.left = posi.x + 'px';
-        bDiv.style.top = posi.y + 'px';
-        bDiv.innerHTML = `<h3>${players[i].name}</h3><div class='cards'>${players[i].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[i].hand)}</p>`;
-        const bChair = document.createElement('div');
-        bChair.className = 'chair';
-        bChair.style.left = (posi.x + kaartWidth/2) + 'px';
-        bChair.style.top = (posi.y + kaartHeight) + 'px';
-        table.appendChild(bChair);
-        table.appendChild(bDiv);
+        const posi=pos(botAnglesUsed[i-1]);
+        const bDiv=document.createElement('div');
+        bDiv.className='player-area';
+        bDiv.style.left=posi.x+'px';
+        bDiv.style.top=posi.y+'px';
+        bDiv.innerHTML=`<h3>${players[i].name}</h3><div class='cards'>${players[i].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[i].hand)}</p>`;
+        const bChair=document.createElement('div'); bChair.className='chair'; bChair.style.left=(posi.x+kaartWidth/2)+'px'; bChair.style.top=(posi.y+kaartHeight)+'px';
+        table.appendChild(bChair); table.appendChild(bDiv);
       }
     }
 
@@ -521,172 +453,123 @@ createAccountBtn.onclick = ()=>{
 
     function botTurn(bot){
       let hv = handValue(bot.hand);
-      while(hv < 16){
+      while(hv<16){
         bot.hand.push(drawCard());
-        hv = handValue(bot.hand);
+        hv=handValue(bot.hand);
       }
       nextPlayer();
     }
 
     function dealerTurn(){
       let hv = handValue(dealer.hand);
-      while(hv < 17){
+      while(hv<17){
         dealer.hand.push(drawCard());
-        hv = handValue(dealer.hand);
+        hv=handValue(dealer.hand);
       }
       checkWinners();
     }
 
     function checkWinners(){
-      const dealerScore = handValue(dealer.hand);
-      let resultMsg = `Dealer heeft ${dealerScore}.\n`;
-      // iterate players and update results and credits & stats for real player
+      const dealerScore=handValue(dealer.hand);
+      let resultMsg=`Dealer heeft ${dealerScore}.\n`;
+
       for(let i=0;i<players.length;i++){
-        const p = players[i];
-        const ps = handValue(p.hand);
-        let outcome = 'lose';
-        if(ps > 21){
-          resultMsg += `${p.name} verliest (bust).\n`;
-          outcome = 'lose';
-        } else if(dealerScore > 21 || ps > dealerScore){
-          resultMsg += `${p.name} wint!\n`;
-          outcome = 'win';
-        } else if(ps === dealerScore){
-          resultMsg += `${p.name} gelijkspel.\n`;
-          outcome = 'push';
-        } else {
-          resultMsg += `${p.name} verliest.\n`;
-          outcome = 'lose';
+        const p=players[i];
+        const ps=handValue(p.hand);
+        let outcome='lose';
+        if(ps>21){
+          resultMsg+=`${p.name} verliest (bust).\n`;
+          outcome='lose';
+        } else if(dealerScore>21 || ps>dealerScore){
+          resultMsg+=`${p.name} wint!\n`;
+          outcome='win';
+        } else if(ps===dealerScore){
+          resultMsg+=`${p.name} gelijkspel.\n`;
+          outcome='push';
+        } else{
+          resultMsg+=`${p.name} verliest.\n`;
+          outcome='lose';
         }
 
-        // update credits & stats for the human player only (players[0])
-        if(i === 0 && currentUser){
-          // define award: win +100, push 0, lose -100
+        if(i===0 && currentUser){
           let delta = 0;
-          if(outcome === 'win') delta = 100;
-          else if(outcome === 'lose') delta = -100;
+          if(outcome==='win') delta = Math.floor(currentBet*1.5);
+          else if(outcome==='push') delta = Math.floor(currentBet*1.0);
           else delta = 0;
-
           currentUser.credits += delta;
-          // update user stats
-          currentUser.gamesPlayed = (currentUser.gamesPlayed || 0) + 1;
-          if(outcome === 'win'){ currentUser.wins = (currentUser.wins||0)+1; currentUser.totalEarned = (currentUser.totalEarned||0) + Math.max(0, delta); }
-          else if(outcome === 'lose'){ currentUser.losses = (currentUser.losses||0)+1; currentUser.totalEarned = (currentUser.totalEarned||0) + Math.max(0, delta); }
-          // push to users store
-          users[currentUser.key] = currentUser;
+          currentUser.gamesPlayed = (currentUser.gamesPlayed||0)+1;
+          if(outcome==='win'){ currentUser.wins=(currentUser.wins||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0)+delta; }
+          else if(outcome==='lose'){ currentUser.losses=(currentUser.losses||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0); }
+          else if(outcome==='push'){ /* totalEarned unchanged */ }
+          users[currentUser.key]=currentUser;
           saveUsers();
           renderDashboard();
         }
       }
 
       alert(resultMsg);
-      nextRoundBtn.style.display = 'inline';
-      hitBtn.style.display = 'none';
-      standBtn.style.display = 'none';
-
-      // update global leaderboard storage (we use users object directly)
-      // no extra call needed because we saved users above when player changed
+      nextRoundBtn.style.display='inline';
+      hitBtn.style.display='none';
+      standBtn.style.display='none';
     }
 
     function startRound(){
+      currentBet = Math.min(currentUser.credits, parseInt(betAmountInput.value)||100);
       createDeck();
-      dealer.hand = [drawCard(), drawCard()];
-      players.forEach(p => p.hand = [drawCard(), drawCard()]);
-      currentPlayerIndex = 0;
+      dealer.hand=[drawCard(), drawCard()];
+      players.forEach(p=>p.hand=[drawCard(), drawCard()]);
+      currentPlayerIndex=0;
       renderGame();
-      // if first player is bot, let it play
-      if(players[0] && players[0].bot) botTurn(players[0]);
-      hitBtn.style.display = 'inline';
-      standBtn.style.display = 'inline';
+      if(players[0].bot) botTurn(players[0]);
+      hitBtn.style.display='inline';
+      standBtn.style.display='inline';
     }
 
-    startGameBtn.onclick = () => {
-      const botCount = parseInt(botSelect.value);
-      // players[0] is the human player, set to currentUser's display name
-      const humanName = currentUser ? currentUser.name : 'Jij';
-      players = [{ name: humanName, bot: false, hand: [] }];
-      for(let i=1;i<=botCount;i++){
-        players.push({ name: `Bot ${i}`, bot: true, hand: [] });
-      }
+    startGameBtn.onclick = ()=>{
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      const botCount=parseInt(botSelect.value);
+      players=[{ name:currentUser.name, bot:false, hand:[] }];
+      for(let i=1;i<=botCount;i++) players.push({ name:`Bot ${i}`, bot:true, hand:[] });
       startRound();
     };
 
-    hitBtn.onclick = () => {
+    hitBtn.onclick = ()=>{
       const p = players[currentPlayerIndex];
       p.hand.push(drawCard());
-      if(handValue(p.hand) > 21) { nextPlayer(); }
+      if(handValue(p.hand)>21) nextPlayer();
       renderGame();
     };
 
-    standBtn.onclick = () => { nextPlayer(); };
-    nextRoundBtn.onclick = () => { nextRoundBtn.style.display='none'; startRound(); };
+    standBtn.onclick = ()=>{ nextPlayer(); };
+    nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
 
-    // ====================
-    // Leaderboard popup logic
-    // ====================
+    // ==================== Leaderboard popup ====================
     let lbIndex = 0;
     const lbTypes = ['earnings','winrate'];
-
-    function loadUsersArray(){
-      // convert users map into array of objects for leaderboard sorting
-      return Object.entries(users).map(([k,u]) => ({ key: k, name: u.name, totalEarned: u.totalEarned||0, wins: u.wins||0, losses: u.losses||0, games: u.gamesPlayed||0 }));
-    }
-
+    function loadUsersArray(){ return Object.entries(users).map(([k,u])=>({ key:k, name:u.name, totalEarned:u.totalEarned||0, wins:u.wins||0, losses:u.losses||0, games:u.gamesPlayed||0 })); }
     function openLeaderboard(){
-      lbPopup.style.display = 'block';
+      lbPopup.style.display='block';
       const type = lbTypes[lbIndex];
-      lbTitle.textContent = type === 'earnings' ? 'All-Time Earnings' : 'Win Percentage';
-      const arr = loadUsersArray();
-
-      if(type === 'earnings'){
-        arr.sort((a,b)=>b.totalEarned - a.totalEarned);
-      } else {
-        arr.sort((a,b)=>{
-          const ra = a.games? (a.wins / a.games) : 0;
-          const rb = b.games? (b.wins / b.games) : 0;
-          return rb - ra;
-        });
-      }
-
-      // Build HTML: top 10 and then own rank if outside
-      let html = '';
-      const top = arr.slice(0,10);
-      top.forEach((u,i)=>{
-        const isYou = currentUser && (u.key === currentUser.key);
-        html += `<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%') }</div>`;
-      });
-
-      // find own rank
-      let yourRank = -1;
-      if(currentUser){
-        yourRank = arr.findIndex(x => x.key === currentUser.key);
-      }
-      if(yourRank > 9){
-        const u = arr[yourRank];
-        html += `<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`;
-      } else if(yourRank === -1 && currentUser){
-        html += `<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`;
-      }
-
-      lbContent.innerHTML = html;
+      lbTitle.textContent = type==='earnings'?'All-Time Earnings':'Win Percentage';
+      const arr=loadUsersArray();
+      if(type==='earnings'){ arr.sort((a,b)=>b.totalEarned-a.totalEarned); }
+      else { arr.sort((a,b)=>{ const ra=a.games?(a.wins/a.games):0; const rb=b.games?(b.wins/b.games):0; return rb-ra; }); }
+      let html='';
+      const top=arr.slice(0,10);
+      top.forEach((u,i)=>{ const isYou=currentUser && (u.key===currentUser.key); html+=`<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`; });
+      let yourRank=-1; if(currentUser) yourRank=arr.findIndex(x=>x.key===currentUser.key);
+      if(yourRank>9){ const u=arr[yourRank]; html+=`<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`; }
+      else if(yourRank===-1 && currentUser){ html+=`<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`; }
+      lbContent.innerHTML=html;
     }
 
-    lbTab.onclick = ()=> { lbIndex = 0; openLeaderboard(); };
-    lbClose.onclick = ()=> { lbPopup.style.display = 'none'; };
-    lbLeft.onclick = ()=> { lbIndex = (lbIndex - 1 + lbTypes.length) % lbTypes.length; openLeaderboard(); };
-    lbRight.onclick = ()=> { lbIndex = (lbIndex + 1) % lbTypes.length; openLeaderboard(); };
+    lbTab.onclick = ()=>{ lbIndex=0; openLeaderboard(); };
+    lbClose.onclick = ()=>{ lbPopup.style.display='none'; };
+    lbLeft.onclick = ()=>{ lbIndex=(lbIndex-1+lbTypes.length)%lbTypes.length; openLeaderboard(); };
+    lbRight.onclick = ()=>{ lbIndex=(lbIndex+1)%lbTypes.length; openLeaderboard(); };
 
-    // Ensure dashboard leaderboard button opens popup as well
-    // openLeaderboardsBtn already wired earlier
-
-    // ====================
-    // Init view
-    // ====================
-    // Show login on load (unless you want auto-login)
-    loginSection.style.display = 'flex';
-
-    // Optional: if a user was last logged in and you want to auto-login, implement here.
-
+    // ==================== Init ====================
+    loginSection.style.display='flex';
   </script>
 </body>
 </html>
