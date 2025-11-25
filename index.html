@@ -5,6 +5,77 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Goksite PWS — Multiplayer Blackjack</title>
   <style>
+    /* ============================
+   LEADERBOARD TAB STYLE
+   ============================ */
+#lb-tab{
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    background: gold;
+    padding: 12px 20px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    z-index: 9999;
+}
+
+/* ============================
+   POPUP WINDOW
+   ============================ */
+#lb-popup{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 350px;
+    height: 450px;
+    background: rgba(0,0,0,0.80);
+    border-radius: 20px 0 0 0;
+    display: none;
+    z-index: 99999;
+    color: white;
+}
+
+#lb-popup-inner{
+    padding: 20px;
+    height: 100%;
+    position: relative;
+}
+
+/* ============================
+   ARROWS
+   ============================ */
+.lb-arrow{
+    position: absolute;
+    top: 15px;
+    font-size: 26px;
+    cursor: pointer;
+    user-select: none;
+}
+#lb-left{ left: 10px; }
+#lb-right{ right: 10px; }
+
+/* ============================
+   CONTENT AREA
+   ============================ */
+#lb-content{
+    margin-top: 60px;
+    height: 330px;
+    overflow-y: auto;
+    font-size: 18px;
+}
+
+#lb-close{
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
     body { margin:0; font-family: system-ui, sans-serif; }
     /* Dashboard Hoofdmenu */
     #login, #dashboard, #blackjackSection { display: none; padding: 20px; text-align:center; }
@@ -301,6 +372,101 @@ const radius = Math.min(table.clientWidth, table.clientHeight) / 2 - kaartOffset
 
     // Toon login scherm bij laden
     loginSection.style.display='flex';
+    /* ===============================================
+   POPUP LEADERBOARD (TOP 10 + EIGEN POSITIE)
+   =============================================== */
+
+let lbIndex = 0; 
+const lbTypes = ["earnings", "winrate"];
+
+document.getElementById("lb-tab").onclick = () => {
+    lbIndex = 0; 
+    openLeaderboard();
+};
+
+document.getElementById("lb-close").onclick = () => {
+    document.getElementById("lb-popup").style.display = "none";
+};
+
+document.getElementById("lb-left").onclick = () => {
+    lbIndex = (lbIndex - 1 + lbTypes.length) % lbTypes.length;
+    openLeaderboard();
+};
+
+document.getElementById("lb-right").onclick = () => {
+    lbIndex = (lbIndex + 1) % lbTypes.length;
+    openLeaderboard();
+};
+
+function openLeaderboard(){
+    const popup = document.getElementById("lb-popup");
+    popup.style.display = "block";
+
+    const type = lbTypes[lbIndex];
+    const title = document.getElementById("lb-title");
+    const content = document.getElementById("lb-content");
+
+    const stats = loadStats();
+    const entries = Object.entries(stats);
+
+    // Earnings sortering
+    if(type === "earnings"){
+        title.innerText = "All-Time Earnings";
+        entries.sort((a,b)=>b[1].earnings - a[1].earnings);
+    }
+    // Winrate sortering
+    else {
+        title.innerText = "Win Percentage";
+        entries.sort((a,b)=>{
+            const wa = a[1].wins / Math.max(1,(a[1].wins+a[1].losses));
+            const wb = b[1].wins / Math.max(1,(b[1].wins+b[1].losses));
+            return wb - wa;
+        });
+    }
+
+    const username = currentUser;
+    let rank = entries.findIndex(([u]) => u === username) + 1;
+
+    let html = "";
+
+    // Top 10 tonen
+    entries.slice(0,10).forEach(([user,data],i)=>{
+        let extra = user === username ? " <strong>(jij)</strong>" : "";
+        html += `<div>#${i+1} — <strong>${user}</strong>${extra}</div>`;
+    });
+
+    // Als speler buiten top 10 valt
+    if(rank > 10){
+        const [u,data] = entries[rank-1];
+        html += `
+            <hr>
+            <div>#${rank} — <strong>${u}</strong> (jij)</div>
+        `;
+    }
+
+    content.innerHTML = html;
+}
   </script>
+  <!-- ============================
+     LEADERBOARD FLOATING TAB
+     ============================ -->
+<div id="lb-tab">🏆 Leaderboard</div>
+
+<!-- ============================
+     LEADERBOARD POPUP
+     ============================ -->
+<div id="lb-popup">
+    <div id="lb-popup-inner">
+        <div id="lb-left" class="lb-arrow">←</div>
+
+        <h2 id="lb-title">All-Time Earnings</h2>
+
+        <div id="lb-content"></div>
+
+        <div id="lb-right" class="lb-arrow">→</div>
+
+        <button id="lb-close">Sluiten</button>
+    </div>
+</div>
 </body>
 </html>
