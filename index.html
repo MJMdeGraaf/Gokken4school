@@ -288,40 +288,56 @@
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
 
-    // ====================
-    // Login / accounts (case-insensitive usernames)
-    // ====================
-    loginSection.style.display = 'flex';
+   const passwordInput = document.getElementById('passwordInput');
+const createAccountBtn = document.getElementById('createAccountBtn');
 
-    loginBtn.onclick = () => {
-      const rawName = usernameInput.value.trim();
-      const passwd = passwordInput.value.trim();
-      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+function normalizeUsername(name) {
+    return name.trim().toLowerCase(); // hoofdletters negeren
+}
 
-      const key = keyForName(rawName);
+// LOGIN
+loginBtn.onclick = ()=>{
+    const name = normalizeUsername(usernameInput.value);
+    const password = passwordInput.value;
+    if(!name || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
 
-      if(!users[key]){
-        // create account
-        users[key] = {
-          name: rawName,       // original display
-          password: passwd,
-          credits: 500,
-          lastDaily: null,
-          wins: 0,
-          losses: 0,
-          totalEarned: 0,
-          gamesPlayed: 0,
-          key: key
-        };
-        alert('Account aangemaakt!');
-      } else {
-        // exists: verify password
-        if(users[key].password !== passwd) return alert('Wachtwoord onjuist.');
-      }
+    if(!users[name]) return alert('Account bestaat niet.');
+    if(users[name].password !== password) return alert('Wachtwoord verkeerd.');
 
-      currentUser = users[key];
-      saveUsers();
-      showDashboard();
+    currentUser = users[name];
+    localStorage.setItem('users', JSON.stringify(users));
+    loginSection.style.display='none';
+    dashboard.style.display='block';
+    renderDashboard();
+    bgMusic.play().catch(()=>{});
+};
+
+// CREATE ACCOUNT
+createAccountBtn.onclick = ()=>{
+    const name = normalizeUsername(usernameInput.value);
+    const password = passwordInput.value;
+    if(!name || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
+
+    if(users[name]) return alert('Account bestaat al.');
+
+    users[name] = {
+        name: usernameInput.value.trim(), // originele display
+        password: password,
+        credits: 500,
+        lastDaily: null,
+        wins: 0,
+        losses: 0,
+        totalEarned: 0,
+        gamesPlayed: 0
+    };
+
+    currentUser = users[name];
+    localStorage.setItem('users', JSON.stringify(users));
+    loginSection.style.display='none';
+    dashboard.style.display='block';
+    renderDashboard();
+    bgMusic.play().catch(()=>{});
+};
       // try play music
       bgMusic.play().catch(()=>{});
     };
