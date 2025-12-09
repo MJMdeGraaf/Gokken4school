@@ -638,12 +638,28 @@
       standBtn.style.display='inline';
     }
 
-    startGameBtn.onclick = ()=>{
-      if(!currentUser) return alert('Je moet eerst inloggen!');
-      const botCount=parseInt(botSelect.value);
-      players=[{ name:currentUser.name, bot:false, hand:[] }];
-      for(let i=1;i<=botCount;i++) players.push({ name:`Bot ${i}`, bot:true, hand:[] });
-      startRound();
+ startGameBtn.onclick = ()=>{
+  if(!currentUser) return alert('Je moet eerst inloggen!');
+
+  // bepaal inzet
+  currentBet = Math.min(currentUser.credits, parseInt(betAmountInput.value)||100);
+  if(currentUser.credits < currentBet) return alert('Je hebt niet genoeg credits!');
+
+  // trek inzet direct af
+  currentUser.credits -= currentBet;
+  saveUsers();
+  renderDashboard();
+
+  // maak spelers array: eerste element is menselijke speler
+  players = [{ name:currentUser.name, bot:false, hand:[] }];
+
+  // voeg bots toe gebaseerd op selectie
+  const botCount = parseInt(botSelect.value);
+  for(let i=1; i<=botCount; i++) players.push({ name:`Bot ${i}`, bot:true, hand:[] });
+
+  // start ronde
+  startRound();
+};
     };
 
     hitBtn.onclick = ()=>{
