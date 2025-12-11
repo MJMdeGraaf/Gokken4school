@@ -211,49 +211,6 @@
 
     .poker-controls { margin-top:14px; }
 
-    <!-- ==================== PAARDENRACE SPEL ==================== -->
-<section id="horseRaceSection" style="display:none; text-align:center; padding:20px; color:white; background:#1b1b1b; height:100vh;">
-    <h2>🏇 Paardenrace</h2>
-
-    <p>Kies je paard en zet je credits in!</p>
-
-    <label>Inzet (credits):</label>
-    <input type="number" id="horseBet" min="10" value="100">
-
-    <br><br>
-
-    <label>Kies een paard:</label>
-    <select id="horseSelect">
-        <option value="1">Paard 1 – ⚡ Sprinter</option>
-        <option value="2">Paard 2 – 🛡 Steady Boy</option>
-        <option value="3">Paard 3 – 🎯 Precision</option>
-        <option value="4">Paard 4 – 🎲 Wild Power</option>
-    </select>
-
-    <br><br>
-
-    <button id="startRaceBtn">Start race</button>
-    <button id="backToMenuRace">Terug naar menu</button>
-
-    <!-- Race Track -->
-    <div id="raceTrack" style="width:90%; margin:40px auto; border:3px solid gold; padding:20px; background:#0d3f00; border-radius:14px;">
-        
-        <div class="raceLane" id="lane1">
-            <div class="horse" id="horse1">🐎</div>
-        </div>
-        <div class="raceLane" id="lane2">
-            <div class="horse" id="horse2">🐎</div>
-        </div>
-        <div class="raceLane" id="lane3">
-            <div class="horse" id="horse3">🐎</div>
-        </div>
-        <div class="raceLane" id="lane4">
-            <div class="horse" id="horse4">🐎</div>
-        </div>
-
-    </div>
-</section>
-
     /* Global credits display */
     #creditsDisplayGlobal{
       position: fixed;
@@ -267,6 +224,24 @@
       z-index: 99999;
       display: none;
     }
+
+/* ===== Paardenrace Lanes ===== */
+.raceLane {
+    position: relative;
+    height: 60px;
+    margin: 18px 0;
+    background: repeating-linear-gradient(90deg, #145200, #145200 40px, #1a6600 40px, #1a6600 80px);
+    border-radius: 10px;
+    border: 2px solid #d4af37;
+}
+
+.horse {
+    position: absolute;
+    font-size: 40px;
+    left: 0;
+    top: 10px;
+    transition: left 0.2s linear;
+}
 
     /* small responsive */
     @media (max-width:600px){
@@ -382,7 +357,50 @@
       </div>
     </div>
   </section>
+  
+ <!-- ==================== PAARDENRACE SPEL ==================== -->
+<section id="horseRaceSection" style="display:none; text-align:center; padding:20px; color:white; background:#1b1b1b; height:100vh;">
+    <h2>🏇 Paardenrace</h2>
 
+    <p>Kies je paard en zet je credits in!</p>
+
+    <label>Inzet (credits):</label>
+    <input type="number" id="horseBet" min="10" value="100">
+
+    <br><br>
+
+    <label>Kies een paard:</label>
+    <select id="horseSelect">
+        <option value="1">Paard 1 – ⚡ Sprinter</option>
+        <option value="2">Paard 2 – 🛡 Steady Boy</option>
+        <option value="3">Paard 3 – 🎯 Precision</option>
+        <option value="4">Paard 4 – 🎲 Wild Power</option>
+    </select>
+
+    <br><br>
+
+    <button id="startRaceBtn">Start race</button>
+    <button id="backToMenuRace">Terug naar menu</button>
+
+    <!-- Race Track -->
+    <div id="raceTrack" style="width:90%; margin:40px auto; border:3px solid gold; padding:20px; background:#0d3f00; border-radius:14px;">
+        
+        <div class="raceLane" id="lane1">
+            <div class="horse" id="horse1">🐎</div>
+        </div>
+        <div class="raceLane" id="lane2">
+            <div class="horse" id="horse2">🐎</div>
+        </div>
+        <div class="raceLane" id="lane3">
+            <div class="horse" id="horse3">🐎</div>
+        </div>
+        <div class="raceLane" id="lane4">
+            <div class="horse" id="horse4">🐎</div>
+        </div>
+
+    </div>
+</section>
+  
   <!-- Leaderboard floating tab -->
   <div id="lb-tab">🏆 Leaderboard</div>
 
@@ -1055,7 +1073,82 @@
     pokerFoldBtn.onclick = ()=>{
       pokerStatusEl.textContent = 'Fold (demo).';
     };
+// ==================== PAARDENRACE LOGICA ====================
 
+const horseRaceSection = document.getElementById("horseRaceSection");
+const startRaceBtn = document.getElementById("startRaceBtn");
+const backToMenuRace = document.getElementById("backToMenuRace");
+const horseBetInput = document.getElementById("horseBet");
+const horseSelect = document.getElementById("horseSelect");
+
+const horses = [
+    document.getElementById("horse1"),
+    document.getElementById("horse2"),
+    document.getElementById("horse3"),
+    document.getElementById("horse4")
+];
+
+function showHorseRace(){
+    dashboard.style.display = "none";
+    blackjackSection.style.display = "none";
+    pokerSection.style.display = "none";
+    horseRaceSection.style.display = "block";
+}
+
+backToMenuRace.onclick = () => {
+    horseRaceSection.style.display = "none";
+    dashboard.style.display = "block";
+};
+
+// START RACE
+startRaceBtn.onclick = () => {
+    const bet = parseInt(horseBetInput.value);
+    const chosenHorse = parseInt(horseSelect.value);
+
+    if (bet < 10) return alert("Minimum inzet is 10 credits.");
+    if (currentUser.credits < bet) return alert("Je hebt niet genoeg credits!");
+
+    currentUser.credits -= bet;
+    saveUsers();
+    renderDashboard();
+
+    // reset positions
+    horses.forEach(h => h.style.left = "0px");
+
+    let finished = false;
+    let winner = null;
+
+    function raceTick(){
+        horses.forEach((horse, index) => {
+            if(finished) return;
+
+            let move = Math.random() * 30; // random sprint
+            horse.style.left = (horse.offsetLeft + move) + "px";
+
+            if(horse.offsetLeft >= 850){ // finish line
+                finished = true;
+                winner = index + 1;
+
+                if(winner === chosenHorse){
+                    const winAmount = bet * 3;
+                    currentUser.credits += winAmount;
+                    alert(`🎉 Je paard heeft gewonnen! +${winAmount} credits`);
+                } else {
+                    alert(`❌ Paard ${winner} won. Je hebt verloren.`);
+                }
+
+                saveUsers();
+                renderDashboard();
+            }
+        });
+
+        if(!finished){
+            requestAnimationFrame(raceTick);
+        }
+    }
+
+    raceTick();
+};
     /* ---------------------------
        Leaderboard popup
        --------------------------- */
