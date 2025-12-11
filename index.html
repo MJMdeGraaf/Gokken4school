@@ -1114,8 +1114,7 @@ startRaceBtn.onclick = () => {
     if (bet < 10) return alert("Minimum inzet is 10 credits.");
     if (currentUser.credits < bet) return alert("Je hebt niet genoeg credits!");
 
-    currentUser.credits -= bet;
-  import { update, ref } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+ currentUser.credits -= bet;
   update(ref(db, "users/" + currentUser.uid), {
     credits: currentUser.credits
   });
