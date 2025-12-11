@@ -1115,7 +1115,11 @@ startRaceBtn.onclick = () => {
     if (currentUser.credits < bet) return alert("Je hebt niet genoeg credits!");
 
     currentUser.credits -= bet;
-    saveUsers();
+  import { update, ref } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+  update(ref(db, "users/" + currentUser.uid), {
+    credits: currentUser.credits
+  });
+
     renderDashboard();
 
     // reset positions
@@ -1143,10 +1147,11 @@ startRaceBtn.onclick = () => {
                     alert(`❌ Paard ${winner} won. Je hebt verloren.`);
                 }
 
-                currentUser.credits -= bet;
-              import { update, ref } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+                currentUser.credits += winnings;
               update(ref(db, "users/" + currentUser.uid), {
                 credits: currentUser.credits
+              });
+
               });
                 renderDashboard();
             }
