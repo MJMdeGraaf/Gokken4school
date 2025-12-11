@@ -1079,7 +1079,7 @@ playHorseRaceBtn.onclick = () => {
     pokerFoldBtn.onclick = ()=>{
       pokerStatusEl.textContent = 'Fold (demo).';
     };
-// ==================== PAARDENRACE LOGICA ====================
+// ==================== PAARDENRACE LOGICA (GEFIXT) ====================
 
 const horseRaceSection = document.getElementById("horseRaceSection");
 const startRaceBtn = document.getElementById("startRaceBtn");
@@ -1107,21 +1107,21 @@ backToMenuRace.onclick = () => {
 };
 
 // START RACE
-startRaceBtn.onclick = () => {
+startRaceBtn.onclick = async () => {
     const bet = parseInt(horseBetInput.value);
     const chosenHorse = parseInt(horseSelect.value);
 
     if (bet < 10) return alert("Minimum inzet is 10 credits.");
     if (currentUser.credits < bet) return alert("Je hebt niet genoeg credits!");
 
- currentUser.credits -= bet;
-  update(ref(db, "users/" + currentUser.uid), {
-    credits: currentUser.credits
-  });
-
+    // credits afschrijven
+    currentUser.credits -= bet;
+    await db.ref("users/" + currentUser.key).update({
+        credits: currentUser.credits
+    });
     renderDashboard();
 
-    // reset positions
+    // reset horse positions
     horses.forEach(h => h.style.left = "0px");
 
     let finished = false;
@@ -1131,25 +1131,26 @@ startRaceBtn.onclick = () => {
         horses.forEach((horse, index) => {
             if(finished) return;
 
-            let move = Math.random() * 30; // random sprint
+            let move = Math.random() * 25 + 5; // smooth movement
             horse.style.left = (horse.offsetLeft + move) + "px";
 
-            if(horse.offsetLeft >= 850){ // finish line
+            if(horse.offsetLeft >= 820){ // finish line
                 finished = true;
                 winner = index + 1;
 
                 if(winner === chosenHorse){
                     const winAmount = bet * 3;
                     currentUser.credits += winAmount;
-                    alert(`🎉 Je paard heeft gewonnen! +${winAmount} credits`);
-                } else {
-                    alert(`❌ Paard ${winner} won. Je hebt verloren.`);
-                }
 
-                currentUser.credits += winnings;
-              update(ref(db, "users/" + currentUser.uid), {
-                credits: currentUser.credits
-              });
+                    db.ref("users/" + currentUser.key).update({
+                        credits: currentUser.credits
+                    });
+
+                    alert("🎉 Je paard heeft gewonnen! +" + winAmount + " credits");
+
+                } else {
+                    alert("❌ Paard " + winner + " won. Je hebt verloren.");
+                }
 
                 renderDashboard();
             }
@@ -1162,6 +1163,7 @@ startRaceBtn.onclick = () => {
 
     raceTick();
 };
+
     /* ---------------------------
        Leaderboard popup
        --------------------------- */
