@@ -1143,7 +1143,11 @@ startRaceBtn.onclick = () => {
                     alert(`❌ Paard ${winner} won. Je hebt verloren.`);
                 }
 
-                saveUsers();
+                currentUser.credits -= bet;
+              import { update, ref } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+              update(ref(db, "users/" + currentUser.uid), {
+                credits: currentUser.credits
+              });
                 renderDashboard();
             }
         });
