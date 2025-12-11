@@ -735,14 +735,19 @@
 
       function renderGame(){ placePlayers(); }
 
-ntPlayerIndex++;
-      if(currentPlayerIndex >= players.length){
-        dealerTurn();
-      } else if(players[currentPlayerIndex].bot){
-        botTurn(players[currentPlayerIndex]);
-      }
-      renderGame();
-    }
+function renderGame() {
+  placePlayers();
+}
+
+function nextPlayer() {
+  currentPlayerIndex++;
+  if (currentPlayerIndex >= players.length) {
+    dealerTurn();
+  } else if (players[currentPlayerIndex].bot) {
+    botTurn(players[currentPlayerIndex]);
+  }
+  renderGame();
+}
 
     function botTurn(bot){
       let hv = handValue(bot.hand);
