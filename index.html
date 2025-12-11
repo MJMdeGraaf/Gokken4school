@@ -91,44 +91,136 @@
     }
 
     /* ============================ Rest of page ============================ */
-    body { margin:0; font-family: system-ui, sans-serif; }
+    body { margin:0; font-family: system-ui, sans-serif; background:#050515; color:#fff;}
     #login, #dashboard, #blackjackSection, #pokerSection { display: none; padding: 20px; text-align:center; }
-    #login { background: #f0f0f0; height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
-    #dashboard { background: linear-gradient(to bottom, #ffffff, #e0e0e0); height:100vh; }
+    #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
+    #dashboard { background: radial-gradient(circle at top, #4c1d7f 0, #050515 55%, #020208 100%); min-height:100vh; }
     #dashboard h2, #login h2 { margin-bottom:10px; }
-    button { padding: 10px 14px; margin: 6px; border-radius: 8px; border:none; cursor:pointer; }
+    button { padding: 10px 14px; margin: 6px; border-radius: 8px; border:none; cursor:pointer; background:#e21a4d; color:#fff; font-weight:600; }
+    button:hover{ filter:brightness(1.05); }
+    input { padding:8px 10px; border-radius:6px; border:1px solid #444; background:#111; color:#fff; }
 
     /* Blackjack sectie */
-    #blackjackSection { background: #2f1e0f; height:100vh; color:white; }
-    .table-container { position:relative; width: 90%; max-width: 900px; margin: 36px auto; height:520px; }
-    .table { background: #8b5a2b; border-radius: 50%; width:100%; height:100%; position:relative; }
+    #blackjackSection {
+      height: 100vh;
+      color: white;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255,255,255,0.08), transparent 55%),
+        radial-gradient(circle at 80% 100%, rgba(255,255,255,0.04), transparent 55%),
+        radial-gradient(circle at center, #1c7b52 0, #094432 55%, #031614 100%);
+    }
+
+    .table-container {
+      position: relative;
+      width: 90%;
+      max-width: 900px;
+      margin: 36px auto;
+      height: 520px;
+      perspective: 900px;
+    }
+
+    .table {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 30% 20%, #2fbf7a 0, #12724b 45%, #063024 100%);
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.8),
+        inset 0 0 25px rgba(0,0,0,0.85);
+      border: 8px solid #c59b45;
+      transform: rotateX(18deg);
+      transform-origin: center 120%;
+    }
+
+    .table::before{
+      content:'';
+      position:absolute;
+      inset:18%;
+      border-radius:50%;
+      border:2px solid rgba(255,255,255,0.15);
+      box-shadow:0 0 12px rgba(0,0,0,0.7);
+      pointer-events:none;
+    }
+
     .player-area { position:absolute; text-align:center; color: white; }
+
     .cards { display:flex; justify-content:center; gap:8px; margin-top:8px; }
-    .card-bj { width:80px; height:120px; background:white; color:black; border-radius:6px; display:flex; justify-content:center; align-items:center; font-weight:bold; }
-    .chair { width:40px; height:40px; background:#333; border-radius:50%; position:absolute; box-shadow:inset 0 -4px 6px rgba(0,0,0,0.4); }
+
+    .card-bj {
+      width:80px;
+      height:120px;
+      background:white;
+      color:black;
+      border-radius:10px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-weight:bold;
+      box-shadow:0 6px 14px rgba(0,0,0,0.7);
+      transform: translateZ(1px);
+    }
+
+    .chair {
+      width:50px;
+      height:50px;
+      background:radial-gradient(circle at 30% 20%, #555, #222);
+      border-radius:50%;
+      position:absolute;
+      box-shadow:
+        0 4px 10px rgba(0,0,0,0.6),
+        inset 0 -4px 8px rgba(0,0,0,0.8);
+      border:2px solid #666;
+    }
+
     #controls { margin-top:20px; }
 
     /* Poker section */
     #pokerSection { background:#0f2b2a; min-height:100vh; color:white; padding-bottom:40px; }
-    .poker-table { width:90%; max-width:1000px; margin:20px auto; background:linear-gradient(#0b6b5a,#084d3f); border-radius:12px; padding:18px; box-shadow:0 8px 30px rgba(0,0,0,0.5); }
+    .poker-table { width:90%; max-width:1000px; margin:20px auto; background:linear-gradient(145deg,#123835,#041817); border-radius:16px; padding:18px; box-shadow:0 8px 30px rgba(0,0,0,0.5); }
     .community { display:flex; justify-content:center; gap:8px; margin:12px 0; }
-    .card-pk { width:72px; height:102px; background:white; color:black; border-radius:6px; display:flex; justify-content:center; align-items:center; font-weight:bold; }
-    .seat-row { display:flex; justify-content:space-around; align-items:center; margin:12px 0; }
-    .seat { width:140px; text-align:center; }
-    .small { font-size:12px; color:#ddd; }
+    .card-pk { width:72px; height:102px; background:white; color:black; border-radius:8px; display:flex; justify-content:center; align-items:center; font-weight:bold; box-shadow:0 6px 16px rgba(0,0,0,0.7); }
+    .poker-players { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:16px; }
+    .poker-player { min-width:140px; padding:10px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); }
+    .poker-player h4{ margin:0 0 6px 0; font-size:14px; }
+    .poker-player .hand{ display:flex; justify-content:center; gap:6px; margin:6px 0; }
+    .poker-info-row{ margin-top:8px; font-size:13px; }
+    .poker-pot-row{ margin-top:8px; font-weight:bold; }
+    .poker-seat-row{ font-size:12px; color:#ccc; }
+    small { font-size:12px; color:#ddd; }
 
     .poker-controls { margin-top:14px; }
+
+    /* Global credits display */
+    #creditsDisplayGlobal{
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      z-index: 99999;
+      display: none;
+    }
 
     /* small responsive */
     @media (max-width:600px){
       #lb-popup { width: 100%; right:0; left:0; height: 50vh; border-radius: 12px 12px 0 0;}
       .card-bj{ width:56px; height:84px; }
       .table-container{ height:360px; }
-      .card-pk{ width:48px; height:68px; font-size:12px; }
+      .card-pk{ width:56px; height:84px; }
     }
   </style>
 </head>
 <body>
+
+  <!-- Globale credits overlay -->
+  <div id="creditsDisplayGlobal">
+    Credits: <span id="globalCredits">0</span>
+  </div>
 
   <!-- Login / Account aanmaken -->
   <section id="login">
@@ -145,7 +237,7 @@
     <p>Credits: <span id="credits"></span></p>
     <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
     <button id="playBlackjackBtn">Speel Blackjack</button>
-    <button id="playPokerBtn">Speel Poker (Texas Hold'em)</button>
+    <button id="playPokerBtn">Speel Poker</button>
     <button id="openLeaderboardsBtn">Leaderboards</button>
     <button id="logoutBtn">Uitloggen</button>
 
@@ -192,59 +284,40 @@
     </div>
   </section>
 
-  <!-- Poker Section (new) -->
+  <!-- Poker -->
   <section id="pokerSection">
-    <h2>Texas Hold'em (No-Limit)</h2>
-    <div class="poker-table" id="pokerTable">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div>
-          <label>Max spelers (incl. jij):</label>
-          <select id="pokerPlayers">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4" selected>4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
-          </select>
-          <label style="margin-left:10px">Start stack:</label>
-          <input id="pokerStartStack" type="number" value="1000" min="100">
+    <h2>Texas Hold'em Poker</h2>
+    <p>Speel tegen bots met echte potten & side pots (voor je PWS natuurlijk 😉).</p>
+
+    <div style="margin:10px 0;">
+      <label>Minimale credits om mee te doen: 500. Kies tafel:</label><br>
+      <select id="pokerTableSelect">
+        <option value="500">Tafel 500</option>
+        <option value="1500">Tafel 1500</option>
+        <option value="3500">Tafel 3500</option>
+        <option value="5000">Tafel 5000</option>
+      </select>
+      <button id="joinPokerBtn">Deelnemen</button>
+      <button id="leavePokerBtn">Tafel verlaten</button>
+    </div>
+
+    <div class="poker-table">
+      <div class="poker-pot-row">
+        Pot: <span id="pokerPot">0</span> | Side pot: <span id="pokerSidePot">0</span>
+      </div>
+      <div class="community" id="pokerCommunity"></div>
+      <div class="poker-players" id="pokerPlayers"></div>
+
+      <div class="poker-controls">
+        <p><strong>Jouw actie:</strong></p>
+        <button id="pokerCheckBtn">Check / Call</button>
+        <button id="pokerBetBtn">Bet / Raise</button>
+        <button id="pokerFoldBtn">Fold</button>
+        <div style="margin-top:6px;">
+          <label>Bet bedrag:</label>
+          <input type="number" id="pokerBetAmount" min="0" value="100" style="width:100px;">
         </div>
-        <div>
-          <button id="joinPokerBtn">Maak/Treed bij tafel</button>
-          <button id="leavePokerBtn">Verlaat tafel</button>
-          <button id="startPokerHandBtn">Start hand</button>
-          <button id="backFromPoker">Terug naar menu</button>
-        </div>
-      </div>
-
-      <div style="margin-top:12px;">
-        Pot: <span id="pokerPot">0</span> &nbsp;|&nbsp; Side pots: <span id="pokerSidePots">-</span>
-      </div>
-
-      <div class="seat-row" id="pokerSeats">
-        <!-- Seats rendered here -->
-      </div>
-
-      <div style="text-align:center;margin-top:8px;">
-        <div class="community" id="communityCards"></div>
-      </div>
-
-      <div style="text-align:center;margin-top:6px;">
-        Actieve speler: <span id="activePokerPlayer">-</span> &nbsp;|&nbsp; To call: <span id="toCallDisplay">0</span>
-      </div>
-
-      <div class="poker-controls" style="text-align:center;">
-        <button id="foldBtn">Fold</button>
-        <button id="callBtn">Call</button>
-        <input id="raiseInput" type="number" style="width:100px" placeholder="Raise amount">
-        <button id="raiseBtn">Raise</button>
-        <button id="allinBtn">All-in</button>
-      </div>
-
-      <div style="margin-top:10px;text-align:center;" class="small">
-        <div id="pokerLog"></div>
+        <small id="pokerStatus"></small>
       </div>
     </div>
   </section>
@@ -283,16 +356,45 @@
     </div>
   </div>
 
+  <!-- Firebase v8 (online accounts & leaderboards) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyARtIFfUXzlkJppkcUSx5ril2FerJltwNs",
+      authDomain: "gokken4school.firebaseapp.com",
+      databaseURL: "https://gokken4school-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "gokken4school",
+      storageBucket: "gokken4school.firebasestorage.app",
+      messagingSenderId: "210902717668",
+      appId: "1:210902717668:web:16ebea58067718ffce48f1",
+      measurementId: "G-G9SVYLDMWC"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+  </script>
+
   <script>
     /* ---------------------------
-       Existing app code (unchanged) + small fixes
+       Data & helpers
        --------------------------- */
-    let users = JSON.parse(localStorage.getItem('users') || '{}');
+    let users = {};
     let currentUser = null;
-    function saveUsers(){ localStorage.setItem('users', JSON.stringify(users)); }
+
     function keyForName(name){ return name.trim().toLowerCase(); }
 
-    // UI refs
+    async function loadUser(key){
+      const snap = await db.ref('users/'+key).once('value');
+      return snap.val() || null;
+    }
+    async function saveCurrentUser(){
+      if(!currentUser || !currentUser.key) return;
+      await db.ref('users/'+currentUser.key).set(currentUser);
+    }
+
+    /* ---------------------------
+       UI refs
+       --------------------------- */
     const loginSection = document.getElementById('login');
     const dashboard = document.getElementById('dashboard');
     const blackjackSection = document.getElementById('blackjackSection');
@@ -318,7 +420,7 @@
     const closeMusicMenu = document.getElementById('closeMusicMenu');
     const muteBtn = document.getElementById('muteBtn');
 
-    // Blackjack refs (unchanged)
+    /* Blackjack refs */
     const startGameBtn = document.getElementById('startGame');
     const botSelect = document.getElementById('botCount');
     const betAmountInput = document.getElementById('betAmount');
@@ -328,7 +430,21 @@
     const nextRoundBtn = document.getElementById('nextRoundBtn');
     const backToMenuBtn = document.getElementById('backToMenu');
 
-    // Leaderboard refs
+    /* Poker refs */
+    const pokerTableSelect = document.getElementById('pokerTableSelect');
+    const joinPokerBtn = document.getElementById('joinPokerBtn');
+    const leavePokerBtn = document.getElementById('leavePokerBtn');
+    const pokerPotEl = document.getElementById('pokerPot');
+    const pokerSidePotEl = document.getElementById('pokerSidePot');
+    const pokerCommunityEl = document.getElementById('pokerCommunity');
+    const pokerPlayersEl = document.getElementById('pokerPlayers');
+    const pokerCheckBtn = document.getElementById('pokerCheckBtn');
+    const pokerBetBtn = document.getElementById('pokerBetBtn');
+    const pokerFoldBtn = document.getElementById('pokerFoldBtn');
+    const pokerBetAmountInput = document.getElementById('pokerBetAmount');
+    const pokerStatusEl = document.getElementById('pokerStatus');
+
+    /* Leaderboard refs */
     const lbTab = document.getElementById('lb-tab');
     const lbPopup = document.getElementById('lb-popup');
     const lbLeft = document.getElementById('lb-left');
@@ -337,94 +453,96 @@
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
 
-    // Poker refs (new)
-    const playPokerBtnEl = document.getElementById('playPokerBtn');
-    const pokerPlayersSelect = document.getElementById('pokerPlayers');
-    const pokerStartStackInput = document.getElementById('pokerStartStack');
-    const joinPokerBtn = document.getElementById('joinPokerBtn');
-    const leavePokerBtn = document.getElementById('leavePokerBtn');
-    const startPokerHandBtn = document.getElementById('startPokerHandBtn');
-    const backFromPoker = document.getElementById('backFromPoker');
-
-    const pokerSeatsDiv = document.getElementById('pokerSeats');
-    const communityCardsDiv = document.getElementById('communityCards');
-    const pokerPotSpan = document.getElementById('pokerPot');
-    const pokerSidePotsSpan = document.getElementById('pokerSidePots');
-    const activePokerPlayerSpan = document.getElementById('activePokerPlayer');
-    const toCallDisplay = document.getElementById('toCallDisplay');
-    const foldBtn = document.getElementById('foldBtn');
-    const callBtn = document.getElementById('callBtn');
-    const raiseInput = document.getElementById('raiseInput');
-    const raiseBtn = document.getElementById('raiseBtn');
-    const allinBtn = document.getElementById('allinBtn');
-    const pokerLog = document.getElementById('pokerLog');
-
-    // small helpers
-    function showLog(msg){ pokerLog.innerHTML = (pokerLog.innerHTML + '<div>'+msg+'</div>').slice(-8000); /* keep small */ }
+    const creditsGlobalSpan = document.getElementById('globalCredits');
 
     /* ---------------------------
-       Login / accounts (unchanged)
+       Login / accounts
        --------------------------- */
-    loginBtn.onclick = ()=>{
-        const nameKey = keyForName(usernameInput.value);
-        const password = passwordInput.value;
-        if(!nameKey || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
-        if(!users[nameKey]) return alert('Account bestaat niet.');
-        if(users[nameKey].password !== password) return alert('Wachtwoord verkeerd.');
-        currentUser = users[nameKey];
-        if(!currentUser.key) currentUser.key = nameKey;
-        saveUsers();
-        loginSection.style.display='none';
-        dashboard.style.display='block';
-        renderDashboard();
-        bgMusic.play().catch(()=>{});
+    loginSection.style.display = 'flex';
+
+    loginBtn.onclick = async ()=>{
+      const rawName = usernameInput.value.trim();
+      const passwd = passwordInput.value.trim();
+      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+
+      const key = keyForName(rawName);
+      const existing = await loadUser(key);
+      if(!existing) return alert('Account bestaat niet.');
+      if(existing.password !== passwd) return alert('Wachtwoord onjuist.');
+
+      currentUser = existing;
+      currentUser.key = key;
+      loginSection.style.display='none';
+      dashboard.style.display='block';
+      renderDashboard();
+      bgMusic.play().catch(()=>{});
     };
 
-    createAccountBtn.onclick = ()=>{
-        const nameKey = keyForName(usernameInput.value);
-        const password = passwordInput.value;
-        if(!nameKey || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
-        if(users[nameKey]) return alert('Account bestaat al.');
-        users[nameKey] = {
-            name: usernameInput.value.trim(),
-            password: password,
-            credits: 500,
-            lastDaily: null,
-            wins: 0,
-            losses: 0,
-            totalEarned: 0,
-            gamesPlayed: 0,
-            key: nameKey
-        };
-        currentUser = users[nameKey];
-        saveUsers();
-        loginSection.style.display='none';
-        dashboard.style.display='block';
-        renderDashboard();
-        bgMusic.play().catch(()=>{});
+    createAccountBtn.onclick = async ()=>{
+      const rawName = usernameInput.value.trim();
+      const passwd = passwordInput.value.trim();
+      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+
+      const key = keyForName(rawName);
+      const existing = await loadUser(key);
+      if(existing){
+        alert('Account bestaat al.');
+        return;
+      }
+
+      currentUser = {
+        key,
+        name: rawName,
+        password: passwd,
+        credits: 1000,
+        lastDaily: null,
+        wins: 0,
+        losses: 0,
+        gamesPlayed: 0,
+        totalEarned: 0,
+        bjWins: 0,
+        bjLosses: 0,
+        bjGames: 0,
+        pkWins: 0,
+        pkLosses: 0,
+        pkGames: 0
+      };
+      await saveCurrentUser();
+      loginSection.style.display='none';
+      dashboard.style.display='block';
+      renderDashboard();
+      bgMusic.play().catch(()=>{});
     };
 
     function renderDashboard(){
       if(!currentUser) return;
       displayName.textContent = currentUser.name;
       creditsEl.textContent = currentUser.credits;
+      const bar = document.getElementById('creditsDisplayGlobal');
+      if(bar){
+        bar.style.display = 'block';
+        creditsGlobalSpan.textContent = currentUser.credits;
+      }
     }
 
     logoutBtn.onclick = () => {
       currentUser = null;
       dashboard.style.display = 'none';
+      blackjackSection.style.display = 'none';
+      pokerSection.style.display = 'none';
       loginSection.style.display = 'flex';
       bgMusic.pause();
+      const bar = document.getElementById('creditsDisplayGlobal');
+      if(bar) bar.style.display = 'none';
     };
 
-    claimDailyBtn.onclick = ()=>{
+    claimDailyBtn.onclick = async ()=>{
       if(!currentUser) return;
       const t = new Date().toDateString();
       if(currentUser.lastDaily !== t){
         currentUser.credits += 100;
         currentUser.lastDaily = t;
-        users[currentUser.key] = currentUser;
-        saveUsers();
+        await saveCurrentUser();
         renderDashboard();
         alert('Dagelijkse bonus geclaimd: +100 credits');
       } else {
@@ -434,52 +552,28 @@
 
     playBlackjackBtn.onclick = ()=>{
       dashboard.style.display='none';
+      pokerSection.style.display='none';
       blackjackSection.style.display='block';
+    };
+
+    playPokerBtn.onclick = ()=>{
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='block';
     };
 
     backToMenuBtn.onclick = ()=>{
       blackjackSection.style.display='none';
-      dashboard.style.display='block';
-    };
-
-    playPokerBtnEl.onclick = ()=>{
-      dashboard.style.display='none';
-      pokerSection.style.display='block';
-    };
-
-    backFromPoker.onclick = ()=>{
       pokerSection.style.display='none';
       dashboard.style.display='block';
     };
 
-    // Leaderboards (unchanged)
-    let lbIndex = 0;
-    const lbTypes = ['earnings','winrate'];
-    function loadUsersArray(){ return Object.entries(users).map(([k,u])=>({ key:k, name:u.name, totalEarned:u.totalEarned||0, wins:u.wins||0, losses:u.losses||0, games:u.gamesPlayed||0 })); }
-    function openLeaderboard(){
-      lbPopup.style.display='block';
-      const type = lbTypes[lbIndex];
-      lbTitle.textContent = type==='earnings'?'All-Time Earnings':'Win Percentage';
-      const arr=loadUsersArray();
-      if(type==='earnings'){ arr.sort((a,b)=>b.totalEarned-a.totalEarned); }
-      else { arr.sort((a,b)=>{ const ra=a.games?(a.wins/a.games):0; const rb=b.games?(b.wins/b.games):0; return rb-ra; }); }
-      let html='';
-      const top=arr.slice(0,10);
-      top.forEach((u,i)=>{ const isYou=currentUser && (u.key===currentUser.key); html+=`<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`; });
-      let yourRank=-1; if(currentUser) yourRank=arr.findIndex(x=>x.key===currentUser.key);
-      if(yourRank>9){ const u=arr[yourRank]; html+=`<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`; }
-      else if(yourRank===-1 && currentUser){ html+=`<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`; }
-      lbContent.innerHTML=html;
-    }
-    lbTab.onclick = ()=>{ lbIndex=0; openLeaderboard(); };
-    lbClose.onclick = ()=>{ lbPopup.style.display='none'; };
-    lbLeft.onclick = ()=>{ lbIndex=(lbIndex-1+lbTypes.length)%lbTypes.length; openLeaderboard(); };
-    lbRight.onclick = ()=>{ lbIndex=(lbIndex+1)%lbTypes.length; openLeaderboard(); };
-    openLeaderboardsBtn.onclick = ()=>{ lbIndex = 0; openLeaderboard(); };
-
-    // Music menu (unchanged logic)
+    /* ---------------------------
+       Music menu
+       --------------------------- */
     musicVolume.value = 0.4;
     bgMusic.volume = 0.4;
+
     musicControl.onclick = () => { musicMenu.style.display = (musicMenu.style.display==='block'?'none':'block'); };
     musicVolume.oninput = ()=>{ bgMusic.volume = parseFloat(musicVolume.value); };
     musicTrackSelect.onchange = ()=>{
@@ -496,22 +590,26 @@
     closeMusicMenu.onclick = ()=>{ musicMenu.style.display='none'; };
 
     /* ---------------------------
-       Blackjack code left intact (unchanged)
+       Blackjack logic
        --------------------------- */
     const suits=['♠','♥','♦','♣'];
     const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
     let deck=[];
-    function createDeck(){ deck=[]; for(let s of suits) for(let v of values) deck.push({suit:s, value:v}); for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; } }
+
+    function createDeck(){
+      deck=[];
+      for(let s of suits) for(let v of values) deck.push({suit:s, value:v});
+      for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
+    }
     function cardValue(card){ if(['J','Q','K'].includes(card.value)) return 10; if(card.value==='A') return 11; return parseInt(card.value); }
     function handValue(hand){ let total=0, aces=0; for(let c of hand){ total+=cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
     function drawCard(){ return deck.pop(); }
 
-    let players=[]; // blackjack players
-    let dealer={hand:[]};
+    let players=[]; // includes human and bots
+    let dealer={hand:[], name:'Dealer'};
     let currentPlayerIndex=0;
     let currentBet = 100;
 
-    
     function placePlayers(){
       table.innerHTML = '';
       const centerX = table.clientWidth/2;
@@ -519,99 +617,25 @@
       const kaartOffset = 60;
       const kaartWidth = 80;
       const kaartHeight = 120;
-
-      // basisradius op de tafel
-      const baseRadius = Math.min(table.clientWidth, table.clientHeight)/2 - kaartOffset;
-      const dealerRadius = baseRadius;
-      const playerRadius = baseRadius;
-      const botRadius = baseRadius + 40; // bots net buiten de rand van de tafel
+      const radius = Math.min(table.clientWidth, table.clientHeight)/2 - kaartOffset;
 
       const dealerAngle = 0;
       const playerAngle = Math.PI;
       const botAngles = [Math.PI/4,2*Math.PI/4,3*Math.PI/4,5*Math.PI/4,6*Math.PI/4,7*Math.PI/4];
 
-      function pos(r, angle){
-        return {
-          x: centerX + r*Math.cos(angle) - kaartWidth/2,
-          y: centerY + r*Math.sin(angle) - kaartHeight/2
-        };
-      }
+      function pos(angle){ return { x:centerX + radius*Math.cos(angle) - kaartWidth/2, y:centerY + radius*Math.sin(angle) - kaartHeight/2 }; }
 
-      // Dealer
-      const dPos = pos(dealerRadius, dealerAngle);
-      const dealerDiv = document.createElement('div');
-      dealerDiv.className='player-area';
-      dealerDiv.style.left=dPos.x+'px';
-      dealerDiv.style.top=dPos.y+'px';
-      dealerDiv.innerHTML = `
-        <h3>Dealer</h3>
-        <div class='cards'>
-          ${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}
-        </div>
-        <p>Score: ${handValue(dealer.hand)}</p>
-      `;
-      const dealerChair=document.createElement('div');
-      dealerChair.className='chair';
-      dealerChair.style.left=(dPos.x+40)+'px';
-      dealerChair.style.top=(dPos.y+120)+'px';
-      table.appendChild(dealerChair);
-      table.appendChild(dealerDiv);
-
-      // Speler (altijd players[0])
-      if(players.length>0){
-        const pPos=pos(playerRadius, playerAngle);
-        const pDiv=document.createElement('div');
-        pDiv.className='player-area';
-        pDiv.style.left=pPos.x+'px';
-        pDiv.style.top=pPos.y+'px';
-        pDiv.innerHTML = `
-          <h3>${players[0].name} ${currentPlayerIndex===0?'←':''}</h3>
-          <div class='cards'>
-            ${players[0].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}
-          </div>
-          <p>Score: ${handValue(players[0].hand)}</p>
-        `;
-        const pChair=document.createElement('div');
-        pChair.className='chair';
-        pChair.style.left=(pPos.x+40)+'px';
-        pChair.style.top=(pPos.y+120)+'px';
-        table.appendChild(pChair);
-        table.appendChild(pDiv);
-      }
-
-      // Bots
-      const botCount = Math.max(0,players.length-1);
-      const botAnglesUsed=botAngles.slice(0,botCount);
-      for(let i=1;i<players.length;i++){
-        const posi=pos(botRadius, botAnglesUsed[i-1]);
-        const bDiv=document.createElement('div');
-        bDiv.className='player-area';
-        bDiv.style.left=posi.x+'px';
-        bDiv.style.top=posi.y+'px';
-        bDiv.innerHTML = `
-          <h3>${players[i].name}</h3>
-          <div class='cards'>
-            ${players[i].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}
-          </div>
-          <p>Score: ${handValue(players[i].hand)}</p>
-        `;
-        const bChair=document.createElement('div');
-        bChair.className='chair';
-        bChair.style.left=(posi.x+40)+'px';
-        bChair.style.top=(posi.y+120)+'px';
-        table.appendChild(bChair);
-        table.appendChild(bDiv);
-      }
-    }
-
+      // dealer
       const dPos = pos(dealerAngle);
       const dealerDiv = document.createElement('div');
       dealerDiv.className='player-area';
       dealerDiv.style.left=dPos.x+'px';
       dealerDiv.style.top=dPos.y+'px';
-      dealerDiv.innerHTML=`<h3>Dealer</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
-      const dealerChair=document.createElement('div'); dealerChair.className='chair'; dealerChair.style.left=(dPos.x+40)+'px'; dealerChair.style.top=(dPos.y+120)+'px';
+      dealerDiv.innerHTML=`<h3>${dealer.name}</h3><div class='cards'>${dealer.hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div>`;
+      const dealerChair=document.createElement('div'); dealerChair.className='chair'; dealerChair.style.left=(dPos.x+kaartWidth/2)+'px'; dealerChair.style.top=(dPos.y+kaartHeight)+'px';
       table.appendChild(dealerChair); table.appendChild(dealerDiv);
+
+      // human
       if(players.length>0){
         const pPos=pos(playerAngle);
         const pDiv=document.createElement('div');
@@ -619,9 +643,11 @@
         pDiv.style.left=pPos.x+'px';
         pDiv.style.top=pPos.y+'px';
         pDiv.innerHTML=`<h3>${players[0].name} ${currentPlayerIndex===0?'←':''}</h3><div class='cards'>${players[0].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[0].hand)}</p>`;
-        const pChair=document.createElement('div'); pChair.className='chair'; pChair.style.left=(pPos.x+40)+'px'; pChair.style.top=(pPos.y+120)+'px';
+        const pChair=document.createElement('div'); pChair.className='chair'; pChair.style.left=(pPos.x+kaartWidth/2)+'px'; pChair.style.top=(pPos.y+kaartHeight)+'px';
         table.appendChild(pChair); table.appendChild(pDiv);
       }
+
+      // bots
       const botCount = Math.max(0,players.length-1);
       const botAnglesUsed=botAngles.slice(0,botCount);
       for(let i=1;i<players.length;i++){
@@ -631,7 +657,10 @@
         bDiv.style.left=posi.x+'px';
         bDiv.style.top=posi.y+'px';
         bDiv.innerHTML=`<h3>${players[i].name}</h3><div class='cards'>${players[i].hand.map(c=>`<div class='card-bj'>${c.value}${c.suit}</div>`).join('')}</div><p>Score: ${handValue(players[i].hand)}</p>`;
-        const bChair=document.createElement('div'); bChair.className='chair'; bChair.style.left=(posi.x+40)+'px'; bChair.style.top=(posi.y+120)+'px';
+        const bChair=document.createElement('div');
+        bChair.className='chair';
+        bChair.style.left=(posi.x+kaartWidth/2)+'px';
+        bChair.style.top=(posi.y+kaartHeight)+'px';
         table.appendChild(bChair); table.appendChild(bDiv);
       }
     }
@@ -669,6 +698,7 @@
     function checkWinners(){
       const dealerScore=handValue(dealer.hand);
       let resultMsg=`Dealer heeft ${dealerScore}.\n`;
+
       for(let i=0;i<players.length;i++){
         const p=players[i];
         const ps=handValue(p.hand);
@@ -686,6 +716,7 @@
           resultMsg+=`${p.name} verliest.\n`;
           outcome='lose';
         }
+
         if(i===0 && currentUser){
           let delta = 0;
           if(outcome==='win') delta = Math.floor(currentBet*1.5);
@@ -693,22 +724,33 @@
           else delta = 0;
           currentUser.credits += delta;
           currentUser.gamesPlayed = (currentUser.gamesPlayed||0)+1;
-          if(outcome==='win'){ currentUser.wins=(currentUser.wins||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0)+delta; }
-          else if(outcome==='lose'){ currentUser.losses=(currentUser.losses||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0); }
-          else if(outcome==='push'){ /* totalEarned unchanged */ }
-          users[currentUser.key]=currentUser;
-          saveUsers();
-          renderDashboard();
+          if(outcome==='win'){ currentUser.wins=(currentUser.wins||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0)+delta; currentUser.bjWins=(currentUser.bjWins||0)+1; }
+          else if(outcome==='lose'){ currentUser.losses=(currentUser.losses||0)+1; currentUser.bjLosses=(currentUser.bjLosses||0)+1; }
+          currentUser.bjGames=(currentUser.bjGames||0)+1;
         }
       }
+
       alert(resultMsg);
       nextRoundBtn.style.display='inline';
       hitBtn.style.display='none';
       standBtn.style.display='none';
+
+      if(currentUser){
+        saveCurrentUser().then(renderDashboard);
+      }
     }
 
     function startRound(){
-      currentBet = Math.min(currentUser.credits, parseInt(betAmountInput.value)||100);
+      if(!currentUser) return;
+      const requestedBet = parseInt(betAmountInput.value)||100;
+      if(currentUser.credits < requestedBet){
+        alert('Je hebt niet genoeg credits voor deze inzet.');
+        return;
+      }
+      currentBet = requestedBet;
+      currentUser.credits -= currentBet;
+      saveCurrentUser().then(renderDashboard);
+
       createDeck();
       dealer.hand=[drawCard(), drawCard()];
       players.forEach(p=>p.hand=[drawCard(), drawCard()]);
@@ -717,29 +759,16 @@
       if(players[0].bot) botTurn(players[0]);
       hitBtn.style.display='inline';
       standBtn.style.display='inline';
+      nextRoundBtn.style.display='none';
     }
 
- startGameBtn.onclick = ()=>{
-  if(!currentUser) return alert('Je moet eerst inloggen!');
-
-  // bepaal inzet
-  currentBet = Math.min(currentUser.credits, parseInt(betAmountInput.value)||100);
-  if(currentUser.credits < currentBet) return alert('Je hebt niet genoeg credits!');
-
-  // trek inzet direct af
-  currentUser.credits -= currentBet;
-  saveUsers();
-  renderDashboard();
-
-  // maak spelers array: eerste element is menselijke speler
-  players = [{ name:currentUser.name, bot:false, hand:[] }];
-
-  // voeg bots toe gebaseerd op selectie
-  const botCount = parseInt(botSelect.value);
-  for(let i=1; i<=botCount; i++) players.push({ name:`Bot ${i}`, bot:true, hand:[] });
-
-  // start ronde
-  startRound();
+    startGameBtn.onclick = ()=>{
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      const botCount=parseInt(botSelect.value);
+      players=[{ name:currentUser.name, bot:false, hand:[] }];
+      for(let i=1;i<=botCount;i++) players.push({ name:`Bot ${i}`, bot:true, hand:[] });
+      dealer.hand=[];
+      startRound();
     };
 
     hitBtn.onclick = ()=>{
@@ -753,640 +782,243 @@
     nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
 
     /* ---------------------------
-       Poker module (new)
-       - No-limit Texas Hold'em
-       - Pot & side-pot calculation + payout
-       - Basic UI & smart bots (level 3 heuristic)
+       Poker logic (bestaande logica, niet gewijzigd aan structuur)
        --------------------------- */
 
-    // Poker deck / utils
-    const PK_suits = ['♠','♥','♦','♣'];
-    const PK_values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-    function PK_newDeck(){ const d=[]; for(const s of PK_suits) for(const v of PK_values) d.push({suit:s,value:v}); for(let i=d.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [d[i],d[j]]=[d[j],d[i]];} return d; }
-    function PK_valNum(v){ if(v==='A') return 14; if(v==='K') return 13; if(v==='Q') return 12; if(v==='J') return 11; return parseInt(v); }
-    function PK_cardText(c){ return c? (c.value + c.suit) : '??'; }
+    const pkSuits = ['♠','♥','♦','♣'];
+    const pkValues = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+    let pkDeck = [];
 
-    // Poker state
-    let PK_table = {
-      seats: [],     // array of player objects or null for empty seats
-      deck: [],
-      community: [],
-      dealerIndex: 0,
-      toAct: 0,
-      toCall: 0,
-      potObjects: [], // computed pots
-      running: false,
-      minPlayers: 2
-    };
-
-    // Create seats (max players)
-    function PK_resetTable(){
-      const maxPlayers = parseInt(pokerPlayersSelect.value);
-      PK_table.seats = [];
-      for(let i=0;i<maxPlayers;i++) PK_table.seats.push(null);
-      PK_renderSeats();
-      PK_resetRoundState();
-      showLog('Tafel gereset voor '+maxPlayers+' spelers.');
+    function pkCreateDeck(){
+      pkDeck=[];
+      for(let s of pkSuits) for(let v of pkValues) pkDeck.push({suit:s,value:v});
+      for(let i=pkDeck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pkDeck[i],pkDeck[j]]=[pkDeck[j],pkDeck[i]]; }
     }
 
-    function PK_resetRoundState(){
-      PK_table.deck = [];
-      PK_table.community = [];
-      PK_table.potObjects = [];
-      PK_table.running = false;
-      pokerPotSpan.textContent = '0';
-      pokerSidePotsSpan.textContent = '-';
-      communityCardsDiv.innerHTML = '';
-      activePokerPlayerSpan.textContent = '-';
-      toCallDisplay.textContent = '0';
-      pokerLog.innerHTML = '';
+    let pokerPlayers = [];
+    let pokerPot = 0;
+    let pokerSidePot = 0;
+    let pokerCommunity = [];
+    let pokerCurrentPlayerIndex = 0;
+    let pokerTableMin = 500;
+
+    function pkDraw(){ return pkDeck.pop(); }
+
+    function pkRender(){
+      pokerPotEl.textContent = pokerPot;
+      pokerSidePotEl.textContent = pokerSidePot;
+      pokerCommunityEl.innerHTML = pokerCommunity.map(c=>`<div class="card-pk">${c.value}${c.suit}</div>`).join('');
+      pokerPlayersEl.innerHTML = pokerPlayers.map((p,i)=>{
+        const isYou = currentUser && p.key===currentUser.key;
+        return `<div class="poker-player">
+          <h4>${p.name} ${isYou?'(jij)':''} ${i===pokerCurrentPlayerIndex?'←':''}</h4>
+          <div class="hand">${p.hand.map(c=>`<div class="card-pk">${c.value}${c.suit}</div>`).join('')}</div>
+          <div class="poker-info-row">Stack: ${p.stack}</div>
+          <div class="poker-info-row">Ingezet: ${p.bet} (committed: ${p.committed})</div>
+          <div class="poker-seat-row">Seat ${p.seat} ${p.folded?'[FOLDED]':''} ${p.allIn?'[ALL-IN]':''}</div>
+        </div>`;
+      }).join('');
     }
 
-    // Join/leave
+    function pkNewHand(){
+      pkCreateDeck();
+      pokerPot = 0;
+      pokerSidePot = 0;
+      pokerCommunity = [];
+      pokerPlayers.forEach(p=>{
+        p.hand = [pkDraw(), pkDraw()];
+        p.bet = 0;
+        p.committed = 0;
+        p.folded = false;
+        p.allIn = false;
+      });
+      pokerCurrentPlayerIndex = 0;
+      pkRender();
+      pokerStatusEl.textContent = 'Nieuwe hand gestart.';
+    }
+
+    function PK_addBotsIfNeeded(){
+      const desiredSeats = 6;
+      const occupiedSeats = new Set(pokerPlayers.map(p=>p.seat));
+      let nextSeat = 1;
+      while(occupiedSeats.size < desiredSeats){
+        while(occupiedSeats.has(nextSeat)) nextSeat++;
+        const seatIdx = nextSeat;
+        occupiedSeats.add(seatIdx);
+        const nextIdx = pokerPlayers.filter(p=>p.isBot).length + 1;
+        const player = {
+          key: 'bot'+nextIdx,
+          name: 'Bot '+nextIdx,
+          stack: 2000,
+          entryStack: 2000,
+          hand: [],
+          bet: 0,
+          committed: 0,
+          folded: false,
+          allIn: false,
+          isBot: true,
+          seat: seatIdx
+        };
+        pokerPlayers.push(player);
+      }
+    }
+
     joinPokerBtn.onclick = ()=>{
-      if(!currentUser) return alert('Login eerst.');
-      // join first empty seat
-      const idx = PK_table.seats.findIndex(s => s===null);
-      if(idx===-1) return alert('Tafel is vol.');
-      // create player object
-      const startStack = Math.max(1, parseInt(pokerStartStackInput.value)||1000);
-      const player = {
+      if(!currentUser) return alert('Je moet inloggen.');
+      const min = parseInt(pokerTableSelect.value)||500;
+      if(currentUser.credits < min){
+        alert('Je hebt niet genoeg credits voor deze tafel.');
+        return;
+      }
+      pokerTableMin = min;
+
+      if(pokerPlayers.some(p=>p.key===currentUser.key)){
+        alert('Je zit al aan de tafel.');
+        return;
+      }
+
+      currentUser.credits -= pokerTableMin;
+      currentUser.entryStack = pokerTableMin;
+      const seat = pokerPlayers.length ? Math.max(...pokerPlayers.map(p=>p.seat))+1 : 1;
+      pokerPlayers.push({
         key: currentUser.key,
         name: currentUser.name,
-        stack: startStack,
-        hand: [],
-        bet: 0,
-        committed: 0,
-        folded: false,
-        allIn: false,
-        isBot: false,
-        seat: idx
-      };
-      PK_table.seats[idx] = player;
-      PK_renderSeats();
-      showLog(`${player.name} nam plaats ${idx+1}`);
+        stack: pokerTableMin,
+        entryStack: pokerTableMin,
+        hand:[],
+        bet:0,
+        committed:0,
+        folded:false,
+        allIn:false,
+        isBot:false,
+        seat
+      });
+
+      PK_addBotsIfNeeded();
+      saveCurrentUser().then(renderDashboard);
+      pkNewHand();
+      pokerSection.style.display='block';
+      dashboard.style.display='none';
     };
 
     leavePokerBtn.onclick = ()=>{
-      if(!currentUser) return alert('Login eerst.');
-      const idx = PK_table.seats.findIndex(s => s && s.key === currentUser.key);
-      if(idx===-1) return alert('Je zit niet aan de tafel.');
-      PK_table.seats[idx] = null;
-      PK_renderSeats();
-    };
-
-    // Start a hand
-    startPokerHandBtn.onclick = ()=>{
-      // must have at least 2 players seated
-      const joined = PK_table.seats.filter(s => s!==null);
-      if(joined.length < 2) return alert('Minstens 2 spelers nodig om te starten.');
-      // reset deck & community
-      PK_table.deck = PK_newDeck();
-      PK_table.community = [];
-      PK_table.potObjects = [];
-      // reset player per-hand properties and set seat indices
-      for(let i=0;i<PK_table.seats.length;i++){
-        if(PK_table.seats[i]){
-          PK_table.seats[i].hand = [];
-          PK_table.seats[i].bet = 0;
-          PK_table.seats[i].committed = 0;
-          PK_table.seats[i].folded = false;
-          PK_table.seats[i].allIn = false;
-          PK_table.seats[i].seat = i;
-        }
-      }
-      // deal two cards to each seated player
-      for(let r=0;r<2;r++){
-        for(let i=0;i<PK_table.seats.length;i++){
-          if(PK_table.seats[i]) PK_table.seats[i].hand.push(PK_table.deck.pop());
-        }
-      }
-      // set dealerIndex to next non-null seat (rotate)
-      PK_table.dealerIndex = PK_table.dealerIndex % PK_table.seats.length;
-      // ensure dealer points to a real player
-      let di = PK_table.dealerIndex;
-      while(!PK_table.seats[di]) di = (di+1)%PK_table.seats.length;
-      PK_table.dealerIndex = di;
-
-      // blinds: small blind (SB) is next seat, big blind next
-      const sbIndex = PK_nextOccupiedIndex(PK_table.dealerIndex, 1);
-      const bbIndex = PK_nextOccupiedIndex(PK_table.dealerIndex, 2);
-      const sb = PK_table.seats[sbIndex];
-      const bb = PK_table.seats[bbIndex];
-      const sbAmt = Math.max(1, Math.floor( (pokerStartStackInput.value || 1000) * 0.01 )); // 1% default
-      const bbAmt = sbAmt*2;
-      // post blinds from stacks (no negative)
-      if(sb){
-        const actual = Math.min(sbAmt, sb.stack);
-        sb.stack -= actual; sb.bet += actual; sb.committed += actual; if(sb.stack===0) sb.allIn=true;
-      }
-      if(bb){
-        const actual2 = Math.min(bbAmt, bb.stack);
-        bb.stack -= actual2; bb.bet += actual2; bb.committed += actual2; if(bb.stack===0) bb.allIn=true;
-      }
-
-      PK_table.toCall = bb ? bb.bet : 0;
-      PK_table.toAct = PK_nextOccupiedIndex(PK_table.dealerIndex, 3); // first to act preflop is UTG (after BB)
-      PK_table.running = true;
-
-      // render
-      PK_renderSeats();
-      PK_updateUI();
-      showLog('Hand gestart. Blinds geplaatst: SB '+sbAmt+' BB '+bbAmt);
-      // start betting round preflop
-      setTimeout(()=> PK_runBettingRound('preflop'), 300);
-    };
-
-    // helper to find next occupied seat offset from idx by step; step relative seats ahead
-    function PK_nextOccupiedIndex(fromIdx, step){
-      const n = PK_table.seats.length;
-      let i = fromIdx;
-      for(let s=0;s< n; s++){
-        i = (i+1)%n;
-        if(PK_table.seats[i]) {
-          step--;
-          if(step<=0) return i;
-        }
-      }
-      // fallback: find any occupied
-      return PK_table.seats.findIndex(s=>s!==null);
-    }
-
-    // Render seats UI
-    function PK_renderSeats(){
-      pokerSeatsDiv.innerHTML = '';
-      for(let i=0;i<PK_table.seats.length;i++){
-        const s = document.createElement('div');
-        s.className = 'seat';
-        const data = PK_table.seats[i];
-        if(data){
-          s.innerHTML = `<div><strong>${data.name}</strong></div>
-                         <div class="small">Seat ${i+1}</div>
-                         <div class="small">Stack: ${data.stack}</div>
-                         <div class="small">${data.folded?'<em>Folded</em>':(data.allIn?'<em>All-in</em>':'')}</div>
-                         <div style="margin-top:6px;">${data.hand.map(c=>`<div class="card-pk">${PK_cardText(c)}</div>`).join('')}</div>`;
-        } else {
-          s.innerHTML = `<div style="opacity:0.7">Leeg</div><div class="small">Seat ${i+1}</div>`;
-        }
-        pokerSeatsDiv.appendChild(s);
-      }
-    }
-
-    // Betting round controller (no-limit) - simplified synchronous loop
-    async function PK_runBettingRound(stage){
-      // stage: 'preflop','flop','turn','river'
-      if(!PK_table.running) return;
-      showLog('Betting round: '+stage);
-      // reset per-player bet (we track bets by .bet already committed)
-      // we use a simple while-loop over active players until betting is closed
-      let playersInHand = PK_table.seats.filter(s=>s && !s.folded);
-      if(playersInHand.length<=1){
-        // trivial: immediate showdown
-        PK_finishHand();
+      if(!currentUser) return;
+      const idx = pokerPlayers.findIndex(p=>p.key===currentUser.key);
+      if(idx===-1){
+        alert('Je zit niet aan de tafel.');
         return;
       }
-      // determine initial toCall = current max bet among players
-      let maxBet = 0;
-      for(const p of PK_table.seats) if(p) maxBet = Math.max(maxBet, p.bet||0);
-      PK_table.toCall = maxBet;
-      toCallDisplay.textContent = PK_table.toCall;
-      // start from toAct (already set)
-      let idx = PK_table.toAct;
-      // We'll loop until everyone has acted with no new raises
-      let lastRaiser = null;
-      let acted = new Set();
-      // Note: bots act immediately, human uses UI buttons
-      while(true){
-        // find next active seat
-        if(!PK_table.seats[idx] || PK_table.seats[idx].folded || PK_table.seats[idx].allIn){
-          idx = (idx+1)%PK_table.seats.length;
-          continue;
-        }
-        const player = PK_table.seats[idx];
-        activePokerPlayerSpan.textContent = player.name;
-        toCallDisplay.textContent = PK_table.toCall - (player.bet||0);
-        PK_updateUI();
-        // if bot -> decide automatically
-        if(player.isBot){
-          await new Promise(r=>setTimeout(r, 400)); // slight delay
-          const action = PK_botAction(player, PK_table);
-          showLog(`${player.name} kiest ${action.type}${action.amount?(' '+action.amount):''}`);
-          PK_applyAction(player, action);
-          if(action.type === 'raise') { lastRaiser = player; PK_table.toCall = player.bet; }
-          // move on
-          idx = (idx+1)%PK_table.seats.length;
-        } else {
-          // human player: wait for UI input (resolve when user clicks call/raise/fold/allin)
-          const act = await PK_waitHumanAction(player);
-          if(!act) { /* timed out or aborted */ break; }
-          showLog(`${player.name} kiest ${act.type}${act.amount?(' '+act.amount):''}`);
-          PK_applyAction(player, act);
-          if(act.type === 'raise') { lastRaiser = player; PK_table.toCall = player.bet; }
-          idx = (idx+1)%PK_table.seats.length;
-        }
-        // check termination: if all players have bet equal to toCall or are all-in/folded
-        let needMore = false;
-        for(const p of PK_table.seats){
-          if(!p || p.folded || p.allIn) continue;
-          if((p.bet||0) !== PK_table.toCall) { needMore = true; break; }
-        }
-        if(!needMore) break;
-      } // end while
-      // betting round finished; normalize: add bets to committed, zero bet fields for next round
-      for(const p of PK_table.seats){
-        if(!p) continue;
-        p.committed = (p.committed||0) + (p.bet||0);
-        p.bet = 0;
-      }
-      // compute pots
-      PK_table.potObjects = PK_calculatePots(PK_table.seats);
-      PK_updatePotUI();
-      PK_renderSeats();
-      // proceed to next stage
-      if(stage === 'preflop'){
-        // deal flop
-        PK_table.community.push(PK_table.deck.pop(), PK_table.deck.pop(), PK_table.deck.pop());
-        PK_updateCommunity();
-        // set toAct = first active seat after dealer
-        PK_table.toAct = PK_nextOccupiedIndex(PK_table.dealerIndex, 1);
-        setTimeout(()=>PK_runBettingRound('flop'), 300);
-      } else if(stage === 'flop'){
-        // turn
-        PK_table.community.push(PK_table.deck.pop());
-        PK_updateCommunity();
-        PK_table.toAct = PK_nextOccupiedIndex(PK_table.dealerIndex, 1);
-        setTimeout(()=>PK_runBettingRound('turn'), 300);
-      } else if(stage === 'turn'){
-        // river
-        PK_table.community.push(PK_table.deck.pop());
-        PK_updateCommunity();
-        PK_table.toAct = PK_nextOccupiedIndex(PK_table.dealerIndex, 1);
-        setTimeout(()=>PK_runBettingRound('river'), 300);
-      } else if(stage === 'river'){
-        // showdown
-        PK_finishHand();
-      }
-    }
-
-    // Wait for human action via UI - resolves to action object
-    function PK_waitHumanAction(player){
-      return new Promise(resolve=>{
-        // enable buttons only for this human player
-        PK_enableControls(true);
-        const onFold = ()=>{ cleanup(); resolve({type:'fold'}); };
-        const onCall = ()=>{ cleanup(); resolve({type:'call'}); };
-        const onRaise = ()=>{ const amt = Math.max(1, parseInt(raiseInput.value)||0); cleanup(); resolve({type:'raise', amount:amt}); };
-        const onAllin = ()=>{ cleanup(); resolve({type:'allin'}); };
-        function cleanup(){
-          foldBtn.removeEventListener('click', onFold);
-          callBtn.removeEventListener('click', onCall);
-          raiseBtn.removeEventListener('click', onRaise);
-          allinBtn.removeEventListener('click', onAllin);
-          PK_enableControls(false);
-        }
-        foldBtn.addEventListener('click', onFold);
-        callBtn.addEventListener('click', onCall);
-        raiseBtn.addEventListener('click', onRaise);
-        allinBtn.addEventListener('click', onAllin);
+      const pl = pokerPlayers[idx];
+      currentUser.credits += pl.stack;
+      pokerPlayers.splice(idx,1);
+      saveCurrentUser().then(()=>{
+        renderDashboard();
+        alert('Tafel verlaten. Je hebt nu weer '+currentUser.credits+' credits.');
       });
-    }
+    };
 
-    function PK_enableControls(enabled){
-      foldBtn.disabled = !enabled;
-      callBtn.disabled = !enabled;
-      raiseBtn.disabled = !enabled;
-      allinBtn.disabled = !enabled;
-      raiseInput.disabled = !enabled;
-    }
-
-    // Apply action for player object
-    function PK_applyAction(player, action){
-      if(action.type === 'fold'){
-        player.folded = true;
-      } else if(action.type === 'call'){
-        const need = PK_table.toCall - (player.bet||0);
-        const put = Math.min(need, player.stack);
-        player.stack -= put; player.bet = (player.bet||0) + put;
-        if(player.stack===0) player.allIn = true;
-      } else if(action.type === 'raise'){
-        let raiseAmt = parseInt(action.amount)||0;
-        // in no-limit, raise is amount total to add (we'll treat as raise over toCall)
-        const need = PK_table.toCall - (player.bet||0);
-        const totalPut = need + raiseAmt;
-        const put = Math.min(totalPut, player.stack);
-        player.stack -= put; player.bet = (player.bet||0) + put;
-        if(player.stack===0) player.allIn = true;
-        // update toCall
-        PK_table.toCall = player.bet;
-      } else if(action.type === 'allin'){
-        const put = player.stack;
-        player.bet = (player.bet||0) + put;
-        player.stack = 0;
-        player.allIn = true;
-        if(player.bet > PK_table.toCall) PK_table.toCall = player.bet;
-      }
-      PK_renderSeats();
-      PK_updateUI();
-    }
-
-    // Bot AI (level 3) - uses evaluator to estimate equity roughly and acts aggressively on strength
-    function PK_botAction(player, tableState){
-      // compute a simple strength: evaluate current best 7-card hand if community present,
-      // otherwise estimate on hole cards highness.
-      const community = tableState.community || [];
-      const combined = [...player.hand, ...community];
-      const rank = PK_evaluate7(combined); // higher array better
-      const strength = PK_rankToScore(rank); // numeric [0..100]
-      const toCallNeed = (tableState.toCall || 0) - (player.bet||0);
-      const pot = PK_table.potObjects.reduce((a,b)=>a+b.amount,0) + (player.bet||0);
-      // simple heuristics:
-      // if very strong -> raise large
-      if(strength >= 85 && player.stack > 0){
-        const raise = Math.min(player.stack, Math.max( Math.floor(pot*0.5), Math.floor(player.stack*0.4) ));
-        return { type:'raise', amount: Math.max(raise, 1) };
-      }
-      // medium strength -> call
-      if(strength >= 40){
-        if(toCallNeed === 0) return {type:'call'}; // check
-        if(toCallNeed <= Math.floor(player.stack * 0.5)) return {type:'call'};
-        // otherwise fold small chance
-        if(Math.random() < 0.8) return {type:'call'}; else return {type:'fold'};
-      }
-      // weak hand preflop heuristics based on hole cards
-      if(community.length===0){
-        // premium pairs/AKs aggressive
-        const v1 = PK_valNum(player.hand[0].value), v2 = PK_valNum(player.hand[1].value);
-        const suited = player.hand[0].suit === player.hand[1].suit;
-        if(v1 === v2 && v1 >= 10){ // high pocket pair
-          const raise = Math.min(player.stack, Math.floor(player.stack*0.25));
-          return {type:'raise', amount: Math.max(raise,1)};
-        }
-        if((v1===14 && v2>=10) || (v2===14 && v1>=10)){
-          if(suited) return {type:'raise', amount: Math.min(player.stack, Math.floor(player.stack*0.2))};
-          return {type:'call'};
-        }
-        // else fold to big bets
-        if(toCallNeed > Math.floor(player.stack*0.1)) return {type:'fold'};
-        return {type:'call'};
-      }
-      // default: fold small hands
-      if(toCallNeed === 0) return {type:'call'}; // check
-      if(toCallNeed > Math.floor(player.stack*0.2)) return {type:'fold'};
-      if(Math.random()<0.3) return {type:'call'}; else return {type:'fold'};
-    }
-
-    // Convert evaluator rank to 0..100 score for bot heuristics
-    function PK_rankToScore(rankArr){
-      // rankArr: [category(8..0), tie1, tie2...]
-      // map category to base score
-      const cat = rankArr[0];
-      const base = (cat/8) * 80; // 0..80
-      // add tie breakers scaled down
-      let t = 0;
-      for(let i=1;i<rankArr.length;i++){ t += (rankArr[i] || 0) / (1000 * i); }
-      return Math.min(99, Math.round(base + t*100));
-    }
-
-    // Calculate pots and side-pots
-    function PK_calculatePots(seats){
-      // seats: array of seat players (some null)
-      const snapshot = seats.filter(s => s).map(p => ({ key:p.key, committed: p.committed || 0, folded: p.folded }));
-      const pots = [];
-      while(true){
-        const contributors = snapshot.filter(s => s.committed > 0);
-        if(contributors.length === 0) break;
-        let min = Math.min(...contributors.map(c => c.committed));
-        const potAmount = min * contributors.length;
-        const eligibles = contributors.map(c => c.key);
-        pots.push({ amount: potAmount, eligibles });
-        for(const c of contributors) c.committed -= min;
-      }
-      return pots;
-    }
-
-    // Finish hand: evaluate showdown and pay pots
-    function PK_finishHand(){
-      // compute pots from seats (ensure committed includes current bets)
-      for(const p of PK_table.seats){ if(p){ p.committed = (p.committed||0) + (p.bet||0); p.bet = 0; } }
-      PK_table.potObjects = PK_calculatePots(PK_table.seats);
-      PK_updatePotUI();
-      // determine winners per pot
-      const payoutLog = [];
-      for(let i=0;i<PK_table.potObjects.length;i++){
-        const pot = PK_table.potObjects[i];
-        const eligiblePlayers = pot.eligibles.map(k => PK_table.seats.find(s=>s && s.key===k)).filter(x=>x && !x.folded);
-        if(eligiblePlayers.length === 0){
-          payoutLog.push({ potIndex:i, amount:pot.amount, winners:[], note:'nobody eligible' });
-          continue;
-        }
-        // evaluate best rank for each eligible
-        const ranks = eligiblePlayers.map(p => ({ p, rank: PK_evaluate7([...(p.hand||[]), ...PK_table.community]) }));
-        // find best
-        ranks.sort((a,b)=> PK_compareRank(a.rank,b.rank) ); // descending comparator returns negative if a better
-        const bestRank = ranks[0].rank;
-        const winners = ranks.filter(r => PK_compareRank(r.rank,bestRank) === 0).map(r=>r.p);
-        // split pot
-        const shareBase = Math.floor(pot.amount / winners.length);
-        let rem = pot.amount - shareBase * winners.length;
-        const wInfo = [];
-        for(const w of winners){
-          const share = shareBase + (rem>0?1:0);
-          if(rem>0) rem--;
-          w.stack += share;
-          users[w.key].credits = (users[w.key].credits || 0) + share; // also reflect in users credit for persistence
-          wInfo.push({ key:w.key, share });
-        }
-        payoutLog.push({ potIndex:i, amount:pot.amount, winners: wInfo });
-      }
-      // persist stacks to users where human seated
-      for(const p of PK_table.seats){ if(p && users[p.key]) { users[p.key].credits = p.stack; users[p.key].totalEarned = users[p.key].totalEarned || 0; saveUsers(); } }
-      showLog('Showdown complete. Uitbetalingen: ' + JSON.stringify(payoutLog));
-      PK_renderSeats();
-      PK_updateUI();
-      // rotate dealer
-      PK_table.dealerIndex = PK_nextOccupiedIndex(PK_table.dealerIndex, 1);
-      PK_table.running = false;
-    }
-
-    // Utility: update UI elements for community and pot
-    function PK_updateCommunity(){
-      communityCardsDiv.innerHTML = '';
-      for(const c of PK_table.community){
-        const el = document.createElement('div'); el.className='card-pk'; el.textContent = PK_cardText(c); communityCardsDiv.appendChild(el);
-      }
-    }
-    function PK_updatePotUI(){
-      const pot = PK_table.potObjects.reduce((a,b)=>a+b.amount,0);
-      pokerPotSpan.textContent = pot;
-      pokerSidePotsSpan.textContent = PK_table.potObjects.length>1 ? PK_table.potObjects.slice(1).map(p=>p.amount).join(',') : '-';
-    }
-    function PK_updateUI(){
-      PK_renderSeats();
-      pokerPotSpan.textContent = PK_table.potObjects.reduce((a,b)=>a+b.amount,0) || 0;
-      PK_updateCommunity();
-    }
-
-    // Evaluate 7-card hand -> returns rank array [category(8..0), tiebreakers...]
-    // category: 8 straight flush,7 four,6 full house,5 flush,4 straight,3 trips,2 two pair,1 pair,0 high card
-    function PK_evaluate7(cards){
-      if(!cards || cards.length===0) return [0,0,0,0,0];
-      // map value counts and suits
-      const vals = cards.map(c => PK_valNum(c.value));
-      // account for Ace as 1 as well
-      const counts = {};
-      const suits = {};
-      for(const c of cards){
-        const v = PK_valNum(c.value);
-        counts[v] = (counts[v]||0)+1;
-        suits[c.suit] = suits[c.suit] || [];
-        suits[c.suit].push(v);
-      }
-      // helper to find flush
-      let flushSuit = null;
-      for(const s of Object.keys(suits)){
-        if(suits[s].length >= 5){ flushSuit = s; break; }
-      }
-      // get unique sorted values desc
-      const uniq = [...new Set(vals)].sort((a,b)=>b-a);
-      // for straight detection include Ace low
-      const uniqForStraight = [...new Set(vals.map(v=>v))];
-      if(uniqForStraight.indexOf(14) !== -1) uniqForStraight.push(1);
-      const uniqSortedAsc = [...new Set(uniqForStraight)].sort((a,b)=>a-b);
-      // detect straight highest
-      function findStraightHigh(arr){
-        // arr sorted asc unique
-        let maxHigh = -1;
-        let run = 1;
-        for(let i=1;i<arr.length;i++){
-          if(arr[i] === arr[i-1] + 1) {
-            run++;
-            if(run>=5) maxHigh = Math.max(maxHigh, arr[i]);
-          } else {
-            run = 1;
-          }
-        }
-        return maxHigh; // value of highest card in straight (numeric), -1 if none
-      }
-      const straightHigh = findStraightHigh(uniqSortedAsc);
-      // straight flush detection
-      let straightFlushHigh = -1;
-      if(flushSuit){
-        const valsFlush = suits[flushSuit]; // unsorted maybe
-        const uniqF = [...new Set(valsFlush)];
-        if(uniqF.indexOf(14)!==-1) uniqF.push(1);
-        uniqF.sort((a,b)=>a-b);
-        straightFlushHigh = findStraightHigh(uniqF);
-      }
-      // counts analysis for pairs/trips/quads
-      const groups = [];
-      for(const k of Object.keys(counts)){ groups.push({val:parseInt(k),count:counts[k]}); }
-      groups.sort((a,b)=> b.count - a.count || b.val - a.val);
-      const quads = groups.filter(g=>g.count===4).map(g=>g.val);
-      const trips = groups.filter(g=>g.count===3).map(g=>g.val);
-      const pairs = groups.filter(g=>g.count===2).map(g=>g.val);
-      // build tiebreakers
-      if(straightFlushHigh>0) return [8, straightFlushHigh];
-      if(quads.length>0){
-        const qv = quads[0];
-        // kicker is highest other card
-        const kicker = Math.max(...uniq.filter(v=>v!==qv));
-        return [7, qv, kicker];
-      }
-      if(trips.length>0 && (pairs.length>0 || trips.length>1)){
-        // full house: best trip + best pair (or second trip as pair)
-        const tripv = trips[0];
-        let pairv = pairs.length>0? pairs[0] : (trips[1]||0);
-        return [6, tripv, pairv];
-      }
-      if(flushSuit){
-        // best 5 values of flush suit
-        const sortedFlushVals = suits[flushSuit].slice().sort((a,b)=>b-a);
-        const top5 = sortedFlushVals.slice(0,5);
-        return [5, ...top5];
-      }
-      if(straightHigh>0) return [4, straightHigh];
-      if(trips.length>0){
-        const tripv = trips[0];
-        // kickers: highest other two cards
-        const others = uniq.filter(v=>v!==tripv).sort((a,b)=>b-a).slice(0,2);
-        return [3, tripv, ...others];
-      }
-      if(pairs.length>=2){
-        const p1 = pairs[0], p2 = pairs[1];
-        const kicker = uniq.filter(v=>v!==p1 && v!==p2).sort((a,b)=>b-a)[0];
-        return [2, p1, p2, kicker];
-      }
-      if(pairs.length===1){
-        const p = pairs[0];
-        const kickers = uniq.filter(v=>v!==p).sort((a,b)=>b-a).slice(0,3);
-        return [1, p, ...kickers];
-      }
-      // high card
-      const top = uniq.sort((a,b)=>b-a).slice(0,5);
-      return [0, ...top];
-    }
-
-    // Compare rank arrays: return -1 if a better than b, 1 if b better, 0 equal
-    function PK_compareRank(a,b){
-      // both arrays
-      for(let i=0;i<Math.max(a.length,b.length);i++){
-        const va = a[i]||0, vb = b[i]||0;
-        if(va>vb) return -1;
-        if(va<vb) return 1;
-      }
-      return 0;
-    }
-
-    /* ---------------------------
-       Poker UI events & init
-       --------------------------- */
-    // initialize table seats
-    PK_resetTable();
-    // add bots automatically if you want? leave to user to join bots by code or we can prefill
-    // For convenience, create a function to add bots to empty seats
-    function PK_addBots(count){
-      let added=0;
-      for(let i=0;i<PK_table.seats.length && added<count;i++){
-        if(!PK_table.seats[i]){
-          const player = {
-            key: 'bot'+(i+1),
-            name: 'Bot '+(i+1),
-            stack: parseInt(pokerStartStackInput.value)||1000,
-            hand: [],
-            bet:0,
-            committed:0,
-            folded:false,
-            allIn:false,
-            isBot:true,
-            seat:i
-          };
-          PK_table.seats[i]=player; added++;
-        }
-      }
-      PK_renderSeats();
-    }
-
-    // quick add bots button logic: when user joins, fill rest seats with bots up to selected max
-    // We'll not auto-add here; user can call PK_addBots in console or you can click join multiple times
-    // Wire UI controls for player actions
-    foldBtn.onclick = ()=>{ /* handled in PK_waitHumanAction via listener */ };
-    callBtn.onclick = ()=>{ /* handled in PK_waitHumanAction via listener */ };
-    raiseBtn.onclick = ()=>{ /* handled in PK_waitHumanAction via listener */ };
-    allinBtn.onclick = ()=>{ /* handled in PK_waitHumanAction via listener */ };
-
-    // expose some helpers to console for debugging
-    window.PK = {
-      PK_addBots,
-      PK_table,
-      PK_evaluate7
+    pokerCheckBtn.onclick = ()=>{
+      pokerStatusEl.textContent = 'Check / Call uitgevoerd (demo).';
+    };
+    pokerBetBtn.onclick = ()=>{
+      pokerStatusEl.textContent = 'Bet / Raise uitgevoerd (demo).';
+    };
+    pokerFoldBtn.onclick = ()=>{
+      pokerStatusEl.textContent = 'Fold (demo).';
     };
 
     /* ---------------------------
-       End Poker module
+       Leaderboard popup
        --------------------------- */
+    let lbIndex = 0;
+    const lbTypes = ['earnings','winrate','bjwinrate','pkwinrate'];
 
-    // Init view
-    loginSection.style.display='flex';
+    async function loadUsersArrayFromDb(){
+      const snap = await db.ref('users').once('value');
+      const obj = snap.val() || {};
+      return Object.entries(obj).map(([k,u])=>({
+        key: k,
+        name: u.name,
+        totalEarned: u.totalEarned||0,
+        wins: u.wins||0,
+        losses: u.losses||0,
+        games: u.gamesPlayed||0,
+        bjWins: u.bjWins||0,
+        bjLosses: u.bjLosses||0,
+        bjGames: u.bjGames||0,
+        pkWins: u.pkWins||0,
+        pkLosses: u.pkLosses||0,
+        pkGames: u.pkGames||0
+      }));
+    }
+
+    async function openLeaderboard(){
+      lbPopup.style.display='block';
+      const type = lbTypes[lbIndex];
+      let title = '';
+      if(type==='earnings') title = 'All-Time Earnings';
+      else if(type==='winrate') title = 'Win Percentage (overall)';
+      else if(type==='bjwinrate') title = 'Blackjack Win Percentage';
+      else if(type==='pkwinrate') title = 'Poker Win Percentage';
+      lbTitle.textContent = title;
+
+      const arr = await loadUsersArrayFromDb();
+
+      if(type==='earnings'){
+        arr.sort((a,b)=>b.totalEarned-a.totalEarned);
+      } else if(type==='winrate'){
+        arr.sort((a,b)=>{
+          const ra=a.games?(a.wins/a.games):0;
+          const rb=b.games?(b.wins/b.games):0;
+          return rb-ra;
+        });
+      } else if(type==='bjwinrate'){
+        arr.sort((a,b)=>{
+          const ra=a.bjGames?(a.bjWins/a.bjGames):0;
+          const rb=b.bjGames?(b.bjWins/b.bjGames):0;
+          return rb-ra;
+        });
+      } else if(type==='pkwinrate'){
+        arr.sort((a,b)=>{
+          const ra=a.pkGames?(a.pkWins/a.pkGames):0;
+          const rb=b.pkGames?(b.pkWins/b.pkGames):0;
+          return rb-ra;
+        });
+      }
+
+      let html='';
+      const top=arr.slice(0,10);
+      top.forEach((u,i)=>{
+        const isYou=currentUser && (u.key===currentUser.key);
+        let extra = '';
+        if(type==='earnings') extra = '— '+u.totalEarned+' credits';
+        else if(type==='winrate') extra = '— '+(u.games?Math.round(100*u.wins/u.games):0)+'%';
+        else if(type==='bjwinrate') extra = '— '+(u.bjGames?Math.round(100*u.bjWins/u.bjGames):0)+'%';
+        else if(type==='pkwinrate') extra = '— '+(u.pkGames?Math.round(100*u.pkWins/u.pkGames):0)+'%';
+        html+=`<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${extra}</div>`;
+      });
+
+      let yourRank=-1;
+      if(currentUser) yourRank=arr.findIndex(x=>x.key===currentUser.key);
+      if(yourRank>9){
+        const u=arr[yourRank];
+        let extra = '';
+        if(type==='earnings') extra = '— '+u.totalEarned+' credits';
+        else if(type==='winrate') extra = '— '+(u.games?Math.round(100*u.wins/u.games):0)+'%';
+        else if(type==='bjwinrate') extra = '— '+(u.bjGames?Math.round(100*u.bjWins/u.bjGames):0)+'%';
+        else if(type==='pkwinrate') extra = '— '+(u.pkGames?Math.round(100*u.pkWins/u.pkGames):0)+'%';
+        html+=`<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${extra}</div>`;
+      } else if(yourRank===-1 && currentUser){
+        html+=`<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`;
+      }
+      lbContent.innerHTML=html;
+    }
+
+    lbTab.onclick = ()=>{ lbIndex=0; openLeaderboard(); };
+    lbClose.onclick = ()=>{ lbPopup.style.display='none'; };
+    lbLeft.onclick = ()=>{ lbIndex=(lbIndex-1+lbTypes.length)%lbTypes.length; openLeaderboard(); };
+    lbRight.onclick = ()=>{ lbIndex=(lbIndex+1)%lbTypes.length; openLeaderboard(); };
+
   </script>
 </body>
 </html>
