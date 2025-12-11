@@ -211,6 +211,49 @@
 
     .poker-controls { margin-top:14px; }
 
+    <!-- ==================== PAARDENRACE SPEL ==================== -->
+<section id="horseRaceSection" style="display:none; text-align:center; padding:20px; color:white; background:#1b1b1b; height:100vh;">
+    <h2>🏇 Paardenrace</h2>
+
+    <p>Kies je paard en zet je credits in!</p>
+
+    <label>Inzet (credits):</label>
+    <input type="number" id="horseBet" min="10" value="100">
+
+    <br><br>
+
+    <label>Kies een paard:</label>
+    <select id="horseSelect">
+        <option value="1">Paard 1 – ⚡ Sprinter</option>
+        <option value="2">Paard 2 – 🛡 Steady Boy</option>
+        <option value="3">Paard 3 – 🎯 Precision</option>
+        <option value="4">Paard 4 – 🎲 Wild Power</option>
+    </select>
+
+    <br><br>
+
+    <button id="startRaceBtn">Start race</button>
+    <button id="backToMenuRace">Terug naar menu</button>
+
+    <!-- Race Track -->
+    <div id="raceTrack" style="width:90%; margin:40px auto; border:3px solid gold; padding:20px; background:#0d3f00; border-radius:14px;">
+        
+        <div class="raceLane" id="lane1">
+            <div class="horse" id="horse1">🐎</div>
+        </div>
+        <div class="raceLane" id="lane2">
+            <div class="horse" id="horse2">🐎</div>
+        </div>
+        <div class="raceLane" id="lane3">
+            <div class="horse" id="horse3">🐎</div>
+        </div>
+        <div class="raceLane" id="lane4">
+            <div class="horse" id="horse4">🐎</div>
+        </div>
+
+    </div>
+</section>
+
     /* Global credits display */
     #creditsDisplayGlobal{
       position: fixed;
