@@ -283,7 +283,7 @@
         <option value="4">4 bots</option>
         <option value="5">5 bots</option>
         <option value="6">6 bots</option>
-        </select><br><br>
+      </select><br><br>
       <label>Inzet (credits):</label>
       <input type="number" id="betAmount" min="1" value="100">
       <button id="startGame">Start spel</button>
@@ -641,7 +641,7 @@
       // binnenradius: dealer & speler, iets binnen de rand
       const innerRadius = Math.min(centerX, centerY) - 120;
 
-      // buitenradius: bots, precies op de rand van de tafel
+      // buitenradius: bots, op de rand van de tafel
       const outerRadius = Math.min(centerX, centerY) - 70;
 
       // hoeken: dealer boven (12 uur), speler onder (6 uur)
@@ -679,8 +679,7 @@
         table.appendChild(div);
       }
 
-      // Dealer (nooit actief)
-      // Dealer met hole card: eerste kaart face-down als dealerReveal nog false is
+      // Dealer (met eventueel verborgen eerste kaart)
       (function(){
         const radius = innerRadius;
         const angle = dealerAngle;
@@ -695,7 +694,6 @@
 
         let cardsHTML = '';
         if (!dealerReveal && dealer.hand.length > 0) {
-          // eerste kaart rug, tweede kaart open
           cardsHTML += `<div class="card-bj card-back"></div>`;
           for (let i = 1; i < dealer.hand.length; i++) {
             const c = dealer.hand[i];
@@ -721,33 +719,39 @@
         createPlayerArea(players[0].name, players[0].hand, playerAngle, innerRadius, isActivePlayer);
       }
 
-      // Bots langs de rand, gelijk verdeeld over 360°
+      // Bots: vaste posities rond de rand, met ruimte onder voor de knoppen
       if (botCount > 0) {
+        const masterAngles = [
+          -3*Math.PI/4,  // linksboven
+          -Math.PI/4,    // rechtsboven
+          Math.PI,       // links
+          0,             // rechts
+          3*Math.PI/4,   // linksonder
+          Math.PI/4      // rechtsonder
+        ];
+        const usedAngles = masterAngles.slice(0, botCount);
+
         for (let i = 1; i < players.length; i++) {
-          const botIndex = i - 1;                // 0..botCount-1
-          const angle = (2 * Math.PI * botIndex / botCount) - Math.PI / 2; // rondom, start boven
+          const angle = usedAngles[i - 1];
           const isActiveBot = currentPlayerIndex === i;
           createPlayerArea(players[i].name, players[i].hand, angle, outerRadius, isActiveBot);
         }
       }
     }
 
+    function renderGame() {
+      placePlayers();
+    }
 
-      function renderGame(){ placePlayers(); }
-
-function renderGame() {
-  placePlayers();
-}
-
-function nextPlayer() {
-  currentPlayerIndex++;
-  if (currentPlayerIndex >= players.length) {
-    dealerTurn();
-  } else if (players[currentPlayerIndex].bot) {
-    botTurn(players[currentPlayerIndex]);
-  }
-  renderGame();
-}
+    function nextPlayer() {
+      currentPlayerIndex++;
+      if (currentPlayerIndex >= players.length) {
+        dealerTurn();
+      } else if (players[currentPlayerIndex].bot) {
+        botTurn(players[currentPlayerIndex]);
+      }
+      renderGame();
+    }
 
     function botTurn(bot){
       let hv = handValue(bot.hand);
@@ -858,7 +862,7 @@ function nextPlayer() {
     nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
 
     /* ---------------------------
-       Poker logic (bestaande logica, niet gewijzigd aan structuur)
+       Poker logic (bestaande logica)
        --------------------------- */
 
     const pkSuits = ['♠','♥','♦','♣'];
@@ -994,7 +998,6 @@ function nextPlayer() {
     };
 
     backFromPokerBtn.onclick = ()=>{
-      // Alleen navigatie: terug naar dashboard
       pokerSection.style.display = 'none';
       blackjackSection.style.display = 'none';
       dashboard.style.display = 'block';
