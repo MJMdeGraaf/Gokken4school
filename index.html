@@ -276,6 +276,7 @@
     <button id="playBlackjackBtn">Speel Blackjack</button>
     <button id="playPokerBtn">Speel Poker</button>
     <button id="logoutBtn">Uitloggen</button>
+    <button id="playHorseRaceBtn">🏇 Paardenrace</button>
 
     <!-- Music control -->
     <div style="margin-top:12px;">
@@ -322,7 +323,6 @@
   <!-- Poker -->
   <section id="pokerSection">
     <h2>Texas Hold'em Poker</h2>
-    <p>Speel tegen bots met echte potten & side pots (voor je PWS natuurlijk 😉).</p>
 
     <div style="margin:10px 0;">
       <label>Minimale credits om mee te doen: 500. Kies tafel:</label><br>
@@ -641,6 +641,12 @@
       blackjackSection.style.display='none';
       pokerSection.style.display='block';
     };
+const playHorseRaceBtn = document.getElementById("playHorseRaceBtn");
+
+playHorseRaceBtn.onclick = () => {
+    dashboard.style.display = "none";
+    horseRaceSection.style.display = "block";
+};
 
     backToMenuBtn.onclick = ()=>{
       blackjackSection.style.display='none';
