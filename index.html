@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Goksite PWS — Multiplayer Blackjack & Poker</title>
+  <title>Goksite PWS — Multiplayer Blackjack & Poker (Online)</title>
   <style>
     /* ============================ LEADERBOARD TAB STYLE ============================ */
     #lb-tab{
@@ -91,56 +91,60 @@
     }
 
     /* ============================ Rest of page ============================ */
-    body { margin:0; font-family: system-ui, sans-serif; background:#050515; color:#fff;}
+    body { margin:0; font-family: system-ui, sans-serif; background:#111; color:#fff; }
     #login, #dashboard, #blackjackSection, #pokerSection { display: none; padding: 20px; text-align:center; }
-    #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
-    #dashboard { background: radial-gradient(circle at top, #4c1d7f 0, #050515 55%, #020208 100%); min-height:100vh; }
+    #login { background: radial-gradient(circle at top, #333, #000); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; color:#fff; }
+    #dashboard { background: radial-gradient(circle at top, #222, #050505); height:100vh; color:#fff; position:relative; }
     #dashboard h2, #login h2 { margin-bottom:10px; }
-    button { padding: 10px 14px; margin: 6px; border-radius: 8px; border:none; cursor:pointer; background:#e21a4d; color:#fff; font-weight:600; }
-    button:hover{ filter:brightness(1.05); }
-    input { padding:8px 10px; border-radius:6px; border:1px solid #444; background:#111; color:#fff; }
+    button { padding: 10px 14px; margin: 6px; border-radius: 8px; border:none; cursor:pointer; background:#d4af37; color:#111; font-weight:600; }
+
+    /* credits badge */
+    #creditsBadge {
+      position:absolute;
+      top:10px;
+      left:10px;
+      padding:8px 14px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.7);
+      color:#ffd700;
+      font-weight:700;
+      box-shadow:0 0 10px rgba(0,0,0,0.6);
+      font-size:14px;
+    }
 
     /* Blackjack sectie */
     #blackjackSection {
-      height: 100vh;
-      color: white;
-      background:
-        radial-gradient(circle at 20% 0%, rgba(255,255,255,0.08), transparent 55%),
-        radial-gradient(circle at 80% 100%, rgba(255,255,255,0.04), transparent 55%),
-        radial-gradient(circle at center, #1c7b52 0, #094432 55%, #031614 100%);
+      background: radial-gradient(circle at top, #0b3b2e, #04110c);
+      height:100vh;
+      color:white;
+      position:relative;
+      overflow:hidden;
     }
-
     .table-container {
-      position: relative;
+      position:relative;
       width: 90%;
       max-width: 900px;
       margin: 36px auto;
-      height: 520px;
-      perspective: 900px;
+      height:520px;
     }
-
     .table {
-      position: relative;
-      width: 100%;
-      height: 100%;
+      background: radial-gradient(circle at top, #145c3b, #052317);
       border-radius: 50%;
-      background:
-        radial-gradient(circle at 30% 20%, #2fbf7a 0, #12724b 45%, #063024 100%);
+      width:100%;
+      height:100%;
+      position:relative;
+      border: 10px solid #5e3b1e;
       box-shadow:
-        0 18px 40px rgba(0,0,0,0.8),
-        inset 0 0 25px rgba(0,0,0,0.85);
-      border: 8px solid #c59b45;
-      transform: rotateX(18deg);
-      transform-origin: center 120%;
+        0 20px 40px rgba(0,0,0,0.7),
+        inset 0 0 40px rgba(0,0,0,0.8);
     }
-
-    .table::before{
-      content:'';
+    .table::before {
+      content:"";
       position:absolute;
       inset:18%;
       border-radius:50%;
-      border:2px solid rgba(255,255,255,0.15);
-      box-shadow:0 0 12px rgba(0,0,0,0.7);
+      border:3px solid rgba(255,215,0,0.35);
+      box-shadow:0 0 18px rgba(255,215,0,0.35);
       pointer-events:none;
     }
 
@@ -152,7 +156,6 @@
     }
 
     .cards { display:flex; justify-content:center; gap:8px; margin-top:8px; }
-
     .card-bj {
       width:80px;
       height:120px;
@@ -173,7 +176,6 @@
       overflow:hidden;
       transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
-
     .card-bj.card-back {
       background: radial-gradient(circle at 30% 20%, #fff8d0 0, #d4af37 35%, #8b6b1f 100%);
       box-shadow:
@@ -181,48 +183,54 @@
         inset 0 0 0 1px rgba(255,255,255,0.9);
     }
 
-    .chair {
-      width:50px;
-      height:50px;
-      background:radial-gradient(circle at 30% 20%, #555, #222);
-      border-radius:50%;
-      position:absolute;
-      box-shadow:
-        0 4px 10px rgba(0,0,0,0.6),
-        inset 0 -4px 8px rgba(0,0,0,0.8);
-      border:2px solid #666;
-    }
-
+    .chair { width:40px; height:40px; background:#333; border-radius:50%; position:absolute; box-shadow:inset 0 -4px 6px rgba(0,0,0,0.4); }
     #controls { margin-top:20px; }
 
-    /* Poker section */
-    #pokerSection { background:#0f2b2a; min-height:100vh; color:white; padding-bottom:40px; }
-    .poker-table { width:90%; max-width:1000px; margin:20px auto; background:linear-gradient(145deg,#123835,#041817); border-radius:16px; padding:18px; box-shadow:0 8px 30px rgba(0,0,0,0.5); }
-    .community { display:flex; justify-content:center; gap:8px; margin:12px 0; }
-    .card-pk { width:72px; height:102px; background:white; color:black; border-radius:8px; display:flex; justify-content:center; align-items:center; font-weight:bold; box-shadow:0 6px 16px rgba(0,0,0,0.7); }
-    .poker-players { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:16px; }
-    .poker-player { min-width:140px; padding:10px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); }
-    .poker-player h4{ margin:0 0 6px 0; font-size:14px; }
-    .poker-player .hand{ display:flex; justify-content:center; gap:6px; margin:6px 0; }
-    .poker-info-row{ margin-top:8px; font-size:13px; }
-    .poker-pot-row{ margin-top:8px; font-weight:bold; }
-    .poker-seat-row{ font-size:12px; color:#ccc; }
-    small { font-size:12px; color:#ddd; }
-
-    .poker-controls { margin-top:14px; }
-
-    /* Global credits display */
-    #creditsDisplayGlobal{
-      position: fixed;
-      top: 12px;
-      left: 12px;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 16px;
-      z-index: 99999;
-      display: none;
+    /* Poker sectie */
+    #pokerSection {
+      background: radial-gradient(circle at top, #162447, #050818);
+      height:100vh;
+      color:#fff;
+      position:relative;
+    }
+    #pokerTable {
+      position:relative;
+      width:90%;
+      max-width:900px;
+      margin:40px auto;
+      height:520px;
+      background:radial-gradient(circle at top, #234, #020712);
+      border-radius:40% / 60%;
+      border: 10px solid #5e3b1e;
+      box-shadow:
+        0 20px 40px rgba(0,0,0,0.7),
+        inset 0 0 40px rgba(0,0,0,0.8);
+    }
+    .poker-player {
+      position:absolute;
+      text-align:center;
+      color:#fff;
+    }
+    .poker-cards {
+      display:flex;
+      justify-content:center;
+      gap:6px;
+      margin-top:4px;
+    }
+    .poker-card {
+      width:60px;
+      height:90px;
+      background:#fff;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#000;
+      font-weight:bold;
+      box-shadow:0 4px 10px rgba(0,0,0,0.6);
+    }
+    #pokerControls {
+      margin-top:10px;
     }
 
     /* small responsive */
@@ -230,16 +238,11 @@
       #lb-popup { width: 100%; right:0; left:0; height: 50vh; border-radius: 12px 12px 0 0;}
       .card-bj{ width:56px; height:84px; }
       .table-container{ height:360px; }
-      .card-pk{ width:56px; height:84px; }
+      #pokerTable{ height:360px; }
     }
   </style>
 </head>
 <body>
-
-  <!-- Globale credits overlay -->
-  <div id="creditsDisplayGlobal">
-    Credits: <span id="globalCredits">0</span>
-  </div>
 
   <!-- Login / Account aanmaken -->
   <section id="login">
@@ -252,6 +255,7 @@
 
   <!-- Dashboard -->
   <section id="dashboard">
+    <div id="creditsBadge">💰 Credits: <span id="badgeCredits">0</span></div>
     <h2>Welkom, <span id="displayName"></span></h2>
     <p>Credits: <span id="credits"></span></p>
     <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
@@ -262,9 +266,7 @@
     <!-- Music control -->
     <div style="margin-top:12px;">
       <audio id="bgMusic" loop>
-        <source src="https://cdn.pixabay.com/audio/2023/03/07/audio_2ea36d1deb.mp3" type="audio/mpeg">
-        <source src="https://cdn.pixabay.com/audio/2023/03/15/audio_e3bbcbfce7.mp3" type="audio/mpeg">
-        <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8f17fc4b42.mp3" type="audio/mpeg">
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_8f17fc4b42.mp3?filename=game-music-110387.mp3" type="audio/mpeg">
       </audio>
       <button id="musicControl">🎵 Muziek</button>
     </div>
@@ -283,7 +285,7 @@
         <option value="4">4 bots</option>
         <option value="5">5 bots</option>
         <option value="6">6 bots</option>
-        </select><br><br>
+      </select><br><br>
       <label>Inzet (credits):</label>
       <input type="number" id="betAmount" min="1" value="100">
       <button id="startGame">Start spel</button>
@@ -304,39 +306,25 @@
   <!-- Poker -->
   <section id="pokerSection">
     <h2>Texas Hold'em Poker</h2>
-    <p>Speel tegen bots met echte potten & side pots (voor je PWS natuurlijk 😉).</p>
-
-    <div style="margin:10px 0;">
-      <label>Minimale credits om mee te doen: 500. Kies tafel:</label><br>
-      <select id="pokerTableSelect">
-        <option value="500">Tafel 500</option>
-        <option value="1500">Tafel 1500</option>
-        <option value="3500">Tafel 3500</option>
-        <option value="5000">Tafel 5000</option>
+    <div>
+      <label>Selecteer tafellimiet:</label>
+      <select id="pokerTableLimit">
+        <option value="500">500 credits</option>
+        <option value="1500">1500 credits</option>
+        <option value="3500">3500 credits</option>
+        <option value="5000">5000 credits</option>
       </select>
-      <button id="joinPokerBtn">Deelnemen</button>
-      <button id="leavePokerBtn">Tafel verlaten</button>
-      <button id="backFromPokerBtn">Terug naar menu</button>
+      <button id="joinPokerBtn">Join tafel</button>
+      <button id="leavePokerBtn">Verlaat tafel</button>
+      <button id="backToMenuFromPoker">Terug naar menu</button>
     </div>
-
-    <div class="poker-table">
-      <div class="poker-pot-row">
-        Pot: <span id="pokerPot">0</span> | Side pot: <span id="pokerSidePot">0</span>
-      </div>
-      <div class="community" id="pokerCommunity"></div>
-      <div class="poker-players" id="pokerPlayers"></div>
-
-      <div class="poker-controls">
-        <p><strong>Jouw actie:</strong></p>
-        <button id="pokerCheckBtn">Check / Call</button>
-        <button id="pokerBetBtn">Bet / Raise</button>
-        <button id="pokerFoldBtn">Fold</button>
-        <div style="margin-top:6px;">
-          <label>Bet bedrag:</label>
-          <input type="number" id="pokerBetAmount" min="0" value="100" style="width:100px;">
-        </div>
-        <small id="pokerStatus"></small>
-      </div>
+    <div id="pokerTable">
+      <!-- Poker spelers + community cards -->
+    </div>
+    <div id="pokerControls">
+      <button id="pokerCheckBtn">Check / Call</button>
+      <button id="pokerBetBtn">Bet / Raise</button>
+      <button id="pokerFoldBtn">Fold</button>
     </div>
   </section>
 
@@ -374,50 +362,49 @@
     </div>
   </div>
 
-  <!-- Firebase v8 (online accounts & leaderboards) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script>
+  <!-- ============================ Firebase & App Script ============================ -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyARtIFfUXzlkJppkcUSx5ril2FerJltwNs",
       authDomain: "gokken4school.firebaseapp.com",
-      databaseURL: "https://gokken4school-default-rtdb.europe-west1.firebasedatabase.app",
       projectId: "gokken4school",
       storageBucket: "gokken4school.firebasestorage.app",
       messagingSenderId: "210902717668",
       appId: "1:210902717668:web:16ebea58067718ffce48f1",
       measurementId: "G-G9SVYLDMWC"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-  </script>
 
-  <script>
-    /* ---------------------------
-       Data & helpers
-       --------------------------- */
-    let users = {};
-    let currentUser = null;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-    function keyForName(name){ return name.trim().toLowerCase(); }
+    // ==================== Data & helpers ====================
+    let currentUser = null; 
+    let currentUserId = null;
 
-    async function loadUser(key){
-      const snap = await db.ref('users/'+key).once('value');
-      return snap.val() || null;
-    }
-    async function saveCurrentUser(){
-      if(!currentUser || !currentUser.key) return;
-      await db.ref('users/'+currentUser.key).set(currentUser);
+    async function loadUser(username) {
+      const ref = doc(db, "users", username);
+      const snap = await getDoc(ref);
+      return snap.exists() ? snap.data() : null;
     }
 
-    /* ---------------------------
-       UI refs
-       --------------------------- */
+    async function saveUser(username, data) {
+      const ref = doc(db, "users", username);
+      await setDoc(ref, data, { merge: true });
+    }
+
+    async function saveCurrentUser() {
+      if (!currentUserId || !currentUser) return;
+      await saveUser(currentUserId, currentUser);
+    }
+
+    // ==================== UI refs ====================
     const loginSection = document.getElementById('login');
     const dashboard = document.getElementById('dashboard');
     const blackjackSection = document.getElementById('blackjackSection');
     const pokerSection = document.getElementById('pokerSection');
-    const backFromPokerBtn = document.getElementById('backFromPokerBtn');
 
     const usernameInput = document.getElementById('usernameInput');
     const passwordInput = document.getElementById('passwordInput');
@@ -425,11 +412,11 @@
     const createAccountBtn = document.getElementById('createAccountBtn');
     const displayName = document.getElementById('displayName');
     const creditsEl = document.getElementById('credits');
+    const badgeCreditsEl = document.getElementById('badgeCredits');
     const claimDailyBtn = document.getElementById('claimDailyBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
     const playPokerBtn = document.getElementById('playPokerBtn');
-    const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
 
     const bgMusic = document.getElementById('bgMusic');
     const musicControl = document.getElementById('musicControl');
@@ -439,7 +426,7 @@
     const closeMusicMenu = document.getElementById('closeMusicMenu');
     const muteBtn = document.getElementById('muteBtn');
 
-    /* Blackjack refs */
+    // Blackjack refs
     const startGameBtn = document.getElementById('startGame');
     const botSelect = document.getElementById('botCount');
     const betAmountInput = document.getElementById('betAmount');
@@ -449,21 +436,17 @@
     const nextRoundBtn = document.getElementById('nextRoundBtn');
     const backToMenuBtn = document.getElementById('backToMenu');
 
-    /* Poker refs */
-    const pokerTableSelect = document.getElementById('pokerTableSelect');
+    // Poker refs
+    const pokerTableLimit = document.getElementById('pokerTableLimit');
     const joinPokerBtn = document.getElementById('joinPokerBtn');
     const leavePokerBtn = document.getElementById('leavePokerBtn');
-    const pokerPotEl = document.getElementById('pokerPot');
-    const pokerSidePotEl = document.getElementById('pokerSidePot');
-    const pokerCommunityEl = document.getElementById('pokerCommunity');
-    const pokerPlayersEl = document.getElementById('pokerPlayers');
+    const backToMenuFromPoker = document.getElementById('backToMenuFromPoker');
+    const pokerTable = document.getElementById('pokerTable');
     const pokerCheckBtn = document.getElementById('pokerCheckBtn');
     const pokerBetBtn = document.getElementById('pokerBetBtn');
     const pokerFoldBtn = document.getElementById('pokerFoldBtn');
-    const pokerBetAmountInput = document.getElementById('pokerBetAmount');
-    const pokerStatusEl = document.getElementById('pokerStatus');
 
-    /* Leaderboard refs */
+    // Leaderboard refs
     const lbTab = document.getElementById('lb-tab');
     const lbPopup = document.getElementById('lb-popup');
     const lbLeft = document.getElementById('lb-left');
@@ -472,87 +455,76 @@
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
 
-    const creditsGlobalSpan = document.getElementById('globalCredits');
+    function normalizeUsername(name){ return name.trim().toLowerCase(); }
 
-    /* ---------------------------
-       Login / accounts
-       --------------------------- */
+    // ==================== Login ====================
     loginSection.style.display = 'flex';
 
     loginBtn.onclick = async ()=>{
-      const rawName = usernameInput.value.trim();
-      const passwd = passwordInput.value.trim();
-      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+        const nameRaw = usernameInput.value.trim();
+        const password = passwordInput.value;
+        if(!nameRaw || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
 
-      const key = keyForName(rawName);
-      const existing = await loadUser(key);
-      if(!existing) return alert('Account bestaat niet.');
-      if(existing.password !== passwd) return alert('Wachtwoord onjuist.');
+        const key = normalizeUsername(nameRaw);
+        const data = await loadUser(key);
+        if(!data) return alert('Account bestaat niet.');
+        if(data.password !== password) return alert('Wachtwoord verkeerd.');
 
-      currentUser = existing;
-      currentUser.key = key;
-      loginSection.style.display='none';
-      dashboard.style.display='block';
-      renderDashboard();
-      bgMusic.play().catch(()=>{});
+        currentUserId = key;
+        currentUser = data;
+        showDashboard();
+        try { bgMusic.play().catch(()=>{}); } catch(e){}
     };
 
     createAccountBtn.onclick = async ()=>{
-      const rawName = usernameInput.value.trim();
-      const passwd = passwordInput.value.trim();
-      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+        const nameRaw = usernameInput.value.trim();
+        const password = passwordInput.value;
+        if(!nameRaw || !password) return alert('Vul gebruikersnaam en wachtwoord in.');
 
-      const key = keyForName(rawName);
-      const existing = await loadUser(key);
-      if(existing){
-        alert('Account bestaat al.');
-        return;
-      }
+        const key = normalizeUsername(nameRaw);
+        const existing = await loadUser(key);
+        if(existing) return alert('Account bestaat al.');
 
-      currentUser = {
-        key,
-        name: rawName,
-        password: passwd,
-        credits: 1000,
-        lastDaily: null,
-        wins: 0,
-        losses: 0,
-        gamesPlayed: 0,
-        totalEarned: 0,
-        bjWins: 0,
-        bjLosses: 0,
-        bjGames: 0,
-        pkWins: 0,
-        pkLosses: 0,
-        pkGames: 0
-      };
-      await saveCurrentUser();
-      loginSection.style.display='none';
-      dashboard.style.display='block';
-      renderDashboard();
-      bgMusic.play().catch(()=>{});
+        currentUserId = key;
+        currentUser = {
+            name: nameRaw,
+            password: password,
+            credits: 500,
+            lastDaily: null,
+            wins: 0,
+            losses: 0,
+            totalEarned: 0,
+            gamesPlayed: 0
+        };
+
+        await saveCurrentUser();
+        showDashboard();
+        try { bgMusic.play().catch(()=>{}); } catch(e){}
     };
+
+    function showDashboard(){
+      loginSection.style.display = 'none';
+      blackjackSection.style.display = 'none';
+      pokerSection.style.display = 'none';
+      dashboard.style.display = 'block';
+      renderDashboard();
+    }
 
     function renderDashboard(){
       if(!currentUser) return;
       displayName.textContent = currentUser.name;
       creditsEl.textContent = currentUser.credits;
-      const bar = document.getElementById('creditsDisplayGlobal');
-      if(bar){
-        bar.style.display = 'block';
-        creditsGlobalSpan.textContent = currentUser.credits;
-      }
+      badgeCreditsEl.textContent = currentUser.credits;
     }
 
     logoutBtn.onclick = () => {
       currentUser = null;
+      currentUserId = null;
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
       loginSection.style.display = 'flex';
       bgMusic.pause();
-      const bar = document.getElementById('creditsDisplayGlobal');
-      if(bar) bar.style.display = 'none';
     };
 
     claimDailyBtn.onclick = async ()=>{
@@ -583,13 +555,15 @@
 
     backToMenuBtn.onclick = ()=>{
       blackjackSection.style.display='none';
-      pokerSection.style.display='none';
-      dashboard.style.display='block';
+      showDashboard();
     };
 
-    /* ---------------------------
-       Music menu
-       --------------------------- */
+    backToMenuFromPoker.onclick = ()=>{
+      pokerSection.style.display='none';
+      showDashboard();
+    };
+
+    // ==================== Music menu ====================
     musicVolume.value = 0.4;
     bgMusic.volume = 0.4;
 
@@ -608,9 +582,7 @@
     muteBtn.onclick = ()=>{ bgMusic.muted = !bgMusic.muted; muteBtn.textContent = bgMusic.muted ? '🔇 Unmute' : '🎵 Mute'; };
     closeMusicMenu.onclick = ()=>{ musicMenu.style.display='none'; };
 
-    /* ---------------------------
-       Blackjack logic
-       --------------------------- */
+    // ==================== Blackjack logic ====================
     const suits=['♠','♥','♦','♣'];
     const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
     let deck=[];
@@ -628,8 +600,8 @@
     let dealer={hand:[], name:'Dealer'};
     let currentPlayerIndex=0;
     let currentBet = 100;
+    let dealerReveal = false;
 
-    
     function placePlayers() {
       table.innerHTML = '';
 
@@ -732,17 +704,20 @@
       }
     }
 
+    function renderGame(){
+      placePlayers();
+    }
 
-      function renderGame(){ placePlayers(); }
-
-ntPlayerIndex++;
+    function nextPlayer(){
+      currentPlayerIndex++;
       if(currentPlayerIndex >= players.length){
         dealerTurn();
       } else if(players[currentPlayerIndex].bot){
         botTurn(players[currentPlayerIndex]);
       }
-    }
       renderGame();
+    }
+
     function botTurn(bot){
       let hv = handValue(bot.hand);
       while(hv<16){
@@ -764,7 +739,7 @@ ntPlayerIndex++;
       checkWinners();
     }
 
-    function checkWinners(){
+    async function checkWinners(){
       const dealerScore=handValue(dealer.hand);
       let resultMsg=`Dealer heeft ${dealerScore}.\n`;
 
@@ -791,11 +766,13 @@ ntPlayerIndex++;
           if(outcome==='win') delta = Math.floor(currentBet*1.5);
           else if(outcome==='push') delta = Math.floor(currentBet*1.0);
           else delta = 0;
+
           currentUser.credits += delta;
           currentUser.gamesPlayed = (currentUser.gamesPlayed||0)+1;
-          if(outcome==='win'){ currentUser.wins=(currentUser.wins||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0)+delta; currentUser.bjWins=(currentUser.bjWins||0)+1; }
-          else if(outcome==='lose'){ currentUser.losses=(currentUser.losses||0)+1; currentUser.bjLosses=(currentUser.bjLosses||0)+1; }
-          currentUser.bjGames=(currentUser.bjGames||0)+1;
+          if(outcome==='win'){ currentUser.wins=(currentUser.wins||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0)+delta; }
+          else if(outcome==='lose'){ currentUser.losses=(currentUser.losses||0)+1; }
+          await saveCurrentUser();
+          renderDashboard();
         }
       }
 
@@ -803,10 +780,6 @@ ntPlayerIndex++;
       nextRoundBtn.style.display='inline';
       hitBtn.style.display='none';
       standBtn.style.display='none';
-
-      if(currentUser){
-        saveCurrentUser().then(renderDashboard);
-      }
     }
 
     function startRound(){
@@ -824,11 +797,11 @@ ntPlayerIndex++;
       dealer.hand=[drawCard(), drawCard()];
       players.forEach(p=>p.hand=[drawCard(), drawCard()]);
       currentPlayerIndex=0;
+      dealerReveal = false;
       renderGame();
       if(players[0].bot) botTurn(players[0]);
       hitBtn.style.display='inline';
       standBtn.style.display='inline';
-      nextRoundBtn.style.display='none';
     }
 
     startGameBtn.onclick = ()=>{
@@ -836,7 +809,6 @@ ntPlayerIndex++;
       const botCount=parseInt(botSelect.value);
       players=[{ name:currentUser.name, bot:false, hand:[] }];
       for(let i=1;i<=botCount;i++) players.push({ name:`Bot ${i}`, bot:true, hand:[] });
-      dealer.hand=[];
       startRound();
     };
 
@@ -850,243 +822,42 @@ ntPlayerIndex++;
     standBtn.onclick = ()=>{ nextPlayer(); };
     nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
 
-    /* ---------------------------
-       Poker logic (bestaande logica, niet gewijzigd aan structuur)
-       --------------------------- */
-
-    const pkSuits = ['♠','♥','♦','♣'];
-    const pkValues = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
-    let pkDeck = [];
-
-    function pkCreateDeck(){
-      pkDeck=[];
-      for(let s of pkSuits) for(let v of pkValues) pkDeck.push({suit:s,value:v});
-      for(let i=pkDeck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pkDeck[i],pkDeck[j]]=[pkDeck[j],pkDeck[i]]; }
-    }
-
-    let pokerPlayers = [];
-    let pokerPot = 0;
-    let pokerSidePot = 0;
-    let pokerCommunity = [];
-    let pokerCurrentPlayerIndex = 0;
-    let pokerTableMin = 500;
-
-    function pkDraw(){ return pkDeck.pop(); }
-
-    function pkRender(){
-      pokerPotEl.textContent = pokerPot;
-      pokerSidePotEl.textContent = pokerSidePot;
-      pokerCommunityEl.innerHTML = pokerCommunity.map(c=>`<div class="card-pk">${c.value}${c.suit}</div>`).join('');
-      pokerPlayersEl.innerHTML = pokerPlayers.map((p,i)=>{
-        const isYou = currentUser && p.key===currentUser.key;
-        return `<div class="poker-player">
-          <h4>${p.name} ${isYou?'(jij)':''} ${i===pokerCurrentPlayerIndex?'←':''}</h4>
-          <div class="hand">${p.hand.map(c=>`<div class="card-pk">${c.value}${c.suit}</div>`).join('')}</div>
-          <div class="poker-info-row">Stack: ${p.stack}</div>
-          <div class="poker-info-row">Ingezet: ${p.bet} (committed: ${p.committed})</div>
-          <div class="poker-seat-row">Seat ${p.seat} ${p.folded?'[FOLDED]':''} ${p.allIn?'[ALL-IN]':''}</div>
-        </div>`;
-      }).join('');
-    }
-
-    function pkNewHand(){
-      pkCreateDeck();
-      pokerPot = 0;
-      pokerSidePot = 0;
-      pokerCommunity = [];
-      pokerPlayers.forEach(p=>{
-        p.hand = [pkDraw(), pkDraw()];
-        p.bet = 0;
-        p.committed = 0;
-        p.folded = false;
-        p.allIn = false;
-      });
-      pokerCurrentPlayerIndex = 0;
-      pkRender();
-      pokerStatusEl.textContent = 'Nieuwe hand gestart.';
-    }
-
-    function PK_addBotsIfNeeded(){
-      const desiredSeats = 6;
-      const occupiedSeats = new Set(pokerPlayers.map(p=>p.seat));
-      let nextSeat = 1;
-      while(occupiedSeats.size < desiredSeats){
-        while(occupiedSeats.has(nextSeat)) nextSeat++;
-        const seatIdx = nextSeat;
-        occupiedSeats.add(seatIdx);
-        const nextIdx = pokerPlayers.filter(p=>p.isBot).length + 1;
-        const player = {
-          key: 'bot'+nextIdx,
-          name: 'Bot '+nextIdx,
-          stack: 2000,
-          entryStack: 2000,
-          hand: [],
-          bet: 0,
-          committed: 0,
-          folded: false,
-          allIn: false,
-          isBot: true,
-          seat: seatIdx
-        };
-        pokerPlayers.push(player);
-      }
-    }
-
-    joinPokerBtn.onclick = ()=>{
-      if(!currentUser) return alert('Je moet inloggen.');
-      const min = parseInt(pokerTableSelect.value)||500;
-      if(currentUser.credits < min){
-        alert('Je hebt niet genoeg credits voor deze tafel.');
-        return;
-      }
-      pokerTableMin = min;
-
-      if(pokerPlayers.some(p=>p.key===currentUser.key)){
-        alert('Je zit al aan de tafel.');
-        return;
-      }
-
-      currentUser.credits -= pokerTableMin;
-      currentUser.entryStack = pokerTableMin;
-      const seat = pokerPlayers.length ? Math.max(...pokerPlayers.map(p=>p.seat))+1 : 1;
-      pokerPlayers.push({
-        key: currentUser.key,
-        name: currentUser.name,
-        stack: pokerTableMin,
-        entryStack: pokerTableMin,
-        hand:[],
-        bet:0,
-        committed:0,
-        folded:false,
-        allIn:false,
-        isBot:false,
-        seat
-      });
-
-      PK_addBotsIfNeeded();
-      saveCurrentUser().then(renderDashboard);
-      pkNewHand();
-      pokerSection.style.display='block';
-      dashboard.style.display='none';
-    };
-
-    leavePokerBtn.onclick = ()=>{
-      if(!currentUser) return;
-      const idx = pokerPlayers.findIndex(p=>p.key===currentUser.key);
-      if(idx===-1){
-        alert('Je zit niet aan de tafel.');
-        return;
-      }
-      const pl = pokerPlayers[idx];
-      currentUser.credits += pl.stack;
-      pokerPlayers.splice(idx,1);
-      saveCurrentUser().then(()=>{
-        renderDashboard();
-        alert('Tafel verlaten. Je hebt nu weer '+currentUser.credits+' credits.');
-      });
-    };
-
-    backFromPokerBtn.onclick = ()=>{
-      // Alleen navigatie: terug naar dashboard
-      pokerSection.style.display = 'none';
-      blackjackSection.style.display = 'none';
-      dashboard.style.display = 'block';
-    };
-
-    pokerCheckBtn.onclick = ()=>{
-      pokerStatusEl.textContent = 'Check / Call uitgevoerd (demo).';
-    };
-    pokerBetBtn.onclick = ()=>{
-      pokerStatusEl.textContent = 'Bet / Raise uitgevoerd (demo).';
-    };
-    pokerFoldBtn.onclick = ()=>{
-      pokerStatusEl.textContent = 'Fold (demo).';
-    };
-
-    /* ---------------------------
-       Leaderboard popup
-       --------------------------- */
+    // ==================== Leaderboard popup ====================
     let lbIndex = 0;
-    const lbTypes = ['earnings','winrate','bjwinrate','pkwinrate'];
-
-    async function loadUsersArrayFromDb(){
-      const snap = await db.ref('users').once('value');
-      const obj = snap.val() || {};
-      return Object.entries(obj).map(([k,u])=>({
-        key: k,
-        name: u.name,
-        totalEarned: u.totalEarned||0,
-        wins: u.wins||0,
-        losses: u.losses||0,
-        games: u.gamesPlayed||0,
-        bjWins: u.bjWins||0,
-        bjLosses: u.bjLosses||0,
-        bjGames: u.bjGames||0,
-        pkWins: u.pkWins||0,
-        pkLosses: u.pkLosses||0,
-        pkGames: u.pkGames||0
-      }));
+    const lbTypes = ['earnings','winrate'];
+    async function loadUsersArray(){
+      const snap = await getDocs(collection(db, "users"));
+      const arr = [];
+      snap.forEach(docSnap => {
+        const u = docSnap.data();
+        arr.push({
+          key: docSnap.id,
+          name: u.name,
+          totalEarned: u.totalEarned||0,
+          wins: u.wins||0,
+          losses: u.losses||0,
+          games: u.gamesPlayed||0
+        });
+      });
+      return arr;
     }
 
     async function openLeaderboard(){
       lbPopup.style.display='block';
       const type = lbTypes[lbIndex];
-      let title = '';
-      if(type==='earnings') title = 'All-Time Earnings';
-      else if(type==='winrate') title = 'Win Percentage (overall)';
-      else if(type==='bjwinrate') title = 'Blackjack Win Percentage';
-      else if(type==='pkwinrate') title = 'Poker Win Percentage';
-      lbTitle.textContent = title;
-
-      const arr = await loadUsersArrayFromDb();
-
-      if(type==='earnings'){
-        arr.sort((a,b)=>b.totalEarned-a.totalEarned);
-      } else if(type==='winrate'){
-        arr.sort((a,b)=>{
-          const ra=a.games?(a.wins/a.games):0;
-          const rb=b.games?(b.wins/b.games):0;
-          return rb-ra;
-        });
-      } else if(type==='bjwinrate'){
-        arr.sort((a,b)=>{
-          const ra=a.bjGames?(a.bjWins/a.bjGames):0;
-          const rb=b.bjGames?(b.bjWins/b.bjGames):0;
-          return rb-ra;
-        });
-      } else if(type==='pkwinrate'){
-        arr.sort((a,b)=>{
-          const ra=a.pkGames?(a.pkWins/a.pkGames):0;
-          const rb=b.pkGames?(b.pkWins/b.pkGames):0;
-          return rb-ra;
-        });
-      }
-
+      lbTitle.textContent = type==='earnings'?'All-Time Earnings':'Win Percentage';
+      const arr=await loadUsersArray();
+      if(type==='earnings'){ arr.sort((a,b)=>b.totalEarned-a.totalEarned); }
+      else { arr.sort((a,b)=>{ const ra=a.games?(a.wins/a.games):0; const rb=b.games?(b.wins/b.games):0; return rb-ra; }); }
       let html='';
       const top=arr.slice(0,10);
-      top.forEach((u,i)=>{
-        const isYou=currentUser && (u.key===currentUser.key);
-        let extra = '';
-        if(type==='earnings') extra = '— '+u.totalEarned+' credits';
-        else if(type==='winrate') extra = '— '+(u.games?Math.round(100*u.wins/u.games):0)+'%';
-        else if(type==='bjwinrate') extra = '— '+(u.bjGames?Math.round(100*u.bjWins/u.bjGames):0)+'%';
-        else if(type==='pkwinrate') extra = '— '+(u.pkGames?Math.round(100*u.pkWins/u.pkGames):0)+'%';
-        html+=`<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${extra}</div>`;
+      top.forEach((u,i)=>{ 
+        const isYou=currentUserId && (u.key===currentUserId); 
+        html+=`<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`; 
       });
-
-      let yourRank=-1;
-      if(currentUser) yourRank=arr.findIndex(x=>x.key===currentUser.key);
-      if(yourRank>9){
-        const u=arr[yourRank];
-        let extra = '';
-        if(type==='earnings') extra = '— '+u.totalEarned+' credits';
-        else if(type==='winrate') extra = '— '+(u.games?Math.round(100*u.wins/u.games):0)+'%';
-        else if(type==='bjwinrate') extra = '— '+(u.bjGames?Math.round(100*u.bjWins/u.bjGames):0)+'%';
-        else if(type==='pkwinrate') extra = '— '+(u.pkGames?Math.round(100*u.pkWins/u.pkGames):0)+'%';
-        html+=`<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${extra}</div>`;
-      } else if(yourRank===-1 && currentUser){
-        html+=`<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`;
-      }
+      let yourRank=-1; if(currentUserId){ yourRank=arr.findIndex(x=>x.key===currentUserId); }
+      if(yourRank>9){ const u=arr[yourRank]; html+=`<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${type==='earnings'?('— '+u.totalEarned+' credits'):('— '+(u.games?Math.round(100*u.wins/u.games):0)+'%')}</div>`; }
+      else if(yourRank===-1 && currentUserId){ html+=`<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`; }
       lbContent.innerHTML=html;
     }
 
