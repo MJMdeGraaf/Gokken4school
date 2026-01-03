@@ -972,6 +972,17 @@
       luckyCoinProgressEl.textContent = currentUser.luckyCoinProgress;
     }
 
+    function recordCasinoResult({ won, payout = 0 } = {}){
+      if(!currentUser) return;
+      currentUser.gamesPlayed = (currentUser.gamesPlayed || 0) + 1;
+      if(won){
+        currentUser.wins = (currentUser.wins || 0) + 1;
+        currentUser.totalEarned = (currentUser.totalEarned || 0) + payout;
+      } else {
+        currentUser.losses = (currentUser.losses || 0) + 1;
+      }
+    }
+
     function applyLuckyCoinProgress(amount){
       if(!currentUser || amount <= 0) return;
       ensureLuckyFields(currentUser);
@@ -1254,10 +1265,12 @@ playHorseRaceBtn.onclick = () => {
     }
 
     async function resolveCrapsPayout(payout, message){
+      const won = payout > 0;
       if(payout > 0){
         currentUser.credits += payout;
         applyLuckyCoinProgress(payout);
       }
+      recordCasinoResult({ won, payout });
       await saveCurrentUser();
       renderDashboard();
       resetCrapsUI();
@@ -1380,6 +1393,7 @@ playHorseRaceBtn.onclick = () => {
         applyLuckyCoinProgress(payout);
       }
 
+      recordCasinoResult({ won: payout > 0, payout });
       await saveCurrentUser();
       renderDashboard();
 
@@ -1437,6 +1451,7 @@ playHorseRaceBtn.onclick = () => {
         applyLuckyCoinProgress(payout);
       }
 
+      recordCasinoResult({ won: payout > 0, payout });
       await saveCurrentUser();
       renderDashboard();
 
