@@ -619,18 +619,111 @@
       margin-top: 12px;
     }
 
-    /* Global credits display */
-    #creditsDisplayGlobal{
+    /* Global currency display */
+    #currencyDisplay{
       position: fixed;
       top: 12px;
-      left: 12px;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 16px;
-      z-index: 99999;
+      right: 12px;
       display: none;
+      gap: 12px;
+      z-index: 99999;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .currency-chip{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(6, 12, 24, 0.75);
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 8px 22px rgba(0,0,0,0.45);
+      min-width: 150px;
+    }
+
+    .currency-values{
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      opacity: 0.85;
+    }
+
+    .currency-values strong{
+      font-size: 18px;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      opacity: 1;
+    }
+
+    .currency-sub{
+      font-size: 11px;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      opacity: 0.7;
+    }
+
+    .coin-icon{
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: inset 0 2px 5px rgba(255,255,255,0.35), inset 0 -2px 6px rgba(0,0,0,0.4);
+    }
+
+    .coin-silver{
+      background: radial-gradient(circle at 30% 30%, #f4f7fb 0%, #cfd5df 45%, #8b94a1 100%);
+      border: 1px solid #d7dde6;
+      color: #fdfdfd;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    .coin-gold{
+      background: radial-gradient(circle at 30% 30%, #ffe9a6 0%, #d6a93b 52%, #9a6a06 100%);
+      border: 1px solid #f1d37a;
+      color: #7a5200;
+      font-size: 15px;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.6);
+    }
+
+    /* Developer portal */
+    #developerPortal{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+    }
+
+    .developer-card{
+      background: #0f1624;
+      color: #fff;
+      padding: 24px;
+      border-radius: 16px;
+      width: min(420px, 90vw);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .developer-card h3{
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .developer-actions{
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
     }
 
 /* ===== Paardenrace Lanes ===== */
@@ -662,9 +755,36 @@
 </head>
 <body>
 
-  <!-- Globale credits overlay -->
-  <div id="creditsDisplayGlobal">
-    Credits: <span id="globalCredits">0</span>
+  <!-- Globale currency overlay -->
+  <div id="currencyDisplay">
+    <div class="currency-chip">
+      <span class="coin-icon coin-silver">C</span>
+      <div class="currency-values">
+        <span>Credits</span>
+        <strong><span id="credits">0</span></strong>
+      </div>
+    </div>
+    <div class="currency-chip">
+      <span class="coin-icon coin-gold">L</span>
+      <div class="currency-values">
+        <span>Lucky Coins</span>
+        <strong><span id="luckyCoins">0</span></strong>
+        <span class="currency-sub"><span id="luckyCoinProgress">0</span>/500</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Developer portal -->
+  <div id="developerPortal">
+    <div class="developer-card">
+      <h3>Developer Portal</h3>
+      <p>Geef jezelf direct oneindige credits of lucky coins.</p>
+      <div class="developer-actions">
+        <button id="devCreditsBtn" class="menu-action-btn primary">Geef oneindig credits</button>
+        <button id="devLuckyBtn" class="menu-action-btn primary">Geef oneindig lucky coins</button>
+        <button id="closeDevPortal" class="menu-action-btn">Sluiten</button>
+      </div>
+    </div>
   </div>
 
   <!-- Login / Account aanmaken -->
@@ -684,17 +804,7 @@
           <div class="menu-logo">♠</div>
           <div>
             <h2>Maria Casino</h2>
-            <small>Welkom terug, <span id="displayName"></span></small>
-          </div>
-        </div>
-        <div class="menu-stats">
-          <div class="menu-stat">
-            <span>Credits</span>
-            <strong><span id="credits"></span></strong>
-          </div>
-          <div class="menu-stat">
-            <span>Lucky Coins</span>
-            <strong><span id="luckyCoins"></span> • <span id="luckyCoinProgress"></span>/500</strong>
+            <small id="welcomeBack">Welkom terug, <span id="displayName"></span></small>
           </div>
         </div>
         <div class="menu-actions">
@@ -1096,6 +1206,12 @@
     const createAccountBtn = document.getElementById('createAccountBtn');
     const displayName = document.getElementById('displayName');
     const creditsEl = document.getElementById('credits');
+    const currencyDisplay = document.getElementById('currencyDisplay');
+    const welcomeBack = document.getElementById('welcomeBack');
+    const developerPortal = document.getElementById('developerPortal');
+    const devCreditsBtn = document.getElementById('devCreditsBtn');
+    const devLuckyBtn = document.getElementById('devLuckyBtn');
+    const closeDevPortal = document.getElementById('closeDevPortal');
     const claimDailyBtn = document.getElementById('claimDailyBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
@@ -1187,8 +1303,6 @@
     const lbClose = document.getElementById('lb-close');
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
-
-    const creditsGlobalSpan = document.getElementById('globalCredits');
 
     /* ---------------------------
        Login / accounts
@@ -1287,10 +1401,8 @@
       displayName.textContent = currentUser.name;
       creditsEl.textContent = currentUser.credits;
       updateLuckyCoinDisplay();
-      const bar = document.getElementById('creditsDisplayGlobal');
-      if(bar){
-        bar.style.display = 'block';
-        creditsGlobalSpan.textContent = currentUser.credits;
+      if(currencyDisplay){
+        currencyDisplay.style.display = 'flex';
       }
     }
 
@@ -1306,9 +1418,68 @@
       lootBoxSection.style.display = 'none';
       loginSection.style.display = 'flex';
       bgMusic.pause();
-      const bar = document.getElementById('creditsDisplayGlobal');
-      if(bar) bar.style.display = 'none';
+      if(currencyDisplay) currencyDisplay.style.display = 'none';
     };
+
+    let developerClicks = 0;
+    let developerClickTimer = null;
+
+    function openDeveloperPortal(){
+      if(!developerPortal) return;
+      developerPortal.style.display = 'flex';
+    }
+
+    function closeDeveloperPortal(){
+      if(!developerPortal) return;
+      developerPortal.style.display = 'none';
+    }
+
+    if(welcomeBack){
+      welcomeBack.addEventListener('click', () => {
+        developerClicks += 1;
+        if(developerClickTimer){
+          clearTimeout(developerClickTimer);
+        }
+        developerClickTimer = setTimeout(() => {
+          developerClicks = 0;
+        }, 800);
+        if(developerClicks === 3){
+          developerClicks = 0;
+          const password = prompt('Developer wachtwoord:');
+          if(password === 'pepjes'){
+            openDeveloperPortal();
+          } else if(password !== null){
+            alert('Onjuist wachtwoord.');
+          }
+        }
+      });
+    }
+
+    if(closeDevPortal){
+      closeDevPortal.addEventListener('click', closeDeveloperPortal);
+    }
+
+    if(devCreditsBtn){
+      devCreditsBtn.addEventListener('click', async () => {
+        if(!currentUser) return;
+        currentUser.credits = 999999999;
+        await saveCurrentUser();
+        renderDashboard();
+        alert('Oneindige credits geactiveerd.');
+      });
+    }
+
+    if(devLuckyBtn){
+      devLuckyBtn.addEventListener('click', async () => {
+        if(!currentUser) return;
+        ensureLuckyFields(currentUser);
+        currentUser.luckyCoins = 999999999;
+        currentUser.luckyCoinProgress = 0;
+        await saveCurrentUser();
+        renderDashboard();
+        alert('Oneindige lucky coins geactiveerd.');
+      });
+    }
 
     claimDailyBtn.onclick = async ()=>{
       if(!currentUser) return;
