@@ -10,17 +10,27 @@
         position: fixed;
         right: 20px;
         bottom: 20px;
-        background: linear-gradient(135deg, #0d4aa8, #0a2f6a);
-        padding: 12px 22px;
-        border-radius: 16px;
+        background: linear-gradient(120deg, var(--maria-blue), var(--maria-blue-bright));
+        padding: 10px 18px;
+        border-radius: 14px;
         cursor: pointer;
-        font-weight: bold;
+        font-weight: 700;
         color: #f8fbff;
-        border: 1px solid rgba(255, 221, 128, 0.8);
-        box-shadow: 0 12px 24px rgba(6, 18, 40, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 12px 24px rgba(6, 18, 40, 0.45);
         z-index: 9999;
         letter-spacing: 0.3px;
         text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    #lb-tab:hover{
+        transform: translateY(-2px);
+        box-shadow: 0 16px 28px rgba(6, 18, 40, 0.55);
+        filter: brightness(1.08);
     }
 
     /* ============================ POPUP WINDOW ============================ */
@@ -899,6 +909,7 @@
           <button id="playHorseRaceBtn" class="cta-button alt">Start race</button>
         </div>
       </div>
+      <div id="lb-tab">🏆 Leaderboard</div>
     </div>
   </section>
 
@@ -1141,9 +1152,6 @@
     </div>
 </section>
   
-  <!-- Leaderboard floating tab -->
-  <div id="lb-tab">🏆 Leaderboard</div>
-
   <!-- Leaderboard popup -->
   <div id="lb-popup">
       <div id="lb-popup-inner">
@@ -1301,6 +1309,12 @@
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
 
+    function closeLeaderboardPopup(){
+      if(lbPopup){
+        lbPopup.style.display = 'none';
+      }
+    }
+
     /* ---------------------------
        Login / accounts
        --------------------------- */
@@ -1403,6 +1417,7 @@
 
     logoutBtn.onclick = () => {
       currentUser = null;
+      closeLeaderboardPopup();
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
@@ -1490,6 +1505,7 @@
     };
 
     playBlackjackBtn.onclick = ()=>{
+      closeLeaderboardPopup();
       dashboard.style.display='none';
       pokerSection.style.display='none';
       crapsSection.style.display='none';
@@ -1501,6 +1517,7 @@
     };
 
     playPokerBtn.onclick = ()=>{
+      closeLeaderboardPopup();
       dashboard.style.display='none';
       blackjackSection.style.display='none';
       crapsSection.style.display='none';
@@ -1512,6 +1529,7 @@
     };
 
     playCrapsBtn.onclick = ()=>{
+      closeLeaderboardPopup();
       dashboard.style.display='none';
       blackjackSection.style.display='none';
       pokerSection.style.display='none';
@@ -1523,6 +1541,7 @@
     };
 
     playBaccaratBtn.onclick = ()=>{
+      closeLeaderboardPopup();
       dashboard.style.display='none';
       blackjackSection.style.display='none';
       pokerSection.style.display='none';
@@ -1534,6 +1553,7 @@
     };
 
     playRouletteBtn.onclick = ()=>{
+      closeLeaderboardPopup();
       dashboard.style.display='none';
       blackjackSection.style.display='none';
       pokerSection.style.display='none';
@@ -1546,6 +1566,7 @@
 
     openLuckyBoxesTab.onclick = ()=>{
       if(!currentUser) return alert('Je moet eerst inloggen!');
+      closeLeaderboardPopup();
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
@@ -1594,6 +1615,7 @@
 
     function openLootBox(type){
       if(!currentUser) return alert('Je moet eerst inloggen!');
+      closeLeaderboardPopup();
       const config = lootBoxConfigs[type];
       ensureLuckyFields(currentUser);
       if(currentUser.luckyCoins < config.cost){
@@ -1637,6 +1659,7 @@
 const playHorseRaceBtn = document.getElementById("playHorseRaceBtn");
 
 playHorseRaceBtn.onclick = () => {
+    closeLeaderboardPopup();
     dashboard.style.display = "none";
     lootBoxMenuSection.style.display = "none";
     lootBoxSection.style.display = "none";
