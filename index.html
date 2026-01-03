@@ -194,14 +194,251 @@
     .lootbox-level-5{ background: linear-gradient(140deg, #ffe48a, #c79a1b); }
 
     /* ============================ Rest of page ============================ */
-    body { margin:0; font-family: system-ui, sans-serif; background:#050515; color:#fff;}
+    :root{
+      --maria-blue: #0b4f7b;
+      --maria-blue-bright: #0f6fb2;
+      --maria-blue-deep: #062339;
+      --casino-gold: #d4af37;
+      --casino-cream: #f6e9c4;
+      --menu-surface: rgba(10, 22, 36, 0.88);
+      --menu-surface-light: rgba(18, 44, 70, 0.82);
+    }
+
+    body {
+      margin:0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background:#050515;
+      color:#fff;
+    }
     #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection { display: none; padding: 20px; text-align:center; }
     #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
-    #dashboard { background: radial-gradient(circle at top, #4c1d7f 0, #050515 55%, #020208 100%); min-height:100vh; }
+    #dashboard {
+      background:
+        radial-gradient(circle at top, rgba(15,111,178,0.25), transparent 40%),
+        radial-gradient(circle at 20% 20%, rgba(212,175,55,0.18), transparent 55%),
+        linear-gradient(140deg, #030b14 0, #051729 35%, #071f33 60%, #030b14 100%);
+      min-height:100vh;
+      text-align:left;
+    }
     #dashboard h2, #login h2 { margin-bottom:10px; }
-    button { padding: 10px 14px; margin: 6px; border-radius: 8px; border:none; cursor:pointer; background:#e21a4d; color:#fff; font-weight:600; }
-    button:hover{ filter:brightness(1.05); }
-    input { padding:8px 10px; border-radius:6px; border:1px solid #444; background:#111; color:#fff; }
+    button { padding: 10px 14px; margin: 6px; border-radius: 10px; border:none; cursor:pointer; background:#e21a4d; color:#fff; font-weight:600; letter-spacing:0.2px; }
+    button:hover{ filter:brightness(1.08); }
+    input { padding:8px 10px; border-radius:8px; border:1px solid #2b4055; background:#111a23; color:#fff; }
+
+    /* ============================ Dashboard menu overhaul ============================ */
+    .menu-wrapper{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 10px 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .menu-header{
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap:16px;
+      padding: 16px 22px;
+      border-radius: 18px;
+      background: linear-gradient(120deg, rgba(7,30,49,0.95), rgba(8,40,60,0.8));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    }
+
+    .menu-brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .menu-logo{
+      width:48px;
+      height:48px;
+      border-radius:14px;
+      background: linear-gradient(140deg, var(--maria-blue), var(--maria-blue-bright));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: var(--casino-cream);
+      font-size:22px;
+      box-shadow: 0 0 16px rgba(15,111,178,0.5);
+    }
+
+    .menu-brand h2{
+      margin:0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .menu-brand small{
+      color: rgba(246,233,196,0.75);
+    }
+
+    .menu-stats{
+      display:flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .menu-stat{
+      background: rgba(8, 26, 40, 0.75);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10px 14px;
+      border-radius: 12px;
+      min-width: 140px;
+    }
+
+    .menu-stat span{
+      display:block;
+      font-size:12px;
+      color: rgba(255,255,255,0.65);
+    }
+
+    .menu-stat strong{
+      font-size:16px;
+      color: var(--casino-cream);
+    }
+
+    .menu-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .menu-action-btn{
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 8px 14px;
+    }
+
+    .menu-action-btn.primary{
+      background: linear-gradient(120deg, var(--maria-blue), var(--maria-blue-bright));
+      border: none;
+      box-shadow: 0 8px 18px rgba(10,90,140,0.35);
+    }
+
+    .menu-hero{
+      padding: 24px;
+      border-radius: 20px;
+      background: radial-gradient(circle at top left, rgba(15,111,178,0.35), transparent 45%), var(--menu-surface);
+      border: 1px solid rgba(255,255,255,0.08);
+      display:flex;
+      align-items:center;
+      justify-content: space-between;
+      gap: 20px;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.35);
+    }
+
+    .menu-hero-text h3{
+      margin:0 0 6px 0;
+      font-size: 26px;
+    }
+
+    .menu-hero-text p{
+      margin:0;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .menu-hero-highlight{
+      background: linear-gradient(130deg, rgba(212,175,55,0.12), rgba(15,111,178,0.2));
+      border: 1px solid rgba(212,175,55,0.3);
+      padding: 14px 18px;
+      border-radius: 16px;
+      text-align:center;
+      min-width: 180px;
+    }
+
+    .menu-hero-highlight strong{
+      font-size: 22px;
+      color: var(--casino-cream);
+    }
+
+    .menu-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap:18px;
+    }
+
+    .menu-card{
+      background: var(--menu-surface-light);
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.4);
+      text-align:left;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-card::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      background: radial-gradient(circle at top right, rgba(15,111,178,0.35), transparent 55%);
+      opacity:0.8;
+      pointer-events:none;
+    }
+
+    .menu-card h4{
+      margin:0;
+      font-size:18px;
+    }
+
+    .menu-card p{
+      margin:0;
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+    }
+
+    .menu-card .cta-button{
+      margin:0;
+      align-self: flex-start;
+      background: linear-gradient(130deg, var(--casino-gold), #f0c96a);
+      color:#1b1b1b;
+      font-weight: 700;
+    }
+
+    .menu-card .cta-button.alt{
+      background: linear-gradient(130deg, var(--maria-blue), var(--maria-blue-bright));
+      color:#fff;
+    }
+
+    .menu-highlight{
+      border:1px solid rgba(212,175,55,0.45);
+      box-shadow: 0 14px 30px rgba(212,175,55,0.22);
+    }
+
+    .menu-cta-row{
+      display:flex;
+      gap:12px;
+      flex-wrap: wrap;
+    }
+
+    .menu-cta-row button{
+      margin:0;
+    }
+
+    @media (max-width: 840px){
+      .menu-header{
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .menu-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
+      .menu-hero{
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
 
     /* Blackjack sectie */
     #blackjackSection {
@@ -373,24 +610,77 @@
 
   <!-- Dashboard -->
   <section id="dashboard">
-    <h2>Welkom, <span id="displayName"></span></h2>
-    <p>Credits: <span id="credits"></span></p>
-    <p>Lucky Coins: <span id="luckyCoins"></span> (<span id="luckyCoinProgress"></span>/500)</p>
-    <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
-    <button id="playBlackjackBtn">Speel Blackjack</button>
-    <button id="playPokerBtn">Speel Poker</button>
-    <button id="openLuckyBoxesTab">🎁 Lucky Boxes</button>
-    <button id="logoutBtn">Uitloggen</button>
-    <button id="playHorseRaceBtn">🏇 Paardenrace</button>
+    <div class="menu-wrapper">
+      <header class="menu-header">
+        <div class="menu-brand">
+          <div class="menu-logo">♠</div>
+          <div>
+            <h2>Maria Casino</h2>
+            <small>Welkom terug, <span id="displayName"></span></small>
+          </div>
+        </div>
+        <div class="menu-stats">
+          <div class="menu-stat">
+            <span>Credits</span>
+            <strong><span id="credits"></span></strong>
+          </div>
+          <div class="menu-stat">
+            <span>Lucky Coins</span>
+            <strong><span id="luckyCoins"></span> • <span id="luckyCoinProgress"></span>/500</strong>
+          </div>
+        </div>
+        <div class="menu-actions">
+          <button id="claimDailyBtn" class="menu-action-btn primary">Claim dagelijkse bonus</button>
+          <button id="logoutBtn" class="menu-action-btn">Uitloggen</button>
+        </div>
+      </header>
 
-    <!-- Music control -->
-    <div style="margin-top:12px;">
+      <section class="menu-hero">
+        <div class="menu-hero-text">
+          <h3>Jouw casinovloer is klaar</h3>
+          <p>Pak je voordeel: snelle games, speciale acties en een luxe sfeer om meteen te spelen.</p>
+        </div>
+        <div class="menu-hero-highlight">
+          <div>Dagelijkse boost</div>
+          <strong>+250 credits</strong>
+          <div style="font-size:12px; color: rgba(255,255,255,0.7);">Mis je bonus niet!</div>
+        </div>
+      </section>
+
+      <div class="menu-grid">
+        <div class="menu-card menu-highlight">
+          <h4>Blackjack Lounge</h4>
+          <p>Casino vibes met live feeling. Strategisch en snel uitbetalen.</p>
+          <button id="playBlackjackBtn" class="cta-button">Play Blackjack</button>
+        </div>
+        <div class="menu-card">
+          <h4>Poker Royale</h4>
+          <p>Ga all-in of speel slim. Kies je tafel en domineer.</p>
+          <button id="playPokerBtn" class="cta-button alt">Speel Poker</button>
+        </div>
+        <div class="menu-card">
+          <h4>Lucky Boxes</h4>
+          <p>Open luxe boxes met Lucky Coins en win power-ups.</p>
+          <button id="openLuckyBoxesTab" class="cta-button alt">Open Lucky Boxes</button>
+        </div>
+        <div class="menu-card">
+          <h4>Paardenrace Club</h4>
+          <p>Stap in de VIP-tribune en kies jouw winnaar.</p>
+          <button id="playHorseRaceBtn" class="cta-button alt">Start race</button>
+        </div>
+        <div class="menu-card">
+          <h4>Casino Sound</h4>
+          <p>Vibe harder met luxe soundtracks. Pas direct je muziek aan.</p>
+          <button id="musicControl" class="cta-button alt">🎵 Muziek</button>
+        </div>
+      </div>
+
+      <!-- Music control -->
       <audio id="bgMusic" loop>
         <source src="https://cdn.pixabay.com/audio/2023/03/07/audio_2ea36d1deb.mp3" type="audio/mpeg">
         <source src="https://cdn.pixabay.com/audio/2023/03/15/audio_e3bbcbfce7.mp3" type="audio/mpeg">
         <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8f17fc4b42.mp3" type="audio/mpeg">
       </audio>
-      <button id="musicControl">🎵 Muziek</button>
     </div>
   </section>
 
