@@ -92,7 +92,7 @@
 
     /* ============================ Rest of page ============================ */
     body { margin:0; font-family: system-ui, sans-serif; background:#050515; color:#fff;}
-    #login, #dashboard, #blackjackSection, #pokerSection { display: none; padding: 20px; text-align:center; }
+    #login, #dashboard, #blackjackSection, #pokerSection, #crapsSection { display: none; padding: 20px; text-align:center; }
     #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
     #dashboard { background: radial-gradient(circle at top, #4c1d7f 0, #050515 55%, #020208 100%); min-height:100vh; }
     #dashboard h2, #login h2 { margin-bottom:10px; }
@@ -192,6 +192,27 @@
 
     .poker-controls { margin-top:14px; }
 
+    /* Craps section */
+    #crapsSection { background:#122033; min-height:100vh; color:white; }
+    .craps-card {
+      width: min(520px, 92%);
+      margin: 18px auto;
+      padding: 18px;
+      background: rgba(0,0,0,0.35);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+    }
+    .craps-dice {
+      font-size: 42px;
+      letter-spacing: 8px;
+      margin: 12px 0;
+    }
+    .craps-status {
+      margin-top: 10px;
+      font-weight: 600;
+    }
+
     /* Global credits display */
     #creditsDisplayGlobal{
       position: fixed;
@@ -238,6 +259,7 @@
     <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
     <button id="playBlackjackBtn">Speel Blackjack</button>
     <button id="playPokerBtn">Speel Poker</button>
+    <button id="playCrapsBtn">Speel Craps</button>
     <button id="openLeaderboardsBtn">Leaderboards</button>
     <button id="logoutBtn">Uitloggen</button>
 
@@ -322,6 +344,25 @@
     </div>
   </section>
 
+  <!-- Craps -->
+  <section id="crapsSection">
+    <h2>Craps</h2>
+    <p>Come-out: 7/11 wint, 2/3/12 verliest. Daarna moet je je punt rollen vóór 7.</p>
+
+    <div class="craps-card">
+      <label>Inzet (credits):</label>
+      <input type="number" id="crapsBet" min="10" value="100">
+      <button id="crapsPlaceBetBtn">Inzet plaatsen</button>
+      <button id="crapsRollBtn" disabled>Gooi dobbelstenen</button>
+      <button id="backFromCrapsBtn">Terug naar menu</button>
+
+      <div class="craps-dice" id="crapsDice">🎲 🎲</div>
+      <div>Laatst gegooid: <span id="crapsLastRoll">-</span></div>
+      <div>Punt: <span id="crapsPoint">-</span></div>
+      <div class="craps-status" id="crapsStatus">Plaats je inzet om te beginnen.</div>
+    </div>
+  </section>
+
   <!-- Leaderboard floating tab -->
   <div id="lb-tab">🏆 Leaderboard</div>
 
@@ -399,6 +440,7 @@
     const dashboard = document.getElementById('dashboard');
     const blackjackSection = document.getElementById('blackjackSection');
     const pokerSection = document.getElementById('pokerSection');
+    const crapsSection = document.getElementById('crapsSection');
     const backFromPokerBtn = document.getElementById('backFromPokerBtn');
 
     const usernameInput = document.getElementById('usernameInput');
@@ -411,6 +453,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
     const playPokerBtn = document.getElementById('playPokerBtn');
+    const playCrapsBtn = document.getElementById('playCrapsBtn');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
 
     const bgMusic = document.getElementById('bgMusic');
@@ -444,6 +487,16 @@
     const pokerFoldBtn = document.getElementById('pokerFoldBtn');
     const pokerBetAmountInput = document.getElementById('pokerBetAmount');
     const pokerStatusEl = document.getElementById('pokerStatus');
+
+    /* Craps refs */
+    const crapsBetInput = document.getElementById('crapsBet');
+    const crapsPlaceBetBtn = document.getElementById('crapsPlaceBetBtn');
+    const crapsRollBtn = document.getElementById('crapsRollBtn');
+    const backFromCrapsBtn = document.getElementById('backFromCrapsBtn');
+    const crapsDiceEl = document.getElementById('crapsDice');
+    const crapsLastRollEl = document.getElementById('crapsLastRoll');
+    const crapsPointEl = document.getElementById('crapsPoint');
+    const crapsStatusEl = document.getElementById('crapsStatus');
 
     /* Leaderboard refs */
     const lbTab = document.getElementById('lb-tab');
@@ -531,6 +584,7 @@
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
+      crapsSection.style.display = 'none';
       loginSection.style.display = 'flex';
       bgMusic.pause();
       const bar = document.getElementById('creditsDisplayGlobal');
@@ -554,18 +608,28 @@
     playBlackjackBtn.onclick = ()=>{
       dashboard.style.display='none';
       pokerSection.style.display='none';
+      crapsSection.style.display='none';
       blackjackSection.style.display='block';
     };
 
     playPokerBtn.onclick = ()=>{
       dashboard.style.display='none';
       blackjackSection.style.display='none';
+      crapsSection.style.display='none';
       pokerSection.style.display='block';
+    };
+
+    playCrapsBtn.onclick = ()=>{
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='none';
+      crapsSection.style.display='block';
     };
 
     backToMenuBtn.onclick = ()=>{
       blackjackSection.style.display='none';
       pokerSection.style.display='none';
+      crapsSection.style.display='none';
       dashboard.style.display='block';
     };
 
@@ -967,6 +1031,99 @@
     pokerFoldBtn.onclick = ()=>{
       pokerStatusEl.textContent = 'Fold (demo).';
     };
+
+    /* ---------------------------
+       Craps logic
+       --------------------------- */
+    const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+    let crapsPoint = null;
+    let crapsBet = 0;
+
+    function resetCrapsRound(){
+      crapsPoint = null;
+      crapsBet = 0;
+      crapsRollBtn.disabled = true;
+      crapsPlaceBetBtn.disabled = false;
+      crapsBetInput.disabled = false;
+      crapsPointEl.textContent = '-';
+      crapsLastRollEl.textContent = '-';
+      crapsDiceEl.textContent = '🎲 🎲';
+      crapsStatusEl.textContent = 'Plaats je inzet om te beginnen.';
+    }
+
+    backFromCrapsBtn.onclick = ()=>{
+      crapsSection.style.display = 'none';
+      dashboard.style.display = 'block';
+    };
+
+    crapsPlaceBetBtn.onclick = async ()=>{
+      if(!currentUser) return;
+      const bet = parseInt(crapsBetInput.value, 10);
+      if(Number.isNaN(bet) || bet < 10) return alert('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+
+      currentUser.credits -= bet;
+      await saveCurrentUser();
+      renderDashboard();
+
+      crapsBet = bet;
+      crapsPoint = null;
+      crapsRollBtn.disabled = false;
+      crapsPlaceBetBtn.disabled = true;
+      crapsBetInput.disabled = true;
+      crapsStatusEl.textContent = 'Come-out roll: gooi de dobbelstenen!';
+    };
+
+    crapsRollBtn.onclick = async ()=>{
+      if(!currentUser || !crapsBet) return;
+      const die1 = Math.ceil(Math.random() * 6);
+      const die2 = Math.ceil(Math.random() * 6);
+      const total = die1 + die2;
+
+      crapsDiceEl.textContent = `${diceFaces[die1 - 1]} ${diceFaces[die2 - 1]}`;
+      crapsLastRollEl.textContent = total;
+
+      if(crapsPoint === null){
+        if(total === 7 || total === 11){
+          const payout = crapsBet * 2;
+          currentUser.credits += payout;
+          await saveCurrentUser();
+          renderDashboard();
+          crapsStatusEl.textContent = `🎉 7/11! Je wint ${payout} credits.`;
+          resetCrapsRound();
+          return;
+        }
+        if([2,3,12].includes(total)){
+          crapsStatusEl.textContent = `❌ ${total} op de come-out. Je verliest.`;
+          resetCrapsRound();
+          return;
+        }
+        crapsPoint = total;
+        crapsPointEl.textContent = total;
+        crapsStatusEl.textContent = `Punt is ${total}. Rol ${total} vóór 7 om te winnen.`;
+        return;
+      }
+
+      if(total === crapsPoint){
+        const payout = crapsBet * 2;
+        currentUser.credits += payout;
+        await saveCurrentUser();
+        renderDashboard();
+        crapsStatusEl.textContent = `🎉 Punt geraakt! Je wint ${payout} credits.`;
+        resetCrapsRound();
+        return;
+      }
+
+      if(total === 7){
+        crapsStatusEl.textContent = '❌ 7-out. Je verliest.';
+        resetCrapsRound();
+        return;
+      }
+
+      crapsStatusEl.textContent = `Je rolde ${total}. Blijf rollen!`;
+    };
+
+    resetCrapsRound();
 
     /* ---------------------------
        Leaderboard popup
