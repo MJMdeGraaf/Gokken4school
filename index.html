@@ -896,6 +896,106 @@
       }
     }
 
+    /* Plinko */
+    #plinkoSection{
+      min-height: 100vh;
+      color: #fff;
+      padding: 24px;
+      text-align: center;
+      background: radial-gradient(circle at top, #1a1430 0, #0a0716 60%, #05030d 100%);
+    }
+
+    .plinko-panel{
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .plinko-controls{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .plinko-board{
+      position: relative;
+      width: min(660px, 92vw);
+      height: 520px;
+      margin: 26px auto 12px;
+      border-radius: 24px;
+      background: linear-gradient(160deg, rgba(22,18,44,0.96), rgba(10,8,22,0.96));
+      border: 1px solid rgba(148, 176, 255, 0.25);
+      box-shadow: 0 26px 50px rgba(0,0,0,0.7);
+      overflow: hidden;
+    }
+
+    .plinko-pegs{
+      position: absolute;
+      inset: 24px 30px 120px 30px;
+    }
+
+    .plinko-peg{
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #f7f6ff, #8aa2ff);
+      box-shadow: 0 0 10px rgba(120,150,255,0.75);
+      transform: translate(-50%, -50%);
+    }
+
+    .plinko-ball{
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffd988, #f08b2c);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.55), 0 0 12px rgba(255,200,120,0.6);
+      left: 50%;
+      top: 16px;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .plinko-slots{
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 96px;
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      gap: 6px;
+      padding: 0 12px 16px;
+      align-items: end;
+    }
+
+    .plinko-slot{
+      background: rgba(15, 24, 60, 0.8);
+      border: 1px solid rgba(120,150,255,0.35);
+      border-radius: 12px;
+      padding: 10px 4px;
+      font-weight: 700;
+      font-size: 13px;
+      color: #cfe0ff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    }
+
+    .plinko-slot.active{
+      transform: translateY(-8px);
+      background: rgba(255, 199, 122, 0.22);
+      box-shadow: 0 0 16px rgba(255,198,120,0.5);
+      color: #ffe3b0;
+    }
+
+    .plinko-status{
+      margin-top: 12px;
+      font-weight: 600;
+      min-height: 24px;
+    }
+
     /* Global currency display */
     #currencyDisplay{
       position: fixed;
@@ -1134,14 +1234,19 @@
           <button id="playSlotsBtn" class="cta-button alt">Speel Slots</button>
         </div>
         <div class="menu-card">
-          <h4>Lucky Boxes</h4>
-          <p>Open luxe boxes met Lucky Coins en win power-ups.</p>
-          <button id="openLuckyBoxesTab" class="cta-button alt">Open Lucky Boxes</button>
-        </div>
-        <div class="menu-card">
           <h4>Paardenrace Club</h4>
           <p>Stap in de VIP-tribune en kies jouw winnaar.</p>
           <button id="playHorseRaceBtn" class="cta-button alt">Start race</button>
+        </div>
+        <div class="menu-card">
+          <h4>Plinko Drop</h4>
+          <p>Laat de bal vallen en pak multipliers met een smooth landing.</p>
+          <button id="playPlinkoBtn" class="cta-button">Speel Plinko</button>
+        </div>
+        <div class="menu-card">
+          <h4>Lucky Boxes</h4>
+          <p>Open luxe boxes met Lucky Coins en win power-ups.</p>
+          <button id="openLuckyBoxesTab" class="cta-button alt">Open Lucky Boxes</button>
         </div>
       </div>
       <div id="lb-tab">🏆 Leaderboard</div>
@@ -1428,6 +1533,25 @@
 
     </div>
 </section>
+
+  <!-- Plinko -->
+  <section id="plinkoSection" style="display:none;">
+    <h2>🟣 Plinko Drop</h2>
+    <p>Drop de bal en mik op de hoogste multiplier. Smooth animaties, snelle payouts.</p>
+    <div class="plinko-panel">
+      <div class="plinko-controls">
+        <label>Inzet (credits):</label>
+        <input type="number" id="plinkoBet" min="10" value="150">
+        <button id="dropPlinkoBtn">Drop bal</button>
+        <button id="backFromPlinkoBtn">Terug naar menu</button>
+      </div>
+      <div class="plinko-board" id="plinkoBoard">
+        <div class="plinko-pegs" id="plinkoPegs"></div>
+        <div class="plinko-slots" id="plinkoSlots"></div>
+      </div>
+      <div class="plinko-status" id="plinkoStatus">Plaats je inzet en drop een bal.</div>
+    </div>
+  </section>
   
   <!-- Leaderboard popup -->
   <div id="lb-popup">
@@ -1487,6 +1611,7 @@
     const baccaratSection = document.getElementById('baccaratSection');
     const rouletteSection = document.getElementById('rouletteSection');
     const slotsSection = document.getElementById('slotsSection');
+    const plinkoSection = document.getElementById('plinkoSection');
     const lootBoxMenuSection = document.getElementById('lootBoxMenuSection');
     const lootBoxSection = document.getElementById('lootBoxSection');
     const backFromPokerBtn = document.getElementById('backFromPokerBtn');
@@ -1511,6 +1636,7 @@
     const playBaccaratBtn = document.getElementById('playBaccaratBtn');
     const playRouletteBtn = document.getElementById('playRouletteBtn');
     const playSlotsBtn = document.getElementById('playSlotsBtn');
+    const playPlinkoBtn = document.getElementById('playPlinkoBtn');
     const openLuckyBoxesTab = document.getElementById('openLuckyBoxesTab');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
     const luckyCoinsEl = document.getElementById('luckyCoins');
@@ -1573,6 +1699,15 @@
     const slotReelOne = document.getElementById('slotReelOne');
     const slotReelTwo = document.getElementById('slotReelTwo');
     const slotReelThree = document.getElementById('slotReelThree');
+
+    /* Plinko refs */
+    const plinkoBetInput = document.getElementById('plinkoBet');
+    const dropPlinkoBtn = document.getElementById('dropPlinkoBtn');
+    const backFromPlinkoBtn = document.getElementById('backFromPlinkoBtn');
+    const plinkoBoard = document.getElementById('plinkoBoard');
+    const plinkoPegs = document.getElementById('plinkoPegs');
+    const plinkoSlots = document.getElementById('plinkoSlots');
+    const plinkoStatus = document.getElementById('plinkoStatus');
 
     /* Poker refs */
     const pokerTableSelect = document.getElementById('pokerTableSelect');
@@ -1730,6 +1865,7 @@
       baccaratSection.style.display = 'none';
       rouletteSection.style.display = 'none';
       slotsSection.style.display = 'none';
+      plinkoSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
       loginSection.style.display = 'flex';
@@ -1818,6 +1954,7 @@
       baccaratSection.style.display='none';
       rouletteSection.style.display='none';
       slotsSection.style.display='none';
+      plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       blackjackSection.style.display='block';
@@ -1831,6 +1968,7 @@
       baccaratSection.style.display='none';
       rouletteSection.style.display='none';
       slotsSection.style.display='none';
+      plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       pokerSection.style.display='block';
@@ -1844,6 +1982,7 @@
       baccaratSection.style.display='none';
       rouletteSection.style.display='none';
       slotsSection.style.display='none';
+      plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       crapsSection.style.display='block';
@@ -1857,6 +1996,7 @@
       crapsSection.style.display='none';
       rouletteSection.style.display='none';
       slotsSection.style.display='none';
+      plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       baccaratSection.style.display='block';
@@ -1870,6 +2010,7 @@
       crapsSection.style.display='none';
       baccaratSection.style.display='none';
       slotsSection.style.display='none';
+      plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       rouletteSection.style.display='block';
@@ -1883,9 +2024,25 @@
       crapsSection.style.display='none';
       baccaratSection.style.display='none';
       rouletteSection.style.display='none';
+      plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       slotsSection.style.display='block';
+    };
+
+    playPlinkoBtn.onclick = ()=>{
+      closeLeaderboardPopup();
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='none';
+      crapsSection.style.display='none';
+      baccaratSection.style.display='none';
+      rouletteSection.style.display='none';
+      slotsSection.style.display='none';
+      lootBoxMenuSection.style.display='none';
+      lootBoxSection.style.display='none';
+      plinkoSection.style.display='block';
+      layoutPlinkoPegs();
     };
 
     openLuckyBoxesTab.onclick = ()=>{
@@ -1898,6 +2055,7 @@
       baccaratSection.style.display = 'none';
       rouletteSection.style.display = 'none';
       slotsSection.style.display = 'none';
+      plinkoSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'block';
     };
@@ -1992,6 +2150,7 @@ playHorseRaceBtn.onclick = () => {
     baccaratSection.style.display = "none";
     rouletteSection.style.display = "none";
     slotsSection.style.display = "none";
+    plinkoSection.style.display = "none";
     horseRaceSection.style.display = "block";
 };
 
@@ -2030,6 +2189,11 @@ playHorseRaceBtn.onclick = () => {
 
     backFromSlotsBtn.onclick = ()=>{
       slotsSection.style.display = 'none';
+      dashboard.style.display = 'block';
+    };
+
+    backFromPlinkoBtn.onclick = ()=>{
+      plinkoSection.style.display = 'none';
       dashboard.style.display = 'block';
     };
 
@@ -2364,6 +2528,139 @@ playHorseRaceBtn.onclick = () => {
     }
 
     spinSlotsBtn.onclick = ()=>{ void spinSlots(); };
+
+    /* ---------------------------
+       Plinko logic
+       --------------------------- */
+    const plinkoSlotMultipliers = [0, 0.5, 1, 1.5, 2.5, 1.5, 1, 0.5, 0];
+    const plinkoPegRows = 7;
+    let plinkoDropping = false;
+
+    function renderPlinkoSlots(){
+      if(!plinkoSlots) return;
+      plinkoSlots.innerHTML = '';
+      plinkoSlotMultipliers.forEach((multiplier)=>{
+        const slot = document.createElement('div');
+        slot.className = 'plinko-slot';
+        slot.textContent = `${multiplier}x`;
+        plinkoSlots.appendChild(slot);
+      });
+    }
+
+    function layoutPlinkoPegs(){
+      if(!plinkoPegs || !plinkoBoard) return;
+      plinkoPegs.innerHTML = '';
+      const boardRect = plinkoBoard.getBoundingClientRect();
+      const pegAreaHeight = boardRect.height - 140;
+      for(let row = 0; row < plinkoPegRows; row += 1){
+        const cols = 6 + row;
+        for(let col = 0; col < cols; col += 1){
+          const peg = document.createElement('div');
+          peg.className = 'plinko-peg';
+          const x = ((col + 1) / (cols + 1)) * boardRect.width;
+          const y = ((row + 1) / (plinkoPegRows + 1)) * pegAreaHeight;
+          peg.style.left = `${x}px`;
+          peg.style.top = `${y}px`;
+          plinkoPegs.appendChild(peg);
+        }
+      }
+    }
+
+    function pickPlinkoSlot(){
+      const steps = 8;
+      let position = Math.floor(plinkoSlotMultipliers.length / 2);
+      for(let i = 0; i < steps; i += 1){
+        position += Math.random() < 0.5 ? -1 : 1;
+        position = Math.max(0, Math.min(plinkoSlotMultipliers.length - 1, position));
+      }
+      return position;
+    }
+
+    function highlightPlinkoSlot(index){
+      if(!plinkoSlots) return;
+      [...plinkoSlots.children].forEach((slot, idx)=>{
+        slot.classList.toggle('active', idx === index);
+      });
+    }
+
+    function buildPlinkoKeyframes(targetX, dropHeight, slotWidth){
+      const steps = 6;
+      const frames = [];
+      for(let i = 0; i <= steps; i += 1){
+        const progress = i / steps;
+        const jitter = (Math.random() - 0.5) * slotWidth * 0.35 * (1 - progress);
+        const x = (targetX * progress) + jitter;
+        const y = dropHeight * progress;
+        frames.push({ transform: `translate(${x}px, ${y}px)` });
+      }
+      return frames;
+    }
+
+    async function dropPlinkoBall(){
+      if(plinkoDropping) return;
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      const bet = parseInt(plinkoBetInput.value, 10) || 0;
+      if(bet < 10) return alert('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+
+      currentUser.credits -= bet;
+      await saveCurrentUser();
+      renderDashboard();
+
+      plinkoDropping = true;
+      dropPlinkoBtn.disabled = true;
+      highlightPlinkoSlot(-1);
+
+      const boardRect = plinkoBoard.getBoundingClientRect();
+      const slotCount = plinkoSlotMultipliers.length;
+      const slotWidth = boardRect.width / slotCount;
+      const slotIndex = pickPlinkoSlot();
+      const targetX = (slotIndex + 0.5) * slotWidth - (boardRect.width / 2);
+      const dropHeight = boardRect.height - 140;
+
+      const ball = document.createElement('div');
+      ball.className = 'plinko-ball';
+      plinkoBoard.appendChild(ball);
+
+      const animation = ball.animate(
+        buildPlinkoKeyframes(targetX, dropHeight, slotWidth),
+        {
+          duration: 1700,
+          easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
+          fill: 'forwards'
+        }
+      );
+
+      animation.onfinish = async () => {
+        highlightPlinkoSlot(slotIndex);
+        const multiplier = plinkoSlotMultipliers[slotIndex];
+        const winAmount = Math.round(bet * multiplier);
+        if(winAmount > 0){
+          currentUser.credits += winAmount;
+          applyLuckyCoinProgress(winAmount);
+        }
+        const outcome = winAmount >= bet ? 'win' : 'lose';
+        if(outcome === 'win'){
+          recordGameResult('plinko', 'win', winAmount);
+          plinkoStatus.textContent = `Nice! ${multiplier}x multiplier en ${winAmount} credits terug.`;
+        } else {
+          recordGameResult('plinko', 'lose');
+          plinkoStatus.textContent = `Bal landt op ${multiplier}x. Probeer opnieuw!`;
+        }
+        await saveCurrentUser();
+        renderDashboard();
+        setTimeout(() => {
+          ball.remove();
+        }, 250);
+        plinkoDropping = false;
+        dropPlinkoBtn.disabled = false;
+      };
+    }
+
+    window.addEventListener('resize', ()=>{ layoutPlinkoPegs(); });
+    renderPlinkoSlots();
+    layoutPlinkoPegs();
+    dropPlinkoBtn.onclick = ()=>{ void dropPlinkoBall(); };
 
     /* ---------------------------
        Blackjack logic
@@ -2795,6 +3092,9 @@ function showHorseRace(){
     baccaratSection.style.display = "none";
     rouletteSection.style.display = "none";
     slotsSection.style.display = "none";
+    plinkoSection.style.display = "none";
+    lootBoxMenuSection.style.display = "none";
+    lootBoxSection.style.display = "none";
     horseRaceSection.style.display = "block";
 }
 
@@ -2918,6 +3218,12 @@ startRaceBtn.onclick = async () => {
         extra: (u)=>`${u.slotsGames?Math.round(100*u.slotsWins/u.slotsGames):0}%`
       },
       {
+        key: 'plinkowinrate',
+        title: 'Plinko Win Percentage',
+        value: (u)=>u.plinkoGames ? (u.plinkoWins/u.plinkoGames) : 0,
+        extra: (u)=>`${u.plinkoGames?Math.round(100*u.plinkoWins/u.plinkoGames):0}%`
+      },
+      {
         key: 'horsewinrate',
         title: 'Horse Race Win Percentage',
         value: (u)=>u.horseGames ? (u.horseWins/u.horseGames) : 0,
@@ -2953,6 +3259,9 @@ startRaceBtn.onclick = async () => {
         slotsWins: u.slotsWins||0,
         slotsLosses: u.slotsLosses||0,
         slotsGames: u.slotsGames||0,
+        plinkoWins: u.plinkoWins||0,
+        plinkoLosses: u.plinkoLosses||0,
+        plinkoGames: u.plinkoGames||0,
         horseWins: u.horseWins||0,
         horseLosses: u.horseLosses||0,
         horseGames: u.horseGames||0
