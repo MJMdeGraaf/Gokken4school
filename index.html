@@ -194,10 +194,197 @@
     .lootbox-level-5{ background: linear-gradient(140deg, #ffe48a, #c79a1b); }
 
     /* ============================ Rest of page ============================ */
-    body { margin:0; font-family: system-ui, sans-serif; background:#050515; color:#fff;}
+    :root{
+      --primary:#0b2d6b;
+      --primary-strong:#153f8c;
+      --gold:#d4af37;
+      --surface:#0a0f1f;
+      --surface-light:#121a31;
+      --muted:#b8c6e6;
+      --accent:#1fd1c2;
+      --danger:#e05656;
+    }
+    *{ box-sizing:border-box; }
+    body { margin:0; font-family: "Inter", system-ui, sans-serif; background:#050515; color:#fff;}
     #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection { display: none; padding: 20px; text-align:center; }
     #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
-    #dashboard { background: radial-gradient(circle at top, #4c1d7f 0, #050515 55%, #020208 100%); min-height:100vh; }
+    #dashboard {
+      background:
+        radial-gradient(circle at top, rgba(11,45,107,0.55) 0, rgba(5,5,18,0.9) 40%, #050515 100%),
+        radial-gradient(circle at 80% 20%, rgba(31,209,194,0.2), transparent 55%);
+      min-height:100vh;
+      padding: 32px clamp(20px, 4vw, 70px) 60px;
+      text-align:left;
+    }
+    .dashboard-shell{
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .dashboard-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      background: linear-gradient(120deg, rgba(11,45,107,0.9), rgba(11,45,107,0.6));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .brand-badge{
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #12367f, #0b2d6b);
+      border: 1px solid rgba(255,255,255,0.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 22px;
+      color: var(--gold);
+      box-shadow: inset 0 0 14px rgba(0,0,0,0.4);
+    }
+    .brand h2{
+      margin:0;
+      font-size: clamp(20px, 3vw, 28px);
+      letter-spacing: 0.02em;
+    }
+    .brand p{
+      margin:4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .btn{
+      padding:10px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+      cursor:pointer;
+      font-weight:600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+    .btn:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 12px 22px rgba(0,0,0,0.25);
+    }
+    .btn-primary{
+      background: linear-gradient(120deg, var(--primary), var(--primary-strong));
+      border-color: rgba(255,255,255,0.18);
+    }
+    .btn-gold{
+      background: linear-gradient(120deg, #f9d976, #d4af37);
+      color:#0d1322;
+      border-color: rgba(0,0,0,0.2);
+    }
+    .btn-outline{
+      background: transparent;
+    }
+    .btn-danger{
+      background: linear-gradient(120deg, #ff9f9f, #e05656);
+      color:#2a0c0c;
+      border-color: rgba(0,0,0,0.1);
+    }
+    .dashboard-hero{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+    .hero-card{
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(10,15,31,0.75);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.35);
+    }
+    .hero-card h3{
+      margin:0 0 6px;
+      font-size: 18px;
+    }
+    .hero-metric{
+      font-size: 26px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .hero-sub{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .menu-section{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .menu-section h3{
+      margin:0;
+      font-size: 20px;
+    }
+    .menu-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:16px;
+    }
+    .menu-card{
+      background: linear-gradient(145deg, rgba(18,26,49,0.9), rgba(10,15,31,0.95));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      padding: 20px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      text-align:left;
+      position:relative;
+      overflow:hidden;
+    }
+    .menu-card::after{
+      content:"";
+      position:absolute;
+      inset:auto -30% -60% -30%;
+      height:120px;
+      background: radial-gradient(circle, rgba(212,175,55,0.18), transparent 70%);
+      pointer-events:none;
+    }
+    .menu-card h4{
+      margin:0;
+      font-size: 18px;
+    }
+    .menu-card p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .menu-card .btn{
+      align-self:flex-start;
+    }
+    .menu-highlight{
+      border-color: rgba(212,175,55,0.4);
+      box-shadow: 0 18px 30px rgba(0,0,0,0.45);
+    }
+    .menu-icon{
+      font-size: 28px;
+      color: var(--gold);
+    }
+    .quick-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
     #dashboard h2, #login h2 { margin-bottom:10px; }
     button { padding: 10px 14px; margin: 6px; border-radius: 8px; border:none; cursor:pointer; background:#e21a4d; color:#fff; font-weight:600; }
     button:hover{ filter:brightness(1.05); }
@@ -352,6 +539,14 @@
       .card-bj{ width:56px; height:84px; }
       .table-container{ height:360px; }
       .card-pk{ width:56px; height:84px; }
+      .dashboard-header{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .header-actions{
+        width:100%;
+        justify-content:flex-start;
+      }
     }
   </style>
 </head>
@@ -373,24 +568,82 @@
 
   <!-- Dashboard -->
   <section id="dashboard">
-    <h2>Welkom, <span id="displayName"></span></h2>
-    <p>Credits: <span id="credits"></span></p>
-    <p>Lucky Coins: <span id="luckyCoins"></span> (<span id="luckyCoinProgress"></span>/500)</p>
-    <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
-    <button id="playBlackjackBtn">Speel Blackjack</button>
-    <button id="playPokerBtn">Speel Poker</button>
-    <button id="openLuckyBoxesTab">🎁 Lucky Boxes</button>
-    <button id="logoutBtn">Uitloggen</button>
-    <button id="playHorseRaceBtn">🏇 Paardenrace</button>
+    <div class="dashboard-shell">
+      <div class="dashboard-header">
+        <div class="brand">
+          <div class="brand-badge">♣</div>
+          <div>
+            <h2>Maria Casino Lounge</h2>
+            <p>Welkom terug, <strong><span id="displayName"></span></strong></p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="claimDailyBtn" class="btn btn-gold">🎁 Dagelijkse bonus</button>
+          <button id="musicControl" class="btn btn-outline">🎵 Muziek</button>
+          <button id="logoutBtn" class="btn btn-danger">Uitloggen</button>
+        </div>
+      </div>
 
-    <!-- Music control -->
-    <div style="margin-top:12px;">
+      <div class="dashboard-hero">
+        <div class="hero-card">
+          <h3>Creditsaldo</h3>
+          <div class="hero-metric"><span id="credits"></span></div>
+          <div class="hero-sub">Altijd klaar voor een nieuwe tafel.</div>
+        </div>
+        <div class="hero-card">
+          <h3>Lucky Coins</h3>
+          <div class="hero-metric"><span id="luckyCoins"></span></div>
+          <div class="hero-sub">Voortgang: <span id="luckyCoinProgress"></span>/500</div>
+        </div>
+        <div class="hero-card">
+          <h3>VIP Spotlight</h3>
+          <div class="hero-metric">Maria Blue</div>
+          <div class="hero-sub">Premium tafels en exclusieve drops.</div>
+        </div>
+      </div>
+
+      <div class="menu-section">
+        <h3>Hoofdmenu</h3>
+        <div class="quick-actions">
+          <button id="playBlackjackBtn" class="btn btn-primary">♠ Blackjack</button>
+          <button id="playPokerBtn" class="btn btn-primary">♥ Poker</button>
+          <button id="playHorseRaceBtn" class="btn btn-primary">🏇 Paardenrace</button>
+        </div>
+      </div>
+
+      <div class="menu-grid">
+        <div class="menu-card menu-highlight">
+          <div class="menu-icon">🂡</div>
+          <h4>High Stakes Blackjack</h4>
+          <p>Snelle rondes, scherpe inzetten en directe spanning.</p>
+          <button class="btn btn-gold" data-action="playBlackjack">Speel nu</button>
+        </div>
+        <div class="menu-card">
+          <div class="menu-icon">♠</div>
+          <h4>Texas Hold'em Poker</h4>
+          <p>Kies je tafel en domineer de river als een pro.</p>
+          <button class="btn btn-primary" data-action="playPoker">Ga naar tafels</button>
+        </div>
+        <div class="menu-card">
+          <div class="menu-icon">🎁</div>
+          <h4>Lucky Boxes</h4>
+          <p>Open drops met Lucky Coins en scoor direct rewards.</p>
+          <button id="openLuckyBoxesTab" class="btn btn-primary">Open boxes</button>
+        </div>
+        <div class="menu-card">
+          <div class="menu-icon">🏇</div>
+          <h4>Paardenrace</h4>
+          <p>Voel de adrenaline en plaats je winnende voorspelling.</p>
+          <button class="btn btn-primary" data-action="playHorseRace">Start race</button>
+        </div>
+      </div>
+
+      <!-- Music control -->
       <audio id="bgMusic" loop>
         <source src="https://cdn.pixabay.com/audio/2023/03/07/audio_2ea36d1deb.mp3" type="audio/mpeg">
         <source src="https://cdn.pixabay.com/audio/2023/03/15/audio_e3bbcbfce7.mp3" type="audio/mpeg">
         <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8f17fc4b42.mp3" type="audio/mpeg">
       </audio>
-      <button id="musicControl">🎵 Muziek</button>
     </div>
   </section>
 
@@ -950,6 +1203,16 @@ playHorseRaceBtn.onclick = () => {
     lootBoxSection.style.display = "none";
     horseRaceSection.style.display = "block";
 };
+
+document.querySelectorAll('[data-action]').forEach((btn)=>{
+  btn.addEventListener('click', ()=>{
+    const action = btn.dataset.action;
+    if(action === 'playBlackjack'){ playBlackjackBtn.click(); }
+    if(action === 'playPoker'){ playPokerBtn.click(); }
+    if(action === 'openLuckyBoxes'){ openLuckyBoxesTab.click(); }
+    if(action === 'playHorseRace'){ playHorseRaceBtn.click(); }
+  });
+});
 
     backToMenuBtn.onclick = ()=>{
       blackjackSection.style.display='none';
