@@ -551,6 +551,74 @@
 
     .poker-controls { margin-top:14px; }
 
+    /* Table games */
+    #crapsSection,
+    #baccaratSection,
+    #rouletteSection{
+      min-height: 100vh;
+      color: white;
+      padding: 24px;
+      background: radial-gradient(circle at top, #1c2235 0, #0c101c 60%, #06070c 100%);
+      text-align: center;
+    }
+
+    .table-game-panel{
+      max-width: 860px;
+      margin: 20px auto;
+      background: rgba(0,0,0,0.55);
+      border-radius: 16px;
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.5);
+    }
+
+    .dice-row{
+      display:flex;
+      justify-content:center;
+      gap:16px;
+      margin: 14px 0;
+      font-size: 48px;
+    }
+
+    .baccarat-row,
+    .roulette-row{
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+    }
+
+    .baccarat-card{
+      width: 70px;
+      height: 100px;
+      background: #fdfdfd;
+      color:#111;
+      border-radius: 10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      border:2px solid #d4af37;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+    }
+
+    .roulette-wheel{
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: conic-gradient(#c62828 0 20deg, #111 20deg 40deg, #c62828 40deg 60deg, #111 60deg 80deg, #c62828 80deg 100deg, #111 100deg 120deg, #c62828 120deg 140deg, #111 140deg 160deg, #c62828 160deg 180deg, #1b7d3d 180deg 200deg, #111 200deg 220deg, #c62828 220deg 240deg, #111 240deg 260deg, #c62828 260deg 280deg, #111 280deg 300deg, #c62828 300deg 320deg, #111 320deg 340deg, #c62828 340deg 360deg);
+      border: 6px solid #d4af37;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.65);
+      margin: 0 auto;
+    }
+
+    .roulette-result{
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 12px;
+    }
+
     /* Global credits display */
     #creditsDisplayGlobal{
       position: fixed;
@@ -657,6 +725,21 @@
           <h4>Poker Royale</h4>
           <p>Ga all-in of speel slim. Kies je tafel en domineer.</p>
           <button id="playPokerBtn" class="cta-button alt">Speel Poker</button>
+        </div>
+        <div class="menu-card">
+          <h4>Craps Arena</h4>
+          <p>Gooi de dobbelstenen en bouw je punt op.</p>
+          <button id="playCrapsBtn" class="cta-button">Speel Craps</button>
+        </div>
+        <div class="menu-card">
+          <h4>Baccarat Salon</h4>
+          <p>Elegante snelle rondes voor high-roller vibes.</p>
+          <button id="playBaccaratBtn" class="cta-button alt">Speel Baccarat</button>
+        </div>
+        <div class="menu-card">
+          <h4>Roulette Table</h4>
+          <p>Voorspel kleur of nummer en laat het wiel draaien.</p>
+          <button id="playRouletteBtn" class="cta-button">Speel Roulette</button>
         </div>
         <div class="menu-card">
           <h4>Lucky Boxes</h4>
@@ -805,6 +888,80 @@
       </div>
     </div>
   </section>
+
+  <!-- Craps -->
+  <section id="crapsSection" style="display:none;">
+    <h2>🎲 Craps</h2>
+    <p>Come-out roll: 7/11 wint, 2/3/12 verliest. Anders zet je een punt.</p>
+    <div class="table-game-panel">
+      <label>Inzet (credits):</label>
+      <input type="number" id="crapsBet" min="10" value="100">
+      <div class="dice-row">
+        <div id="crapsDieOne">⚀</div>
+        <div id="crapsDieTwo">⚀</div>
+      </div>
+      <div id="crapsPoint">Punt: -</div>
+      <div id="crapsStatus">Plaats je inzet en gooi de dobbelstenen.</div>
+      <div style="margin-top:12px;">
+        <button id="rollCrapsBtn">Gooi</button>
+        <button id="resetCrapsBtn">Reset ronde</button>
+        <button id="backFromCrapsBtn">Terug naar menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Baccarat -->
+  <section id="baccaratSection" style="display:none;">
+    <h2>🂡 Baccarat</h2>
+    <p>Kies je inzet op Player, Banker of Tie en laat de kaarten spreken.</p>
+    <div class="table-game-panel">
+      <label>Inzet (credits):</label>
+      <input type="number" id="baccaratBet" min="10" value="200">
+      <label style="margin-left:8px;">Inzet op:</label>
+      <select id="baccaratBetType">
+        <option value="player">Player</option>
+        <option value="banker">Banker</option>
+        <option value="tie">Tie</option>
+      </select>
+      <div class="baccarat-row" id="baccaratPlayerRow"></div>
+      <div class="baccarat-row" id="baccaratBankerRow"></div>
+      <div id="baccaratStatus">Plaats je inzet en start een ronde.</div>
+      <div style="margin-top:12px;">
+        <button id="dealBaccaratBtn">Deel kaarten</button>
+        <button id="backFromBaccaratBtn">Terug naar menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Roulette -->
+  <section id="rouletteSection" style="display:none;">
+    <h2>🎡 Roulette</h2>
+    <p>Kies je inzettype en draai het wiel.</p>
+    <div class="table-game-panel">
+      <label>Inzet (credits):</label>
+      <input type="number" id="rouletteBet" min="10" value="150">
+      <label style="margin-left:8px;">Inzettype:</label>
+      <select id="rouletteBetType">
+        <option value="color">Kleur</option>
+        <option value="number">Nummer</option>
+      </select>
+      <div class="roulette-row">
+        <select id="rouletteColor">
+          <option value="red">Rood</option>
+          <option value="black">Zwart</option>
+          <option value="green">Groen (0)</option>
+        </select>
+        <input type="number" id="rouletteNumber" min="0" max="36" value="7" style="width:90px;">
+      </div>
+      <div class="roulette-wheel"></div>
+      <div class="roulette-result" id="rouletteResult">Resultaat: -</div>
+      <div id="rouletteStatus">Plaats je inzet en draai.</div>
+      <div style="margin-top:12px;">
+        <button id="spinRouletteBtn">Draaien</button>
+        <button id="backFromRouletteBtn">Terug naar menu</button>
+      </div>
+    </div>
+  </section>
   
  <!-- ==================== PAARDENRACE SPEL ==================== -->
 <section id="horseRaceSection" style="display:none; text-align:center; padding:20px; color:white; background:#1b1b1b; height:100vh;">
@@ -926,6 +1083,9 @@
     const dashboard = document.getElementById('dashboard');
     const blackjackSection = document.getElementById('blackjackSection');
     const pokerSection = document.getElementById('pokerSection');
+    const crapsSection = document.getElementById('crapsSection');
+    const baccaratSection = document.getElementById('baccaratSection');
+    const rouletteSection = document.getElementById('rouletteSection');
     const lootBoxMenuSection = document.getElementById('lootBoxMenuSection');
     const lootBoxSection = document.getElementById('lootBoxSection');
     const backFromPokerBtn = document.getElementById('backFromPokerBtn');
@@ -940,6 +1100,9 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
     const playPokerBtn = document.getElementById('playPokerBtn');
+    const playCrapsBtn = document.getElementById('playCrapsBtn');
+    const playBaccaratBtn = document.getElementById('playBaccaratBtn');
+    const playRouletteBtn = document.getElementById('playRouletteBtn');
     const openLuckyBoxesTab = document.getElementById('openLuckyBoxesTab');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
     const luckyCoinsEl = document.getElementById('luckyCoins');
@@ -972,6 +1135,35 @@
     const standBtn = document.getElementById('standBtn');
     const nextRoundBtn = document.getElementById('nextRoundBtn');
     const backToMenuBtn = document.getElementById('backToMenu');
+
+    /* Craps refs */
+    const crapsBetInput = document.getElementById('crapsBet');
+    const crapsDieOne = document.getElementById('crapsDieOne');
+    const crapsDieTwo = document.getElementById('crapsDieTwo');
+    const crapsPointEl = document.getElementById('crapsPoint');
+    const crapsStatusEl = document.getElementById('crapsStatus');
+    const rollCrapsBtn = document.getElementById('rollCrapsBtn');
+    const resetCrapsBtn = document.getElementById('resetCrapsBtn');
+    const backFromCrapsBtn = document.getElementById('backFromCrapsBtn');
+
+    /* Baccarat refs */
+    const baccaratBetInput = document.getElementById('baccaratBet');
+    const baccaratBetType = document.getElementById('baccaratBetType');
+    const baccaratPlayerRow = document.getElementById('baccaratPlayerRow');
+    const baccaratBankerRow = document.getElementById('baccaratBankerRow');
+    const baccaratStatusEl = document.getElementById('baccaratStatus');
+    const dealBaccaratBtn = document.getElementById('dealBaccaratBtn');
+    const backFromBaccaratBtn = document.getElementById('backFromBaccaratBtn');
+
+    /* Roulette refs */
+    const rouletteBetInput = document.getElementById('rouletteBet');
+    const rouletteBetType = document.getElementById('rouletteBetType');
+    const rouletteColor = document.getElementById('rouletteColor');
+    const rouletteNumber = document.getElementById('rouletteNumber');
+    const rouletteResult = document.getElementById('rouletteResult');
+    const rouletteStatus = document.getElementById('rouletteStatus');
+    const spinRouletteBtn = document.getElementById('spinRouletteBtn');
+    const backFromRouletteBtn = document.getElementById('backFromRouletteBtn');
 
     /* Poker refs */
     const pokerTableSelect = document.getElementById('pokerTableSelect');
@@ -1107,6 +1299,9 @@
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
+      crapsSection.style.display = 'none';
+      baccaratSection.style.display = 'none';
+      rouletteSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
       loginSection.style.display = 'flex';
@@ -1132,6 +1327,9 @@
     playBlackjackBtn.onclick = ()=>{
       dashboard.style.display='none';
       pokerSection.style.display='none';
+      crapsSection.style.display='none';
+      baccaratSection.style.display='none';
+      rouletteSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       blackjackSection.style.display='block';
@@ -1140,9 +1338,45 @@
     playPokerBtn.onclick = ()=>{
       dashboard.style.display='none';
       blackjackSection.style.display='none';
+      crapsSection.style.display='none';
+      baccaratSection.style.display='none';
+      rouletteSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       pokerSection.style.display='block';
+    };
+
+    playCrapsBtn.onclick = ()=>{
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='none';
+      baccaratSection.style.display='none';
+      rouletteSection.style.display='none';
+      lootBoxMenuSection.style.display='none';
+      lootBoxSection.style.display='none';
+      crapsSection.style.display='block';
+    };
+
+    playBaccaratBtn.onclick = ()=>{
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='none';
+      crapsSection.style.display='none';
+      rouletteSection.style.display='none';
+      lootBoxMenuSection.style.display='none';
+      lootBoxSection.style.display='none';
+      baccaratSection.style.display='block';
+    };
+
+    playRouletteBtn.onclick = ()=>{
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='none';
+      crapsSection.style.display='none';
+      baccaratSection.style.display='none';
+      lootBoxMenuSection.style.display='none';
+      lootBoxSection.style.display='none';
+      rouletteSection.style.display='block';
     };
 
     openLuckyBoxesTab.onclick = ()=>{
@@ -1150,6 +1384,9 @@
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
+      crapsSection.style.display = 'none';
+      baccaratSection.style.display = 'none';
+      rouletteSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'block';
     };
@@ -1238,6 +1475,9 @@ playHorseRaceBtn.onclick = () => {
     dashboard.style.display = "none";
     lootBoxMenuSection.style.display = "none";
     lootBoxSection.style.display = "none";
+    crapsSection.style.display = "none";
+    baccaratSection.style.display = "none";
+    rouletteSection.style.display = "none";
     horseRaceSection.style.display = "block";
 };
 
@@ -1257,6 +1497,245 @@ playHorseRaceBtn.onclick = () => {
     backToMenuFromLuckyBoxes.onclick = ()=>{
       lootBoxMenuSection.style.display = 'none';
       dashboard.style.display = 'block';
+    };
+
+    backFromCrapsBtn.onclick = ()=>{
+      crapsSection.style.display = 'none';
+      dashboard.style.display = 'block';
+    };
+
+    backFromBaccaratBtn.onclick = ()=>{
+      baccaratSection.style.display = 'none';
+      dashboard.style.display = 'block';
+    };
+
+    backFromRouletteBtn.onclick = ()=>{
+      rouletteSection.style.display = 'none';
+      dashboard.style.display = 'block';
+    };
+
+    /* ---------------------------
+       Craps / Baccarat / Roulette logic
+       --------------------------- */
+    const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+    let crapsPoint = null;
+    let crapsBet = 0;
+
+    function rollDie(){
+      return Math.floor(Math.random() * 6) + 1;
+    }
+
+    function updateCrapsDice(d1, d2){
+      crapsDieOne.textContent = diceFaces[d1 - 1];
+      crapsDieTwo.textContent = diceFaces[d2 - 1];
+    }
+
+    function resetCrapsRound(){
+      crapsPoint = null;
+      crapsBet = 0;
+      crapsPointEl.textContent = 'Punt: -';
+      crapsStatusEl.textContent = 'Plaats je inzet en gooi de dobbelstenen.';
+      updateCrapsDice(1, 1);
+    }
+
+    rollCrapsBtn.onclick = async ()=>{
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(crapsPoint === null){
+        const bet = parseInt(crapsBetInput.value) || 0;
+        if(bet < 10) return alert('Minimum inzet is 10 credits.');
+        if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+        crapsBet = bet;
+        currentUser.credits -= bet;
+        await saveCurrentUser();
+        renderDashboard();
+      }
+
+      const d1 = rollDie();
+      const d2 = rollDie();
+      const total = d1 + d2;
+      updateCrapsDice(d1, d2);
+
+      if(crapsPoint === null){
+        if(total === 7 || total === 11){
+          const winAmount = crapsBet * 2;
+          currentUser.credits += winAmount;
+          applyLuckyCoinProgress(winAmount);
+          crapsStatusEl.textContent = `Come-out ${total}! Je wint ${winAmount} credits.`;
+          crapsPointEl.textContent = 'Punt: -';
+          await saveCurrentUser();
+          renderDashboard();
+          crapsBet = 0;
+        } else if([2,3,12].includes(total)){
+          crapsStatusEl.textContent = `Come-out ${total}. Je verliest je inzet.`;
+          crapsPointEl.textContent = 'Punt: -';
+          await saveCurrentUser();
+          renderDashboard();
+          crapsBet = 0;
+        } else {
+          crapsPoint = total;
+          crapsPointEl.textContent = `Punt: ${crapsPoint}`;
+          crapsStatusEl.textContent = `Punt gezet op ${crapsPoint}. Gooi door om te winnen!`;
+        }
+      } else {
+        if(total === crapsPoint){
+          const winAmount = crapsBet * 2;
+          currentUser.credits += winAmount;
+          applyLuckyCoinProgress(winAmount);
+          crapsStatusEl.textContent = `Je rolt ${total} en maakt je punt! +${winAmount} credits.`;
+          await saveCurrentUser();
+          renderDashboard();
+          crapsPoint = null;
+          crapsBet = 0;
+          crapsPointEl.textContent = 'Punt: -';
+        } else if(total === 7){
+          crapsStatusEl.textContent = '7-out! Je verliest je inzet.';
+          await saveCurrentUser();
+          renderDashboard();
+          crapsPoint = null;
+          crapsBet = 0;
+          crapsPointEl.textContent = 'Punt: -';
+        } else {
+          crapsStatusEl.textContent = `Je rolt ${total}. Punt blijft ${crapsPoint}.`;
+        }
+      }
+    };
+
+    resetCrapsBtn.onclick = ()=>{
+      resetCrapsRound();
+    };
+
+    resetCrapsRound();
+
+    function baccaratCard(){
+      const suits = ['♠','♥','♦','♣'];
+      const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+      const value = values[Math.floor(Math.random() * values.length)];
+      const suit = suits[Math.floor(Math.random() * suits.length)];
+      let points = parseInt(value, 10);
+      if(Number.isNaN(points)){
+        points = value === 'A' ? 1 : 0;
+      }
+      return { value, suit, points };
+    }
+
+    function baccaratScore(hand){
+      return hand.reduce((sum, card)=>sum + card.points, 0) % 10;
+    }
+
+    function renderBaccaratHand(row, hand, label){
+      row.innerHTML = `<strong style="width:100%; text-align:center;">${label} (${baccaratScore(hand)})</strong>` +
+        hand.map(card=>`<div class="baccarat-card">${card.value}${card.suit}</div>`).join('');
+    }
+
+    dealBaccaratBtn.onclick = async ()=>{
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      const bet = parseInt(baccaratBetInput.value) || 0;
+      if(bet < 10) return alert('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+
+      currentUser.credits -= bet;
+      await saveCurrentUser();
+      renderDashboard();
+
+      const playerHand = [baccaratCard(), baccaratCard()];
+      const bankerHand = [baccaratCard(), baccaratCard()];
+
+      const playerScore = baccaratScore(playerHand);
+      const bankerScore = baccaratScore(bankerHand);
+
+      if(playerScore < 8 && bankerScore < 8){
+        if(playerScore <= 5){
+          playerHand.push(baccaratCard());
+        }
+        const newBankerScore = baccaratScore(bankerHand);
+        if(newBankerScore <= 5){
+          bankerHand.push(baccaratCard());
+        }
+      }
+
+      const finalPlayerScore = baccaratScore(playerHand);
+      const finalBankerScore = baccaratScore(bankerHand);
+      let winner = 'tie';
+      if(finalPlayerScore > finalBankerScore) winner = 'player';
+      if(finalBankerScore > finalPlayerScore) winner = 'banker';
+
+      renderBaccaratHand(baccaratPlayerRow, playerHand, 'Player');
+      renderBaccaratHand(baccaratBankerRow, bankerHand, 'Banker');
+
+      let winAmount = 0;
+      if(baccaratBetType.value === winner){
+        if(winner === 'tie'){
+          winAmount = bet * 9;
+        } else if(winner === 'banker'){
+          winAmount = Math.floor(bet * 1.95);
+        } else {
+          winAmount = bet * 2;
+        }
+        currentUser.credits += winAmount;
+        applyLuckyCoinProgress(winAmount);
+        baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}! Je wint ${winAmount} credits.`;
+      } else {
+        baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}. Je verliest je inzet.`;
+      }
+
+      await saveCurrentUser();
+      renderDashboard();
+    };
+
+    const rouletteRedNumbers = new Set([
+      1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36
+    ]);
+
+    function rouletteColorFor(number){
+      if(number === 0) return 'green';
+      return rouletteRedNumbers.has(number) ? 'red' : 'black';
+    }
+
+    function updateRouletteInputs(){
+      const type = rouletteBetType.value;
+      rouletteColor.disabled = type !== 'color';
+      rouletteNumber.disabled = type !== 'number';
+    }
+
+    rouletteBetType.onchange = updateRouletteInputs;
+    updateRouletteInputs();
+
+    spinRouletteBtn.onclick = async ()=>{
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      const bet = parseInt(rouletteBetInput.value) || 0;
+      if(bet < 10) return alert('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+
+      currentUser.credits -= bet;
+      await saveCurrentUser();
+      renderDashboard();
+
+      const resultNumber = Math.floor(Math.random() * 37);
+      const resultColor = rouletteColorFor(resultNumber);
+      rouletteResult.textContent = `Resultaat: ${resultNumber} (${resultColor})`;
+
+      let winAmount = 0;
+      if(rouletteBetType.value === 'color'){
+        if(rouletteColor.value === resultColor){
+          winAmount = resultColor === 'green' ? bet * 14 : bet * 2;
+        }
+      } else {
+        const chosenNumber = parseInt(rouletteNumber.value, 10);
+        if(!Number.isNaN(chosenNumber) && chosenNumber === resultNumber){
+          winAmount = bet * 36;
+        }
+      }
+
+      if(winAmount > 0){
+        currentUser.credits += winAmount;
+        applyLuckyCoinProgress(winAmount);
+        rouletteStatus.textContent = `Je wint ${winAmount} credits!`;
+      } else {
+        rouletteStatus.textContent = 'Helaas, geen winst deze draai.';
+      }
+
+      await saveCurrentUser();
+      renderDashboard();
     };
 
     /* ---------------------------
@@ -1706,6 +2185,9 @@ function showHorseRace(){
     dashboard.style.display = "none";
     blackjackSection.style.display = "none";
     pokerSection.style.display = "none";
+    crapsSection.style.display = "none";
+    baccaratSection.style.display = "none";
+    rouletteSection.style.display = "none";
     horseRaceSection.style.display = "block";
 }
 
