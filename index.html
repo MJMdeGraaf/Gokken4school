@@ -10,13 +10,17 @@
         position: fixed;
         right: 20px;
         bottom: 20px;
-        background: gold;
-        padding: 12px 20px;
+        background: linear-gradient(135deg, #0d4aa8, #0a2f6a);
+        padding: 12px 22px;
         border-radius: 16px;
         cursor: pointer;
         font-weight: bold;
-        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        color: #f8fbff;
+        border: 1px solid rgba(255, 221, 128, 0.8);
+        box-shadow: 0 12px 24px rgba(6, 18, 40, 0.55);
         z-index: 9999;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
     }
 
     /* ============================ POPUP WINDOW ============================ */
@@ -26,11 +30,13 @@
         right: 0;
         width: 360px;
         height: 460px;
-        background: rgba(0,0,0,0.88);
+        background: linear-gradient(160deg, rgba(7, 20, 45, 0.98), rgba(4, 10, 22, 0.98));
         border-radius: 20px 0 0 0;
         display: none;
         z-index: 99999;
         color: white;
+        border: 1px solid rgba(114, 179, 255, 0.25);
+        box-shadow: 0 24px 40px rgba(0,0,0,0.55);
     }
 
     #lb-popup-inner{
@@ -46,9 +52,23 @@
         font-size: 26px;
         cursor: pointer;
         user-select: none;
+        color: #8fc5ff;
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+    .lb-arrow:hover{
+        transform: scale(1.05);
+        color: #ffe8a6;
     }
     #lb-left{ left: 10px; }
     #lb-right{ right: 10px; }
+
+    #lb-title{
+        text-align: center;
+        margin: 6px 0 0;
+        font-size: 18px;
+        letter-spacing: 0.4px;
+        color: #f6fbff;
+    }
 
     /* ============================ CONTENT AREA ============================ */
     #lb-content{
@@ -56,6 +76,41 @@
         height: 330px;
         overflow-y: auto;
         font-size: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .lb-entry{
+        display: grid;
+        grid-template-columns: 28px 1fr auto;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        background: rgba(15, 40, 86, 0.6);
+        border-radius: 12px;
+        border: 1px solid rgba(140, 200, 255, 0.2);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+    }
+
+    .lb-entry.you{
+        background: rgba(25, 79, 164, 0.75);
+        border-color: rgba(255, 221, 128, 0.6);
+    }
+
+    .lb-rank{
+        font-weight: 700;
+        color: #ffe8a6;
+    }
+
+    .lb-name{
+        font-weight: 600;
+        color: #f2f7ff;
+    }
+
+    .lb-extra{
+        font-size: 14px;
+        color: #b9d8ff;
     }
 
     #lb-close{
@@ -66,6 +121,10 @@
         padding: 8px 20px;
         border-radius: 10px;
         cursor: pointer;
+        background: linear-gradient(135deg, #1f6be3, #0e3b7c);
+        color: #f8fbff;
+        border: 1px solid rgba(255, 221, 128, 0.7);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.4);
     }
 
     /* ============================ Loot box styles ============================ */
@@ -1666,12 +1725,14 @@ playHorseRaceBtn.onclick = () => {
           const winAmount = crapsBet * 2;
           currentUser.credits += winAmount;
           applyLuckyCoinProgress(winAmount);
+          recordGameResult('craps', 'win', winAmount);
           crapsStatusEl.textContent = `Come-out ${total}! Je wint ${winAmount} credits.`;
           crapsPointEl.textContent = 'Punt: -';
           await saveCurrentUser();
           renderDashboard();
           crapsBet = 0;
         } else if([2,3,12].includes(total)){
+          recordGameResult('craps', 'lose');
           crapsStatusEl.textContent = `Come-out ${total}. Je verliest je inzet.`;
           crapsPointEl.textContent = 'Punt: -';
           await saveCurrentUser();
@@ -1687,6 +1748,7 @@ playHorseRaceBtn.onclick = () => {
           const winAmount = crapsBet * 2;
           currentUser.credits += winAmount;
           applyLuckyCoinProgress(winAmount);
+          recordGameResult('craps', 'win', winAmount);
           crapsStatusEl.textContent = `Je rolt ${total} en maakt je punt! +${winAmount} credits.`;
           await saveCurrentUser();
           renderDashboard();
@@ -1694,6 +1756,7 @@ playHorseRaceBtn.onclick = () => {
           crapsBet = 0;
           crapsPointEl.textContent = 'Punt: -';
         } else if(total === 7){
+          recordGameResult('craps', 'lose');
           crapsStatusEl.textContent = '7-out! Je verliest je inzet.';
           await saveCurrentUser();
           renderDashboard();
@@ -1779,8 +1842,10 @@ playHorseRaceBtn.onclick = () => {
         }
         currentUser.credits += winAmount;
         applyLuckyCoinProgress(winAmount);
+        recordGameResult('baccarat', 'win', winAmount);
         baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}! Je wint ${winAmount} credits.`;
       } else {
+        recordGameResult('baccarat', 'lose');
         baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}. Je verliest je inzet.`;
       }
 
@@ -1835,8 +1900,10 @@ playHorseRaceBtn.onclick = () => {
       if(winAmount > 0){
         currentUser.credits += winAmount;
         applyLuckyCoinProgress(winAmount);
+        recordGameResult('roulette', 'win', winAmount);
         rouletteStatus.textContent = `Je wint ${winAmount} credits!`;
       } else {
+        recordGameResult('roulette', 'lose');
         rouletteStatus.textContent = 'Helaas, geen winst deze draai.';
       }
 
@@ -2317,16 +2384,16 @@ startRaceBtn.onclick = async () => {
                     const winAmount = bet * 3;
                     currentUser.credits += winAmount;
                     applyLuckyCoinProgress(winAmount);
-
-                    db.ref("users/" + currentUser.key).update({
-                        credits: currentUser.credits,
-                        luckyCoins: currentUser.luckyCoins,
-                        luckyCoinProgress: currentUser.luckyCoinProgress
-                    });
+                    recordGameResult('horse', 'win', winAmount);
+                    await saveCurrentUser();
+                    renderDashboard();
 
                     alert("🎉 Je paard heeft gewonnen! +" + winAmount + " credits");
 
                 } else {
+                    recordGameResult('horse', 'lose');
+                    await saveCurrentUser();
+                    renderDashboard();
                     alert("❌ Paard " + winner + " won. Je hebt verloren.");
                 }
 
@@ -2346,7 +2413,56 @@ startRaceBtn.onclick = async () => {
        Leaderboard popup
        --------------------------- */
     let lbIndex = 0;
-    const lbTypes = ['earnings','winrate','bjwinrate','pkwinrate'];
+    const leaderboardConfigs = [
+      {
+        key: 'earnings',
+        title: 'All-Time Earnings',
+        value: (u)=>u.totalEarned||0,
+        extra: (u)=>`${u.totalEarned||0} credits`
+      },
+      {
+        key: 'winrate',
+        title: 'Win Percentage (overall)',
+        value: (u)=>u.games ? (u.wins/u.games) : 0,
+        extra: (u)=>`${u.games?Math.round(100*u.wins/u.games):0}%`
+      },
+      {
+        key: 'bjwinrate',
+        title: 'Blackjack Win Percentage',
+        value: (u)=>u.bjGames ? (u.bjWins/u.bjGames) : 0,
+        extra: (u)=>`${u.bjGames?Math.round(100*u.bjWins/u.bjGames):0}%`
+      },
+      {
+        key: 'pkwinrate',
+        title: 'Poker Win Percentage',
+        value: (u)=>u.pkGames ? (u.pkWins/u.pkGames) : 0,
+        extra: (u)=>`${u.pkGames?Math.round(100*u.pkWins/u.pkGames):0}%`
+      },
+      {
+        key: 'crapswinrate',
+        title: 'Craps Win Percentage',
+        value: (u)=>u.crapsGames ? (u.crapsWins/u.crapsGames) : 0,
+        extra: (u)=>`${u.crapsGames?Math.round(100*u.crapsWins/u.crapsGames):0}%`
+      },
+      {
+        key: 'baccaratwinrate',
+        title: 'Baccarat Win Percentage',
+        value: (u)=>u.baccaratGames ? (u.baccaratWins/u.baccaratGames) : 0,
+        extra: (u)=>`${u.baccaratGames?Math.round(100*u.baccaratWins/u.baccaratGames):0}%`
+      },
+      {
+        key: 'roulettewinrate',
+        title: 'Roulette Win Percentage',
+        value: (u)=>u.rouletteGames ? (u.rouletteWins/u.rouletteGames) : 0,
+        extra: (u)=>`${u.rouletteGames?Math.round(100*u.rouletteWins/u.rouletteGames):0}%`
+      },
+      {
+        key: 'horsewinrate',
+        title: 'Horse Race Win Percentage',
+        value: (u)=>u.horseGames ? (u.horseWins/u.horseGames) : 0,
+        extra: (u)=>`${u.horseGames?Math.round(100*u.horseWins/u.horseGames):0}%`
+      }
+    ];
 
     async function loadUsersArrayFromDb(){
       const snap = await db.ref('users').once('value');
@@ -2363,76 +2479,64 @@ startRaceBtn.onclick = async () => {
         bjGames: u.bjGames||0,
         pkWins: u.pkWins||0,
         pkLosses: u.pkLosses||0,
-        pkGames: u.pkGames||0
+        pkGames: u.pkGames||0,
+        crapsWins: u.crapsWins||0,
+        crapsLosses: u.crapsLosses||0,
+        crapsGames: u.crapsGames||0,
+        baccaratWins: u.baccaratWins||0,
+        baccaratLosses: u.baccaratLosses||0,
+        baccaratGames: u.baccaratGames||0,
+        rouletteWins: u.rouletteWins||0,
+        rouletteLosses: u.rouletteLosses||0,
+        rouletteGames: u.rouletteGames||0,
+        horseWins: u.horseWins||0,
+        horseLosses: u.horseLosses||0,
+        horseGames: u.horseGames||0
       }));
     }
 
     async function openLeaderboard(){
       lbPopup.style.display='block';
-      const type = lbTypes[lbIndex];
-      let title = '';
-      if(type==='earnings') title = 'All-Time Earnings';
-      else if(type==='winrate') title = 'Win Percentage (overall)';
-      else if(type==='bjwinrate') title = 'Blackjack Win Percentage';
-      else if(type==='pkwinrate') title = 'Poker Win Percentage';
-      lbTitle.textContent = title;
+      const config = leaderboardConfigs[lbIndex];
+      lbTitle.textContent = config.title;
 
       const arr = await loadUsersArrayFromDb();
-
-      if(type==='earnings'){
-        arr.sort((a,b)=>b.totalEarned-a.totalEarned);
-      } else if(type==='winrate'){
-        arr.sort((a,b)=>{
-          const ra=a.games?(a.wins/a.games):0;
-          const rb=b.games?(b.wins/b.games):0;
-          return rb-ra;
-        });
-      } else if(type==='bjwinrate'){
-        arr.sort((a,b)=>{
-          const ra=a.bjGames?(a.bjWins/a.bjGames):0;
-          const rb=b.bjGames?(b.bjWins/b.bjGames):0;
-          return rb-ra;
-        });
-      } else if(type==='pkwinrate'){
-        arr.sort((a,b)=>{
-          const ra=a.pkGames?(a.pkWins/a.pkGames):0;
-          const rb=b.pkGames?(b.pkWins/b.pkGames):0;
-          return rb-ra;
-        });
-      }
+      arr.sort((a,b)=>config.value(b) - config.value(a));
 
       let html='';
       const top=arr.slice(0,10);
       top.forEach((u,i)=>{
         const isYou=currentUser && (u.key===currentUser.key);
-        let extra = '';
-        if(type==='earnings') extra = '— '+u.totalEarned+' credits';
-        else if(type==='winrate') extra = '— '+(u.games?Math.round(100*u.wins/u.games):0)+'%';
-        else if(type==='bjwinrate') extra = '— '+(u.bjGames?Math.round(100*u.bjWins/u.bjGames):0)+'%';
-        else if(type==='pkwinrate') extra = '— '+(u.pkGames?Math.round(100*u.pkWins/u.pkGames):0)+'%';
-        html+=`<div style="padding:6px 0">${i+1}. <strong>${u.name}</strong> ${isYou?'<em>(jij)</em>':''} ${extra}</div>`;
+        const extra = config.extra(u);
+        html+=`
+          <div class="lb-entry ${isYou ? 'you' : ''}">
+            <span class="lb-rank">${i+1}.</span>
+            <span class="lb-name">${u.name} ${isYou ? '<em>(jij)</em>' : ''}</span>
+            <span class="lb-extra">${extra}</span>
+          </div>
+        `;
       });
 
       let yourRank=-1;
       if(currentUser) yourRank=arr.findIndex(x=>x.key===currentUser.key);
       if(yourRank>9){
         const u=arr[yourRank];
-        let extra = '';
-        if(type==='earnings') extra = '— '+u.totalEarned+' credits';
-        else if(type==='winrate') extra = '— '+(u.games?Math.round(100*u.wins/u.games):0)+'%';
-        else if(type==='bjwinrate') extra = '— '+(u.bjGames?Math.round(100*u.bjWins/u.bjGames):0)+'%';
-        else if(type==='pkwinrate') extra = '— '+(u.pkGames?Math.round(100*u.pkWins/u.pkGames):0)+'%';
-        html+=`<hr><div style="padding:6px 0">${yourRank+1}. <strong>${u.name}</strong> ${extra}</div>`;
+        const extra = config.extra(u);
+        html+=`<hr><div class="lb-entry">
+          <span class="lb-rank">${yourRank+1}.</span>
+          <span class="lb-name">${u.name}</span>
+          <span class="lb-extra">${extra}</span>
+        </div>`;
       } else if(yourRank===-1 && currentUser){
-        html+=`<hr><div style="padding:6px 0">Jij staat nog niet in de statistieken.</div>`;
+        html+=`<hr><div class="lb-entry"><span class="lb-name">Jij staat nog niet in de statistieken.</span></div>`;
       }
       lbContent.innerHTML=html;
     }
 
     lbTab.onclick = ()=>{ lbIndex=0; openLeaderboard(); };
     lbClose.onclick = ()=>{ lbPopup.style.display='none'; };
-    lbLeft.onclick = ()=>{ lbIndex=(lbIndex-1+lbTypes.length)%lbTypes.length; openLeaderboard(); };
-    lbRight.onclick = ()=>{ lbIndex=(lbIndex+1)%lbTypes.length; openLeaderboard(); };
+    lbLeft.onclick = ()=>{ lbIndex=(lbIndex-1+leaderboardConfigs.length)%leaderboardConfigs.length; openLeaderboard(); };
+    lbRight.onclick = ()=>{ lbIndex=(lbIndex+1)%leaderboardConfigs.length; openLeaderboard(); };
 
   </script>
 </body>
