@@ -633,6 +633,7 @@
       position:relative;
       overflow:hidden;
       transition: transform 0.18s ease, box-shadow 0.18s ease;
+      animation: dealCard 0.35s ease;
     }
 
     .card-bj.card-back {
@@ -640,6 +641,17 @@
       box-shadow:
         0 6px 18px rgba(0,0,0,0.8),
         inset 0 0 0 1px rgba(255,255,255,0.9);
+    }
+
+    @keyframes dealCard {
+      from {
+        opacity: 0;
+        transform: translateY(-14px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .chair {
@@ -660,7 +672,7 @@
     #pokerSection { background:#0f2b2a; min-height:100vh; color:white; padding-bottom:40px; }
     .poker-table { width:90%; max-width:1000px; margin:20px auto; background:linear-gradient(145deg,#123835,#041817); border-radius:16px; padding:18px; box-shadow:0 8px 30px rgba(0,0,0,0.5); }
     .community { display:flex; justify-content:center; gap:8px; margin:12px 0; }
-    .card-pk { width:72px; height:102px; background:white; color:black; border-radius:8px; display:flex; justify-content:center; align-items:center; font-weight:bold; box-shadow:0 6px 16px rgba(0,0,0,0.7); }
+    .card-pk { width:72px; height:102px; background:white; color:black; border-radius:8px; display:flex; justify-content:center; align-items:center; font-weight:bold; box-shadow:0 6px 16px rgba(0,0,0,0.7); animation: dealCard 0.35s ease; }
     .poker-players { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; margin-top:16px; }
     .poker-player { min-width:140px; padding:10px; border-radius:10px; background:rgba(0,0,0,0.4); border:1px solid rgba(255,255,255,0.06); }
     .poker-player h4{ margin:0 0 6px 0; font-size:14px; }
@@ -701,6 +713,28 @@
       font-size: 48px;
     }
 
+    .dice-row div{
+      width: 64px;
+      height: 64px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    .dice-roll{
+      animation: diceRoll 0.55s ease;
+    }
+
+    @keyframes diceRoll{
+      0% { transform: rotate(0deg) scale(1); }
+      30% { transform: rotate(12deg) scale(1.1); }
+      60% { transform: rotate(-10deg) scale(0.96); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+
     .baccarat-row,
     .roulette-row{
       display:flex;
@@ -722,6 +756,7 @@
       font-weight:700;
       border:2px solid #d4af37;
       box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+      animation: dealCard 0.35s ease;
     }
 
     .roulette-wheel{
@@ -732,6 +767,15 @@
       border: 6px solid #d4af37;
       box-shadow: 0 10px 30px rgba(0,0,0,0.65);
       margin: 0 auto;
+    }
+
+    .roulette-wheel.spinning{
+      animation: rouletteSpin 1.2s cubic-bezier(0.22, 0.6, 0.2, 1);
+    }
+
+    @keyframes rouletteSpin{
+      from { transform: rotate(0deg); }
+      to { transform: rotate(920deg); }
     }
 
     .roulette-result{
@@ -1772,6 +1816,7 @@
     const rouletteStatus = document.getElementById('rouletteStatus');
     const spinRouletteBtn = document.getElementById('spinRouletteBtn');
     const backFromRouletteBtn = document.getElementById('backFromRouletteBtn');
+    const rouletteWheel = document.querySelector('.roulette-wheel');
 
     /* Slots refs */
     const slotsBetInput = document.getElementById('slotsBet');
@@ -1821,6 +1866,8 @@
         lbPopup.style.display = 'none';
       }
     }
+
+    const sleep = (ms)=>new Promise(resolve=>setTimeout(resolve, ms));
 
     /* ---------------------------
        Login / accounts
@@ -2316,6 +2363,7 @@ playHorseRaceBtn.onclick = () => {
     const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
     let crapsPoint = null;
     let crapsBet = 0;
+    let crapsRolling = false;
 
     function rollDie(){
       return Math.floor(Math.random() * 6) + 1;
@@ -2336,6 +2384,7 @@ playHorseRaceBtn.onclick = () => {
 
     rollCrapsBtn.onclick = async ()=>{
       if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(crapsRolling) return;
       if(crapsPoint === null){
         const bet = parseInt(crapsBetInput.value) || 0;
         if(bet < 10) return alert('Minimum inzet is 10 credits.');
@@ -2346,10 +2395,20 @@ playHorseRaceBtn.onclick = () => {
         renderDashboard();
       }
 
+      crapsRolling = true;
+      rollCrapsBtn.disabled = true;
+      resetCrapsBtn.disabled = true;
+      crapsDieOne.classList.add('dice-roll');
+      crapsDieTwo.classList.add('dice-roll');
+      crapsStatusEl.textContent = 'Dobbelstenen rollen...';
+      await sleep(500);
+
       const d1 = rollDie();
       const d2 = rollDie();
       const total = d1 + d2;
       updateCrapsDice(d1, d2);
+      crapsDieOne.classList.remove('dice-roll');
+      crapsDieTwo.classList.remove('dice-roll');
 
       if(crapsPoint === null){
         if(total === 7 || total === 11){
@@ -2398,6 +2457,10 @@ playHorseRaceBtn.onclick = () => {
           crapsStatusEl.textContent = `Je rolt ${total}. Punt blijft ${crapsPoint}.`;
         }
       }
+
+      crapsRolling = false;
+      rollCrapsBtn.disabled = false;
+      resetCrapsBtn.disabled = false;
     };
 
     resetCrapsBtn.onclick = ()=>{
@@ -2429,9 +2492,16 @@ playHorseRaceBtn.onclick = () => {
 
     dealBaccaratBtn.onclick = async ()=>{
       if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(dealBaccaratBtn.disabled) return;
       const bet = parseInt(baccaratBetInput.value) || 0;
       if(bet < 10) return alert('Minimum inzet is 10 credits.');
       if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+
+      dealBaccaratBtn.disabled = true;
+      baccaratBetInput.disabled = true;
+      baccaratBetType.disabled = true;
+      baccaratStatusEl.textContent = 'Kaarten worden gedeeld...';
+      await sleep(450);
 
       currentUser.credits -= bet;
       await saveCurrentUser();
@@ -2482,6 +2552,9 @@ playHorseRaceBtn.onclick = () => {
 
       await saveCurrentUser();
       renderDashboard();
+      dealBaccaratBtn.disabled = false;
+      baccaratBetInput.disabled = false;
+      baccaratBetType.disabled = false;
     };
 
     const rouletteRedNumbers = new Set([
@@ -2502,11 +2575,23 @@ playHorseRaceBtn.onclick = () => {
     rouletteBetType.onchange = updateRouletteInputs;
     updateRouletteInputs();
 
+    let rouletteSpinning = false;
     spinRouletteBtn.onclick = async ()=>{
       if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(rouletteSpinning) return;
       const bet = parseInt(rouletteBetInput.value) || 0;
       if(bet < 10) return alert('Minimum inzet is 10 credits.');
       if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+
+      rouletteSpinning = true;
+      spinRouletteBtn.disabled = true;
+      rouletteBetInput.disabled = true;
+      rouletteBetType.disabled = true;
+      rouletteColor.disabled = true;
+      rouletteNumber.disabled = true;
+      rouletteWheel?.classList.add('spinning');
+      rouletteStatus.textContent = 'Het wiel draait...';
+      await sleep(1100);
 
       currentUser.credits -= bet;
       await saveCurrentUser();
@@ -2540,6 +2625,12 @@ playHorseRaceBtn.onclick = () => {
 
       await saveCurrentUser();
       renderDashboard();
+      rouletteWheel?.classList.remove('spinning');
+      rouletteSpinning = false;
+      spinRouletteBtn.disabled = false;
+      rouletteBetInput.disabled = false;
+      rouletteBetType.disabled = false;
+      updateRouletteInputs();
     };
 
     /* ---------------------------
@@ -2948,6 +3039,7 @@ playHorseRaceBtn.onclick = () => {
     let currentPlayerIndex=0;
     let currentBet = 100;
     let dealerReveal = false;
+    let blackjackRoundActive = false;
 
     function placePlayers() {
       table.innerHTML = '';
@@ -3060,6 +3152,18 @@ playHorseRaceBtn.onclick = () => {
 
     function renderGame() {
       placePlayers();
+      setBlackjackControls();
+    }
+
+    function setBlackjackControls(){
+      if(!blackjackRoundActive){
+        hitBtn.disabled = true;
+        standBtn.disabled = true;
+        return;
+      }
+      const isUserTurn = players.length > 0 && currentPlayerIndex === 0 && !dealerReveal;
+      hitBtn.disabled = !isUserTurn;
+      standBtn.disabled = !isUserTurn;
     }
 
     function nextPlayer() {
@@ -3067,6 +3171,7 @@ playHorseRaceBtn.onclick = () => {
       if (currentPlayerIndex >= players.length) {
         dealerTurn();
       } else if (players[currentPlayerIndex].bot) {
+        setBlackjackControls();
         botTurn(players[currentPlayerIndex]);
       }
       renderGame();
@@ -3135,6 +3240,8 @@ playHorseRaceBtn.onclick = () => {
       nextRoundBtn.style.display='inline';
       hitBtn.style.display='none';
       standBtn.style.display='none';
+      blackjackRoundActive = false;
+      setBlackjackControls();
 
       if(currentUser){
         saveCurrentUser().then(renderDashboard);
@@ -3153,6 +3260,7 @@ playHorseRaceBtn.onclick = () => {
       saveCurrentUser().then(renderDashboard);
 
       dealerReveal = false;
+      blackjackRoundActive = true;
       createDeck();
       dealer.hand=[drawCard(), drawCard()];
       players.forEach(p=>p.hand=[drawCard(), drawCard()]);
@@ -3162,6 +3270,7 @@ playHorseRaceBtn.onclick = () => {
       hitBtn.style.display='inline';
       standBtn.style.display='inline';
       nextRoundBtn.style.display='none';
+      setBlackjackControls();
     }
 
     startGameBtn.onclick = ()=>{
@@ -3203,6 +3312,7 @@ playHorseRaceBtn.onclick = () => {
     let pokerCommunity = [];
     let pokerCurrentPlayerIndex = 0;
     let pokerTableMin = 500;
+    let pokerTurnLocked = false;
 
     function pkDraw(){ return pkDeck.pop(); }
 
@@ -3222,6 +3332,78 @@ playHorseRaceBtn.onclick = () => {
       }).join('');
     }
 
+    function pokerUserIndex(){
+      if(!currentUser) return -1;
+      return pokerPlayers.findIndex(p=>p.key === currentUser.key);
+    }
+
+    function pokerIsUserTurn(){
+      const idx = pokerUserIndex();
+      return idx !== -1 && idx === pokerCurrentPlayerIndex;
+    }
+
+    function setPokerControlsEnabled(enabled){
+      pokerCheckBtn.disabled = !enabled;
+      pokerBetBtn.disabled = !enabled;
+      pokerFoldBtn.disabled = !enabled;
+      pokerBetAmountInput.disabled = !enabled;
+    }
+
+    function updatePokerTurnState(){
+      const userCanAct = pokerIsUserTurn() && !pokerTurnLocked;
+      setPokerControlsEnabled(userCanAct);
+      if(!userCanAct && pokerPlayers[pokerCurrentPlayerIndex]){
+        pokerStatusEl.textContent = `${pokerPlayers[pokerCurrentPlayerIndex].name} is aan zet...`;
+      }
+    }
+
+    function pokerAdvanceTurn(){
+      if(pokerPlayers.length === 0) return;
+      let nextIndex = pokerCurrentPlayerIndex;
+      for(let i = 0; i < pokerPlayers.length; i++){
+        nextIndex = (nextIndex + 1) % pokerPlayers.length;
+        const nextPlayer = pokerPlayers[nextIndex];
+        if(!nextPlayer.folded && !nextPlayer.allIn){
+          break;
+        }
+      }
+      pokerCurrentPlayerIndex = nextIndex;
+      pkRender();
+      updatePokerTurnState();
+      if(pokerPlayers[pokerCurrentPlayerIndex]?.isBot){
+        void pokerBotTurn();
+      }
+    }
+
+    async function pokerBotTurn(){
+      pokerTurnLocked = true;
+      updatePokerTurnState();
+      await sleep(700);
+      const bot = pokerPlayers[pokerCurrentPlayerIndex];
+      if(!bot || !bot.isBot){
+        pokerTurnLocked = false;
+        updatePokerTurnState();
+        return;
+      }
+      const decision = Math.random();
+      if(decision < 0.12){
+        bot.folded = true;
+        pokerStatusEl.textContent = `${bot.name} foldt.`;
+      } else if(decision < 0.35){
+        const betSize = Math.min(200, bot.stack);
+        bot.stack -= betSize;
+        bot.bet += betSize;
+        bot.committed += betSize;
+        pokerPot += betSize;
+        pokerStatusEl.textContent = `${bot.name} bet ${betSize}.`;
+      } else {
+        pokerStatusEl.textContent = `${bot.name} checkt.`;
+      }
+      pkRender();
+      pokerTurnLocked = false;
+      pokerAdvanceTurn();
+    }
+
     function pkNewHand(){
       pkCreateDeck();
       pokerPot = 0;
@@ -3237,6 +3419,10 @@ playHorseRaceBtn.onclick = () => {
       pokerCurrentPlayerIndex = 0;
       pkRender();
       pokerStatusEl.textContent = 'Nieuwe hand gestart.';
+      updatePokerTurnState();
+      if(pokerPlayers[pokerCurrentPlayerIndex]?.isBot){
+        void pokerBotTurn();
+      }
     }
 
     function PK_addBotsIfNeeded(){
@@ -3313,6 +3499,7 @@ playHorseRaceBtn.onclick = () => {
       const pl = pokerPlayers[idx];
       currentUser.credits += pl.stack;
       pokerPlayers.splice(idx,1);
+      setPokerControlsEnabled(false);
       saveCurrentUser().then(()=>{
         renderDashboard();
         alert('Tafel verlaten. Je hebt nu weer '+currentUser.credits+' credits.');
@@ -3322,17 +3509,54 @@ playHorseRaceBtn.onclick = () => {
     backFromPokerBtn.onclick = ()=>{
       pokerSection.style.display = 'none';
       blackjackSection.style.display = 'none';
+      setPokerControlsEnabled(false);
       showDashboard(true);
     };
 
     pokerCheckBtn.onclick = ()=>{
-      pokerStatusEl.textContent = 'Check / Call uitgevoerd (demo).';
+      if(!pokerIsUserTurn()){
+        pokerStatusEl.textContent = 'Wacht op je beurt om te checken.';
+        return;
+      }
+      pokerStatusEl.textContent = 'Check / Call uitgevoerd.';
+      pokerAdvanceTurn();
     };
     pokerBetBtn.onclick = ()=>{
-      pokerStatusEl.textContent = 'Bet / Raise uitgevoerd (demo).';
+      if(!pokerIsUserTurn()){
+        pokerStatusEl.textContent = 'Wacht op je beurt om te betten.';
+        return;
+      }
+      const betSize = Math.max(0, parseInt(pokerBetAmountInput.value, 10) || 0);
+      const player = pokerPlayers[pokerCurrentPlayerIndex];
+      if(!player || player.stack <= 0){
+        pokerStatusEl.textContent = 'Je hebt geen chips meer om te betten.';
+        return;
+      }
+      if(betSize <= 0){
+        pokerStatusEl.textContent = 'Voer een geldig bet-bedrag in.';
+        return;
+      }
+      const finalBet = Math.min(betSize, player.stack);
+      player.stack -= finalBet;
+      player.bet += finalBet;
+      player.committed += finalBet;
+      pokerPot += finalBet;
+      pokerStatusEl.textContent = `Bet / Raise uitgevoerd (${finalBet}).`;
+      pkRender();
+      pokerAdvanceTurn();
     };
     pokerFoldBtn.onclick = ()=>{
-      pokerStatusEl.textContent = 'Fold (demo).';
+      if(!pokerIsUserTurn()){
+        pokerStatusEl.textContent = 'Wacht op je beurt om te folden.';
+        return;
+      }
+      const player = pokerPlayers[pokerCurrentPlayerIndex];
+      if(player){
+        player.folded = true;
+      }
+      pokerStatusEl.textContent = 'Fold uitgevoerd.';
+      pkRender();
+      pokerAdvanceTurn();
     };
 // ==================== PAARDENRACE LOGICA (GEFIXT) ====================
 
