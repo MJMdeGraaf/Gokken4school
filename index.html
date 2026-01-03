@@ -1207,6 +1207,14 @@
       await db.ref('users/'+currentUser.key).set(currentUser);
     }
 
+    function ensureMusicFields(user){
+      if(!user) return;
+      if(typeof user.musicVolume !== 'number') user.musicVolume = musicDefaults.volume;
+      if(typeof user.musicTrackIndex !== 'number') user.musicTrackIndex = musicDefaults.trackIndex;
+      if(typeof user.musicMuted !== 'boolean') user.musicMuted = musicDefaults.muted;
+      if(typeof user.musicEnabled !== 'boolean') user.musicEnabled = musicDefaults.enabled;
+    }
+
     /* ---------------------------
        UI refs
        --------------------------- */
@@ -1262,6 +1270,13 @@
     const musicTrackSelect = document.getElementById('musicTrackSelect');
     const closeMusicMenu = document.getElementById('closeMusicMenu');
     const muteBtn = document.getElementById('muteBtn');
+    const musicDefaults = {
+      volume: 0.4,
+      trackIndex: 0,
+      muted: false,
+      enabled: true
+    };
+    let musicNeedsGesture = false;
 
     /* Blackjack refs */
     const startGameBtn = document.getElementById('startGame');
@@ -1341,16 +1356,21 @@
       if(existing.password !== passwd) return alert('Wachtwoord onjuist.');
 
       const needsLuckyInit = typeof existing.luckyCoins !== 'number' || typeof existing.luckyCoinProgress !== 'number';
+      const needsMusicInit = typeof existing.musicVolume !== 'number'
+        || typeof existing.musicTrackIndex !== 'number'
+        || typeof existing.musicMuted !== 'boolean'
+        || typeof existing.musicEnabled !== 'boolean';
       currentUser = existing;
       currentUser.key = key;
       ensureLuckyFields(currentUser);
+      ensureMusicFields(currentUser);
       loginSection.style.display='none';
       dashboard.style.display='block';
       renderDashboard();
-      if(needsLuckyInit){
+      if(needsLuckyInit || needsMusicInit){
         saveCurrentUser();
       }
-      bgMusic.play().catch(()=>{});
+      applyMusicSettings(currentUser, true);
     };
 
     createAccountBtn.onclick = async ()=>{
@@ -1382,13 +1402,17 @@
         bjGames: 0,
         pkWins: 0,
         pkLosses: 0,
-        pkGames: 0
+        pkGames: 0,
+        musicVolume: musicDefaults.volume,
+        musicTrackIndex: musicDefaults.trackIndex,
+        musicMuted: musicDefaults.muted,
+        musicEnabled: musicDefaults.enabled
       };
       await saveCurrentUser();
       loginSection.style.display='none';
       dashboard.style.display='block';
       renderDashboard();
-      bgMusic.play().catch(()=>{});
+      applyMusicSettings(currentUser, true);
     };
 
     function ensureLuckyFields(user){
@@ -1933,39 +1957,88 @@ playHorseRaceBtn.onclick = () => {
     /* ---------------------------
        Music menu
        --------------------------- */
-    musicVolume.value = 0.4;
-    bgMusic.volume = 0.4;
-
-    function startMusic(){
+    function setMusicSource(index){
       const sources = bgMusic.querySelectorAll('source');
-      const index = parseInt(musicTrackSelect.value);
       const selectedSource = sources[index] || sources[0];
       if(selectedSource && bgMusic.src !== selectedSource.src){
         bgMusic.src = selectedSource.src;
         bgMusic.load();
       }
-      bgMusic.play().catch(()=>{});
+    }
+
+    function rememberMusicNeedsGesture(){
+      if(musicNeedsGesture) return;
+      musicNeedsGesture = true;
+      const resume = () => {
+        musicNeedsGesture = false;
+        startMusic(true);
+        document.removeEventListener('pointerdown', resume);
+      };
+      document.addEventListener('pointerdown', resume, { once: true });
+    }
+
+    function startMusic(userInitiated = false){
+      setMusicSource(parseInt(musicTrackSelect.value, 10));
+      if(bgMusic.muted || !currentUser || !currentUser.musicEnabled) return;
+      const playPromise = bgMusic.play();
+      if(playPromise && typeof playPromise.catch === 'function'){
+        playPromise.catch(() => {
+          if(!userInitiated){
+            rememberMusicNeedsGesture();
+          }
+        });
+      }
+    }
+
+    function applyMusicSettings(user, userInitiated = false){
+      if(!user) return;
+      ensureMusicFields(user);
+      musicVolume.value = user.musicVolume;
+      musicTrackSelect.value = String(user.musicTrackIndex);
+      bgMusic.volume = user.musicVolume;
+      bgMusic.muted = user.musicMuted;
+      muteBtn.textContent = bgMusic.muted ? '🔇 Unmute' : '🎵 Mute';
+      if(user.musicEnabled){
+        startMusic(userInitiated);
+      } else {
+        bgMusic.pause();
+      }
     }
 
     musicControl.onclick = () => {
       const isOpen = musicMenu.style.display === 'block';
       musicMenu.style.display = isOpen ? 'none' : 'block';
       if(!isOpen){
-        startMusic();
+        startMusic(true);
       }
     };
-    musicVolume.oninput = ()=>{ bgMusic.volume = parseFloat(musicVolume.value); };
+    musicVolume.oninput = ()=>{
+      bgMusic.volume = parseFloat(musicVolume.value);
+      if(currentUser){
+        ensureMusicFields(currentUser);
+        currentUser.musicVolume = bgMusic.volume;
+        saveCurrentUser();
+      }
+    };
     musicTrackSelect.onchange = ()=>{
-      const index = parseInt(musicTrackSelect.value);
-      const sources = bgMusic.querySelectorAll('source');
-      if(sources[index]){
-        bgMusic.pause();
-        bgMusic.src = sources[index].src;
-        bgMusic.load();
-        startMusic();
+      const index = parseInt(musicTrackSelect.value, 10);
+      setMusicSource(index);
+      startMusic(true);
+      if(currentUser){
+        ensureMusicFields(currentUser);
+        currentUser.musicTrackIndex = index;
+        saveCurrentUser();
       }
     };
-    muteBtn.onclick = ()=>{ bgMusic.muted = !bgMusic.muted; muteBtn.textContent = bgMusic.muted ? '🔇 Unmute' : '🎵 Mute'; };
+    muteBtn.onclick = ()=>{
+      bgMusic.muted = !bgMusic.muted;
+      muteBtn.textContent = bgMusic.muted ? '🔇 Unmute' : '🎵 Mute';
+      if(currentUser){
+        ensureMusicFields(currentUser);
+        currentUser.musicMuted = bgMusic.muted;
+        saveCurrentUser();
+      }
+    };
     closeMusicMenu.onclick = ()=>{ musicMenu.style.display='none'; };
 
     /* ---------------------------
