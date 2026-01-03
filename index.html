@@ -563,188 +563,276 @@
 
     /* Blackjack sectie */
     #blackjackSection {
-      height: 100vh;
-      color: white;
+      min-height: 100vh;
+      color: #f7fbff;
       background:
         radial-gradient(circle at 20% 0%, rgba(255,255,255,0.08), transparent 55%),
-        radial-gradient(circle at 80% 100%, rgba(255,255,255,0.04), transparent 55%),
-        radial-gradient(circle at center, #1c7b52 0, #094432 55%, #031614 100%);
+        radial-gradient(circle at 80% 100%, rgba(255,255,255,0.06), transparent 55%),
+        linear-gradient(135deg, #082420 0%, #0e4c3b 45%, #031614 100%);
+      padding-bottom: 40px;
     }
 
-    .table-container {
-      position: relative;
-      width: 90%;
-      max-width: 900px;
-      margin: 36px auto;
-      height: 520px;
-      perspective: 900px;
-    }
-
-    .table {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 30% 20%, #2fbf7a 0, #12724b 45%, #063024 100%);
-      box-shadow:
-        0 18px 40px rgba(0,0,0,0.8),
-        inset 0 0 25px rgba(0,0,0,0.85);
-      border: 8px solid #c59b45;
-      transform: rotateX(18deg);
-      transform-origin: center 120%;
-    }
-
-    .table::before{
-      content:'';
-      position:absolute;
-      inset:18%;
-      border-radius:50%;
-      border:2px solid rgba(255,255,255,0.15);
-      box-shadow:0 0 12px rgba(0,0,0,0.7);
-      pointer-events:none;
-    }
-
-    .player-area { position:absolute; text-align:center; color: white; transition: transform 0.2s ease, box-shadow 0.2s ease; }
-
-    .player-area.active-player {
-      transform: translateY(-6px) scale(1.05);
-      box-shadow: 0 0 18px rgba(255, 215, 0, 0.65);
-    }
-
-    .cards { display:flex; justify-content:center; gap:8px; margin-top:8px; }
-
-    .card-bj {
-      width:80px;
-      height:120px;
-      border-radius:10px;
-      background:linear-gradient(145deg,#fdfdfd,#f3f3f3);
-      color:#111;
-      border:2px solid #d4af37;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      font-weight:700;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size:20px;
-      box-shadow:
-        0 6px 14px rgba(0,0,0,0.7),
-        inset 0 0 0 1px rgba(255,255,255,0.8);
-      position:relative;
-      overflow:hidden;
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      animation: dealCard 0.35s ease;
-    }
-
-    .card-bj.card-back,
-    .card-face.card-back {
-      background: radial-gradient(circle at 30% 20%, #fff8d0 0, #d4af37 35%, #8b6b1f 100%);
-      box-shadow:
-        0 6px 18px rgba(0,0,0,0.8),
-        inset 0 0 0 1px rgba(255,255,255,0.9);
-    }
-
-    .card-flip {
-      perspective: 900px;
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
-
-    .card-flip .card-inner {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transform: rotateY(0deg);
-      transition: transform 1s ease;
-    }
-
-    .card-flip.show-front .card-inner {
-      transform: rotateY(180deg);
-    }
-
-    .card-flip.flip-animate .card-inner {
-      animation: dealerFlip 1.2s ease forwards;
-    }
-
-    .card-face {
-      position: absolute;
-      inset: 0;
-      backface-visibility: hidden;
-      border-radius: 10px;
+    .bj-shell{
+      max-width: 1100px;
+      margin: 0 auto;
       display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .bj-header{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      font-size: 20px;
-      border: 2px solid #d4af37;
-      box-shadow:
-        0 6px 14px rgba(0,0,0,0.7),
-        inset 0 0 0 1px rgba(255,255,255,0.8);
-      background: linear-gradient(145deg,#fdfdfd,#f3f3f3);
-      color: #111;
+      justify-content: space-between;
+      background: rgba(6, 22, 20, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 16px 18px;
+      box-shadow: 0 16px 30px rgba(0,0,0,0.4);
     }
 
-    .card-face.card-front {
-      transform: rotateY(180deg);
+    .bj-header h2{
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0.4px;
     }
 
-    @keyframes dealerFlip {
-      0% { transform: rotateY(0deg); }
-      100% { transform: rotateY(180deg); }
+    .bj-setup{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
     }
 
-    .deck-stack {
+    .bj-setup label{
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin-right: 6px;
+    }
+
+    .bj-setup select,
+    .bj-setup input{
+      min-width: 110px;
+    }
+
+    .bj-table{
+      position: relative;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 55%),
+        radial-gradient(circle at 50% 85%, rgba(0,0,0,0.6), transparent 55%),
+        linear-gradient(160deg, rgba(12,66,50,0.95), rgba(6,25,20,0.95));
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 26px;
+      min-height: 440px;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.6), 0 25px 50px rgba(0,0,0,0.45);
+      overflow: hidden;
+    }
+
+    .bj-table::before{
+      content: '';
       position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 74px;
-      height: 104px;
-      transform: translate(-50%, -50%);
+      inset: 18px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+
+    .bj-shoe{
+      position: absolute;
+      right: 30px;
+      top: 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
       z-index: 4;
     }
 
-    .deck-stack .deck-card {
+    .bj-shoe-stack{
+      position: relative;
+      width: 76px;
+      height: 108px;
+    }
+
+    .bj-shoe-card{
       position: absolute;
       inset: 0;
-      border-radius: 10px;
+      border-radius: 12px;
       border: 2px solid #d4af37;
-      background: radial-gradient(circle at 30% 20%, #fff4c4 0, #cda23b 35%, #7a5a16 100%);
+      background: radial-gradient(circle at 30% 20%, #fff3c1 0, #cda23b 40%, #7a5a16 100%);
       box-shadow:
-        0 6px 16px rgba(0,0,0,0.7),
+        0 6px 14px rgba(0,0,0,0.65),
         inset 0 0 0 1px rgba(255,255,255,0.85);
     }
 
-    .deck-stack .deck-card:nth-child(1) { transform: translate(0, 0); }
-    .deck-stack .deck-card:nth-child(2) { transform: translate(4px, -4px); }
-    .deck-stack .deck-card:nth-child(3) { transform: translate(8px, -8px); }
+    .bj-shoe-card:nth-child(1){ transform: translate(0,0); }
+    .bj-shoe-card:nth-child(2){ transform: translate(4px,-4px); }
+    .bj-shoe-card:nth-child(3){ transform: translate(8px,-8px); }
 
-    .deal-flight {
+    .bj-shoe-count{
+      padding: 6px 12px;
+      font-size: 12px;
+      border-radius: 999px;
+      background: rgba(8, 30, 26, 0.8);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.8);
+    }
+
+    .bj-lane{
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+      text-align: center;
+    }
+
+    .bj-lane .bj-hand{
+      display: flex;
+      gap: 10px;
+      min-height: 132px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .bj-lane .bj-score{
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .bj-table-grid{
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 22px;
+      height: 100%;
+    }
+
+    .bj-dealer{
+      padding-top: 8px;
+    }
+
+    .bj-players{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .bj-seat{
+      background: rgba(8, 28, 24, 0.65);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 180px;
+      position: relative;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .bj-seat.active{
+      transform: translateY(-4px);
+      box-shadow: 0 0 18px rgba(255,215,0,0.45);
+    }
+
+    .bj-seat h3{
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .bj-seat .bj-score{
+      font-size: 13px;
+    }
+
+    .bj-card{
+      width: 76px;
+      height: 110px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #ffffff, #f0f0f0);
+      border: 2px solid #d4af37;
+      color: #111;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow:
+        0 6px 14px rgba(0,0,0,0.55),
+        inset 0 0 0 1px rgba(255,255,255,0.75);
+    }
+
+    .bj-card .corner{
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .bj-card .center{
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .bj-card.red{
+      color: #b01e2d;
+    }
+
+    .bj-card.is-back{
+      background: radial-gradient(circle at 30% 20%, #fff3c1 0, #cda23b 40%, #7a5a16 100%);
+      color: transparent;
+    }
+
+    .bj-card.is-back::after{
+      content: '♣';
+      color: rgba(255,255,255,0.85);
+      font-size: 24px;
+    }
+
+    .bj-actions{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(6, 22, 20, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 14px 18px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.35);
+    }
+
+    .bj-status{
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      max-width: 520px;
+      text-align: left;
+    }
+
+    .bj-actions-buttons{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .bj-fly-card{
       position: fixed;
-      width: 80px;
-      height: 120px;
-      border-radius: 10px;
+      width: 76px;
+      height: 110px;
+      border-radius: 12px;
       border: 2px solid #d4af37;
-      background: radial-gradient(circle at 30% 20%, #fff4c4 0, #cda23b 35%, #7a5a16 100%);
+      background: radial-gradient(circle at 30% 20%, #fff3c1 0, #cda23b 40%, #7a5a16 100%);
       box-shadow:
-        0 10px 22px rgba(0,0,0,0.75),
+        0 8px 18px rgba(0,0,0,0.65),
         inset 0 0 0 1px rgba(255,255,255,0.85);
-      z-index: 1000;
+      z-index: 9999;
       pointer-events: none;
-      transition: transform 0.85s ease, opacity 0.85s ease;
-    }
-
-    @keyframes dealCard {
-      from {
-        opacity: 0;
-        transform: translateY(-14px) scale(0.98);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
+      transition: transform 0.5s ease, opacity 0.4s ease;
     }
 
     .chair {
@@ -1543,8 +1631,8 @@
     /* small responsive */
     @media (max-width:600px){
       #lb-popup { width: 100%; right:0; left:0; height: 50vh; border-radius: 12px 12px 0 0;}
-      .card-bj{ width:56px; height:84px; }
-      .table-container{ height:360px; }
+      .bj-card{ width:56px; height:84px; }
+      .bj-table{ min-height: 360px; }
       .card-pk{ width:56px; height:84px; }
     }
   </style>
@@ -1726,32 +1814,54 @@
 
   <!-- Blackjack -->
   <section id="blackjackSection">
-    <h2>Blackjack</h2>
-    <div>
-      <label>Kies aantal bots:</label>
-      <select id="botCount">
-        <option value="0">0 bots</option>
-        <option value="1">1 bot</option>
-        <option value="2">2 bots</option>
-        <option value="3">3 bots</option>
-        <option value="4">4 bots</option>
-        <option value="5">5 bots</option>
-        <option value="6">6 bots</option>
-      </select><br><br>
-      <label>Inzet (credits):</label>
-      <input type="number" id="betAmount" min="1" value="100">
-      <button id="startGame">Start spel</button>
-      <button id="backToMenu">Terug naar menu</button>
-    </div>
-    <div class="table-container">
-      <div class="table" id="table">
-        <!-- Stoelen + spelergebieden komen hier dynamisch -->
+    <div class="bj-shell">
+      <div class="bj-header">
+        <h2>Blackjack</h2>
+        <div class="bj-setup">
+          <label for="botCount">Bots:</label>
+          <select id="botCount">
+            <option value="0">0 bots</option>
+            <option value="1">1 bot</option>
+            <option value="2">2 bots</option>
+            <option value="3">3 bots</option>
+            <option value="4">4 bots</option>
+            <option value="5">5 bots</option>
+            <option value="6">6 bots</option>
+          </select>
+          <label for="betAmount">Inzet:</label>
+          <input type="number" id="betAmount" min="1" value="100">
+          <button id="startGame">Start ronde</button>
+          <button id="backToMenu">Terug naar menu</button>
+        </div>
       </div>
-    </div>
-    <div id="controls">
-      <button id="hitBtn">Hit</button>
-      <button id="standBtn">Stand</button>
-      <button id="nextRoundBtn">Volgende ronde</button>
+
+      <div class="bj-table">
+        <div class="bj-shoe">
+          <div class="bj-shoe-stack" id="bjShoe">
+            <div class="bj-shoe-card"></div>
+            <div class="bj-shoe-card"></div>
+            <div class="bj-shoe-card"></div>
+          </div>
+          <div class="bj-shoe-count" id="bjShoeCount">Shoe: -- kaarten</div>
+        </div>
+        <div class="bj-table-grid">
+          <div class="bj-lane bj-dealer">
+            <div class="bj-label">Dealer</div>
+            <div class="bj-hand" id="bjDealerHand"></div>
+            <div class="bj-score" id="bjDealerScore">Score: -</div>
+          </div>
+          <div class="bj-players" id="bjPlayersArea"></div>
+        </div>
+      </div>
+
+      <div class="bj-actions">
+        <div class="bj-status" id="bjStatus">Kies je inzet en start de ronde.</div>
+        <div class="bj-actions-buttons">
+          <button id="hitBtn">Hit</button>
+          <button id="standBtn">Stand</button>
+          <button id="nextRoundBtn">Volgende ronde</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -2097,7 +2207,12 @@
     const startGameBtn = document.getElementById('startGame');
     const botSelect = document.getElementById('botCount');
     const betAmountInput = document.getElementById('betAmount');
-    const table = document.getElementById('table');
+    const bjDealerHand = document.getElementById('bjDealerHand');
+    const bjDealerScore = document.getElementById('bjDealerScore');
+    const bjPlayersArea = document.getElementById('bjPlayersArea');
+    const bjStatus = document.getElementById('bjStatus');
+    const bjShoeCount = document.getElementById('bjShoeCount');
+    const bjShoe = document.getElementById('bjShoe');
     const hitBtn = document.getElementById('hitBtn');
     const standBtn = document.getElementById('standBtn');
     const nextRoundBtn = document.getElementById('nextRoundBtn');
@@ -3338,58 +3453,139 @@ playHorseRaceBtn.onclick = () => {
     /* ---------------------------
        Blackjack logic
        --------------------------- */
-    const suits=['♠','♥','♦','♣'];
-    const values=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-    let deck=[];
+    const bjSuits = ['♠','♥','♦','♣'];
+    const bjValues = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    const bjShoeDecks = 6;
+    let bjShoeCards = [];
 
-    function createDeck(){
-      deck=[];
-      for(let s of suits) for(let v of values) deck.push({suit:s, value:v});
-      for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
-    }
-    function cardValue(card){ if(['J','Q','K'].includes(card.value)) return 10; if(card.value==='A') return 11; return parseInt(card.value); }
-    function handValue(hand){ let total=0, aces=0; for(let c of hand){ total+=cardValue(c); if(c.value==='A') aces++; } while(total>21 && aces>0){ total-=10; aces--; } return total; }
-    function drawCard(){ return deck.pop(); }
-
-    let players=[]; // includes human and bots
-    let dealer={hand:[], name:'Dealer'};
-    let currentPlayerIndex=0;
-    let currentBet = 100;
-    let dealerReveal = false;
-    let blackjackRoundActive = false;
-    let blackjackAnimationActive = false;
-
-    const wait = (ms)=>new Promise(resolve=>setTimeout(resolve, ms));
-
-    function clearDealerFlipFlags(){
-      dealer.hand.forEach(card=>{
-        if(card) card.animateFlip = false;
-      });
-    }
-
-    function ensureDeckStack(){
-      const existing = table.querySelector('.deck-stack');
-      if(existing) return;
-      const stack = document.createElement('div');
-      stack.className = 'deck-stack';
-      stack.innerHTML = `
-        <div class="deck-card"></div>
-        <div class="deck-card"></div>
-        <div class="deck-card"></div>
-      `;
-      table.appendChild(stack);
-    }
-
-    function animateDealToDealer(cardIndex){
-      const stack = table.querySelector('.deck-stack');
-      const target = table.querySelector(`.dealer-area .card-bj[data-dealer-card-index="${cardIndex}"]`);
-      if(!stack || !target){
-        return Promise.resolve();
+    function bjShuffle(cards){
+      for(let i = cards.length - 1; i > 0; i -= 1){
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
       }
-      const stackRect = stack.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
+    }
+
+    function bjBuildShoe(){
+      bjShoeCards = [];
+      for(let d = 0; d < bjShoeDecks; d += 1){
+        for(const suit of bjSuits){
+          for(const value of bjValues){
+            bjShoeCards.push({ suit, value });
+          }
+        }
+      }
+      bjShuffle(bjShoeCards);
+      updateShoeCount();
+    }
+
+    function updateShoeCount(){
+      bjShoeCount.textContent = `Shoe: ${bjShoeCards.length} kaarten`;
+    }
+
+    function bjDrawCard(){
+      if(bjShoeCards.length < 30){
+        bjBuildShoe();
+      }
+      const card = bjShoeCards.pop();
+      updateShoeCount();
+      return card;
+    }
+
+    function bjCardValue(card){
+      if(['J','Q','K'].includes(card.value)) return 10;
+      if(card.value === 'A') return 11;
+      return parseInt(card.value, 10);
+    }
+
+    function bjHandValue(hand){
+      let total = 0;
+      let aces = 0;
+      hand.forEach(card=>{
+        total += bjCardValue(card);
+        if(card.value === 'A') aces += 1;
+      });
+      while(total > 21 && aces > 0){
+        total -= 10;
+        aces -= 1;
+      }
+      return total;
+    }
+
+    function wait(ms){
+      return new Promise(resolve=>setTimeout(resolve, ms));
+    }
+
+    function isRedSuit(suit){
+      return suit === '♥' || suit === '♦';
+    }
+
+    let bjPlayers = [];
+    const bjDealer = { hand: [] };
+    let bjCurrentIndex = 0;
+    let bjBet = 100;
+    let bjRoundActive = false;
+    let bjAnimating = false;
+    let bjDealerReveal = false;
+
+    function createCardMarkup(card){
+      const red = isRedSuit(card.suit);
+      return `
+        <div class="bj-card ${red ? 'red' : ''}">
+          <div class="corner">${card.value}${card.suit}</div>
+          <div class="center">${card.value}${card.suit}</div>
+        </div>
+      `;
+    }
+
+    function createCardBackMarkup(){
+      return `<div class="bj-card is-back"></div>`;
+    }
+
+    function renderDealer(){
+      const cardsHtml = bjDealer.hand.map(card=>{
+        if(card.hidden){
+          return createCardBackMarkup();
+        }
+        return createCardMarkup(card);
+      }).join('');
+      bjDealerHand.innerHTML = cardsHtml || '';
+      const score = bjDealerReveal ? bjHandValue(bjDealer.hand) : '?';
+      bjDealerScore.textContent = `Score: ${score}`;
+    }
+
+    function renderPlayers(){
+      bjPlayersArea.innerHTML = bjPlayers.map((player, index)=>{
+        const score = player.busted ? 'Bust' : bjHandValue(player.hand);
+        const cardsHtml = player.hand.map(card=>createCardMarkup(card)).join('');
+        return `
+          <div class="bj-seat ${index === bjCurrentIndex && bjRoundActive ? 'active' : ''}" data-player-index="${index}">
+            <h3>${player.name}</h3>
+            <div class="bj-hand">${cardsHtml}</div>
+            <div class="bj-score">Score: ${score}</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBlackjack(){
+      renderDealer();
+      renderPlayers();
+      setBlackjackControls();
+    }
+
+    function setBlackjackControls(){
+      const isUserTurn = bjRoundActive && !bjAnimating && bjCurrentIndex === 0 && !bjDealerReveal;
+      hitBtn.disabled = !isUserTurn;
+      standBtn.disabled = !isUserTurn;
+      nextRoundBtn.disabled = bjRoundActive || bjPlayers.length === 0 || bjAnimating;
+    }
+
+    function animateDealTo(targetEl){
+      if(!bjShoe || !targetEl) return Promise.resolve();
+      const stackRect = bjShoe.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
       const flight = document.createElement('div');
-      flight.className = 'deal-flight';
+      flight.className = 'bj-fly-card';
       flight.style.left = `${stackRect.left}px`;
       flight.style.top = `${stackRect.top}px`;
       document.body.appendChild(flight);
@@ -3398,7 +3594,7 @@ playHorseRaceBtn.onclick = () => {
 
       return new Promise(resolve=>{
         requestAnimationFrame(()=>{
-          flight.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(6deg)`;
+          flight.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
           flight.style.opacity = '0';
         });
         const cleanup = ()=>{
@@ -3406,281 +3602,243 @@ playHorseRaceBtn.onclick = () => {
           resolve();
         };
         flight.addEventListener('transitionend', cleanup, { once: true });
-        setTimeout(cleanup, 1000);
+        setTimeout(cleanup, 700);
       });
     }
 
-    function placePlayers() {
-      table.innerHTML = '';
-      ensureDeckStack();
-
-      const centerX = table.clientWidth / 2;
-      const centerY = table.clientHeight / 2;
-      const cardW = 80;
-      const cardH = 120;
-
-      // binnenradius: dealer & speler, iets binnen de rand
-      const innerRadius = Math.min(centerX, centerY) - 120;
-
-      // buitenradius: bots, op de rand van de tafel
-      const outerRadius = Math.min(centerX, centerY) - 70;
-
-      // hoeken: dealer boven (12 uur), speler onder (6 uur)
-      const dealerAngle = -Math.PI / 2;
-      const playerAngle =  Math.PI / 2;
-
-      const botCount = Math.max(0, players.length - 1);
-
-      function getPos(radius, angle) {
-        return {
-          x: centerX + radius * Math.cos(angle) - cardW / 2,
-          y: centerY + radius * Math.sin(angle) - cardH / 2
-        };
-      }
-
-      function createPlayerArea(label, hand, angle, radius, isActive) {
-        const pos = getPos(radius, angle);
-
-        const div = document.createElement('div');
-        div.className = 'player-area';
-        if (isActive) div.classList.add('active-player');
-        div.style.left = pos.x + 'px';
-        div.style.top = pos.y + 'px';
-
-        const cardsHTML = hand.map(c =>
-          `<div class="card-bj">${c.value}${c.suit}</div>`
-        ).join('');
-
-        div.innerHTML = `
-          <h3>${label}</h3>
-          <div class="cards">${cardsHTML}</div>
-          <p>Score: ${handValue(hand)}</p>
-        `;
-
-        table.appendChild(div);
-      }
-
-      // Dealer (met eventueel verborgen eerste kaart)
-      (function(){
-        const radius = innerRadius;
-        const angle = dealerAngle;
-        const pos = {
-          x: centerX + radius * Math.cos(angle) - cardW / 2,
-          y: centerY + radius * Math.sin(angle) - cardH / 2
-        };
-        const div = document.createElement('div');
-        div.className = 'player-area dealer-area';
-        div.style.left = pos.x + 'px';
-        div.style.top = pos.y + 'px';
-
-        const cardsHTML = dealer.hand.map((card, index)=>{
-          const isHidden = !dealerReveal && index === 0;
-          const shouldAnimate = dealerReveal && card.animateFlip;
-          const showFront = !isHidden && (!dealerReveal || !shouldAnimate);
-          const flipClasses = [
-            'card-bj',
-            'card-flip',
-            showFront ? 'show-front' : '',
-            shouldAnimate ? 'flip-animate' : ''
-          ].filter(Boolean).join(' ');
-
-          const frontValue = `${card.value}${card.suit}`;
-          return `
-            <div class="${flipClasses}" data-dealer-card-index="${index}">
-              <div class="card-inner">
-                <div class="card-face card-back"></div>
-                <div class="card-face card-front">${frontValue}</div>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        const scoreText = dealerReveal ? handValue(dealer.hand) : '?';
-
-        div.innerHTML = `
-          <h3>Dealer</h3>
-          <div class="cards">${cardsHTML}</div>
-          <p>Score: ${scoreText}</p>
-        `;
-        table.appendChild(div);
-      })();
-
-      // Speler (altijd players[0])
-      if (players.length > 0) {
-        const isActivePlayer = currentPlayerIndex === 0;
-        createPlayerArea(players[0].name, players[0].hand, playerAngle, innerRadius, isActivePlayer);
-      }
-
-      // Bots: vaste posities rond de rand, met ruimte onder voor de knoppen
-      if (botCount > 0) {
-        const masterAngles = [
-          -3*Math.PI/4,  // linksboven
-          -Math.PI/4,    // rechtsboven
-          Math.PI,       // links
-          0,             // rechts
-          3*Math.PI/4,   // linksonder
-          Math.PI/4      // rechtsonder
-        ];
-        const usedAngles = masterAngles.slice(0, botCount);
-
-        for (let i = 1; i < players.length; i++) {
-          const angle = usedAngles[i - 1];
-          const isActiveBot = currentPlayerIndex === i;
-          createPlayerArea(players[i].name, players[i].hand, angle, outerRadius, isActiveBot);
-        }
-      }
+    async function dealCardToPlayer(index){
+      const card = bjDrawCard();
+      bjPlayers[index].hand.push({ ...card });
+      renderBlackjack();
+      const seat = bjPlayersArea.querySelector(`[data-player-index="${index}"] .bj-hand`);
+      const cardEl = seat?.lastElementChild;
+      await animateDealTo(cardEl);
     }
 
-    function renderGame() {
-      placePlayers();
+    async function dealCardToDealer({ hidden = false } = {}){
+      const card = bjDrawCard();
+      bjDealer.hand.push({ ...card, hidden });
+      renderBlackjack();
+      const cardEl = bjDealerHand?.lastElementChild;
+      await animateDealTo(cardEl);
+    }
+
+    async function dealInitialCards(){
+      bjAnimating = true;
       setBlackjackControls();
-      clearDealerFlipFlags();
-    }
-
-    function setBlackjackControls(){
-      const isUserTurn = players.length > 0 && currentPlayerIndex === 0 && !dealerReveal;
-      hitBtn.disabled = !blackjackRoundActive || !isUserTurn || blackjackAnimationActive;
-      standBtn.disabled = !blackjackRoundActive || !isUserTurn || blackjackAnimationActive;
-      nextRoundBtn.disabled = blackjackRoundActive || players.length === 0 || blackjackAnimationActive;
-    }
-
-    async function nextPlayer() {
-      currentPlayerIndex++;
-      if (currentPlayerIndex >= players.length) {
-        await dealerTurn();
-      } else if (players[currentPlayerIndex].bot) {
-        setBlackjackControls();
-        await botTurn(players[currentPlayerIndex]);
+      for(let round = 0; round < 2; round += 1){
+        for(let i = 0; i < bjPlayers.length; i += 1){
+          await dealCardToPlayer(i);
+          await wait(120);
+        }
+        await dealCardToDealer({ hidden: round === 0 });
+        await wait(160);
       }
-      renderGame();
+      bjAnimating = false;
+      setBlackjackControls();
+    }
+
+    function advanceTurn(){
+      do {
+        bjCurrentIndex += 1;
+      } while(bjCurrentIndex < bjPlayers.length && (bjPlayers[bjCurrentIndex].busted || bjPlayers[bjCurrentIndex].standing));
+    }
+
+    async function nextPlayer(){
+      advanceTurn();
+      if(bjCurrentIndex >= bjPlayers.length){
+        await dealerTurn();
+        return;
+      }
+      const current = bjPlayers[bjCurrentIndex];
+      if(current.bot){
+        await botTurn(current);
+      } else {
+        bjStatus.textContent = 'Jij bent aan de beurt.';
+        renderBlackjack();
+      }
     }
 
     async function botTurn(bot){
-      blackjackAnimationActive = true;
+      bjAnimating = true;
       setBlackjackControls();
-      let hv = handValue(bot.hand);
-      while(hv<16){
-        bot.hand.push(drawCard());
-        hv=handValue(bot.hand);
-        renderGame();
-        await wait(300);
+      bjStatus.textContent = `${bot.name} denkt na...`;
+      await wait(400);
+      while(bjHandValue(bot.hand) < 16){
+        await dealCardToPlayer(bjCurrentIndex);
+        await wait(220);
+        if(bjHandValue(bot.hand) > 21){
+          bot.busted = true;
+          break;
+        }
       }
-      blackjackAnimationActive = false;
-      setBlackjackControls();
-      nextPlayer();
+      if(!bot.busted){
+        bot.standing = true;
+      }
+      bjAnimating = false;
+      renderBlackjack();
+      await wait(200);
+      await nextPlayer();
     }
 
     async function dealerTurn(){
-      blackjackAnimationActive = true;
-      setBlackjackControls();
-      dealerReveal = true;
-      dealer.hand.forEach(card=>{ card.animateFlip = true; });
-      renderGame();
-      await wait(700);
-      let hv = handValue(dealer.hand);
-      while(hv<17){
-        const newCard = drawCard();
-        newCard.animateFlip = true;
-        dealer.hand.push(newCard);
-        hv=handValue(dealer.hand);
-        renderGame();
-        await animateDealToDealer(dealer.hand.length - 1);
-        await wait(500);
+      bjAnimating = true;
+      bjDealerReveal = true;
+      bjDealer.hand.forEach(card=>{ card.hidden = false; });
+      renderBlackjack();
+      bjStatus.textContent = 'Dealer speelt de hand.';
+      await wait(500);
+      while(bjHandValue(bjDealer.hand) < 17){
+        await dealCardToDealer();
+        await wait(220);
       }
-      renderGame();
-      blackjackAnimationActive = false;
-      setBlackjackControls();
+      bjAnimating = false;
+      renderBlackjack();
       checkWinners();
     }
 
     function checkWinners(){
-      const dealerScore=handValue(dealer.hand);
-      let resultMsg=`Dealer heeft ${dealerScore}.\n`;
+      const dealerScore = bjHandValue(bjDealer.hand);
+      const results = [];
 
-      for(let i=0;i<players.length;i++){
-        const p=players[i];
-        const ps=handValue(p.hand);
-        let outcome='lose';
-        if(ps>21){
-          resultMsg+=`${p.name} verliest (bust).\n`;
-          outcome='lose';
-        } else if(dealerScore>21 || ps>dealerScore){
-          resultMsg+=`${p.name} wint!\n`;
-          outcome='win';
-        } else if(ps===dealerScore){
-          resultMsg+=`${p.name} gelijkspel.\n`;
-          outcome='push';
-        } else{
-          resultMsg+=`${p.name} verliest.\n`;
-          outcome='lose';
+      bjPlayers.forEach((player, index)=>{
+        const playerScore = bjHandValue(player.hand);
+        let outcome = 'lose';
+        if(player.busted){
+          outcome = 'lose';
+        } else if(dealerScore > 21 || playerScore > dealerScore){
+          outcome = 'win';
+        } else if(playerScore === dealerScore){
+          outcome = 'push';
         }
 
-        if(i===0 && currentUser){
+        if(index === 0 && currentUser){
           let delta = 0;
-          if(outcome==='win') delta = Math.floor(currentBet*1.5);
-          else if(outcome==='push') delta = Math.floor(currentBet*1.0);
-          else delta = 0;
+          if(outcome === 'win') delta = Math.floor(bjBet * 1.5);
+          if(outcome === 'push') delta = bjBet;
           currentUser.credits += delta;
-          if(outcome==='win'){
+          if(outcome === 'win'){
             applyLuckyCoinProgress(delta);
           }
-          currentUser.gamesPlayed = (currentUser.gamesPlayed||0)+1;
-          if(outcome==='win'){ currentUser.wins=(currentUser.wins||0)+1; currentUser.totalEarned=(currentUser.totalEarned||0)+delta; currentUser.bjWins=(currentUser.bjWins||0)+1; }
-          else if(outcome==='lose'){ currentUser.losses=(currentUser.losses||0)+1; currentUser.bjLosses=(currentUser.bjLosses||0)+1; }
-          currentUser.bjGames=(currentUser.bjGames||0)+1;
+          currentUser.gamesPlayed = (currentUser.gamesPlayed || 0) + 1;
+          if(outcome === 'win'){
+            currentUser.wins = (currentUser.wins || 0) + 1;
+            currentUser.totalEarned = (currentUser.totalEarned || 0) + delta;
+            currentUser.bjWins = (currentUser.bjWins || 0) + 1;
+          } else if(outcome === 'lose'){
+            currentUser.losses = (currentUser.losses || 0) + 1;
+            currentUser.bjLosses = (currentUser.bjLosses || 0) + 1;
+          }
+          currentUser.bjGames = (currentUser.bjGames || 0) + 1;
         }
-      }
 
-      alert(resultMsg);
-      blackjackRoundActive = false;
+        const text = outcome === 'win'
+          ? `${player.name} wint`
+          : outcome === 'push'
+            ? `${player.name} speelt gelijk`
+            : `${player.name} verliest`;
+        results.push(text);
+      });
+
+      bjStatus.textContent = `Dealer heeft ${dealerScore}. ${results.join('. ')}.`;
+      bjRoundActive = false;
       setBlackjackControls();
-
       if(currentUser){
         saveCurrentUser().then(renderDashboard);
       }
     }
 
-    function startRound(){
+    async function startRound(){
       if(!currentUser) return;
-      const requestedBet = parseInt(betAmountInput.value)||100;
+      const requestedBet = parseInt(betAmountInput.value, 10) || 100;
       if(currentUser.credits < requestedBet){
         alert('Je hebt niet genoeg credits voor deze inzet.');
         return;
       }
-      currentBet = requestedBet;
-      currentUser.credits -= currentBet;
+      bjBet = requestedBet;
+      currentUser.credits -= bjBet;
       saveCurrentUser().then(renderDashboard);
 
-      dealerReveal = false;
-      blackjackRoundActive = true;
-      createDeck();
-      dealer.hand=[drawCard(), drawCard()];
-      players.forEach(p=>p.hand=[drawCard(), drawCard()]);
-      currentPlayerIndex=0;
-      renderGame();
-      if(players[0].bot) botTurn(players[0]);
-      setBlackjackControls();
+      bjDealerReveal = false;
+      bjRoundActive = true;
+      bjCurrentIndex = 0;
+      bjDealer.hand = [];
+      bjPlayers.forEach(player=>{
+        player.hand = [];
+        player.busted = false;
+        player.standing = false;
+      });
+
+      if(bjShoeCards.length === 0){
+        bjBuildShoe();
+      }
+
+      bjStatus.textContent = 'Kaarten worden gedeeld...';
+      renderBlackjack();
+      await dealInitialCards();
+      if(bjHandValue(bjPlayers[0].hand) === 21){
+        bjPlayers[0].standing = true;
+        await nextPlayer();
+        return;
+      }
+      bjStatus.textContent = 'Jij bent aan de beurt.';
+      renderBlackjack();
+      if(bjPlayers[0].bot){
+        await botTurn(bjPlayers[0]);
+      }
     }
 
     startGameBtn.onclick = ()=>{
       if(!currentUser) return alert('Je moet eerst inloggen!');
-      const botCount=parseInt(botSelect.value);
-      players=[{ name:currentUser.name, bot:false, hand:[] }];
-      for(let i=1;i<=botCount;i++) players.push({ name:`Bot ${i}`, bot:true, hand:[] });
-      dealer.hand=[];
+      const botCount = parseInt(botSelect.value, 10);
+      bjPlayers = [{ name: currentUser.name, bot: false, hand: [], busted: false, standing: false }];
+      for(let i = 1; i <= botCount; i += 1){
+        bjPlayers.push({ name: `Bot ${i}`, bot: true, hand: [], busted: false, standing: false });
+      }
+      bjDealer.hand = [];
       startRound();
     };
 
-    hitBtn.onclick = ()=>{
-      if(blackjackAnimationActive) return;
-      const p = players[currentPlayerIndex];
-      p.hand.push(drawCard());
-      if(handValue(p.hand)>21) nextPlayer();
-      renderGame();
+    hitBtn.onclick = async ()=>{
+      if(hitBtn.disabled) return;
+      bjAnimating = true;
+      setBlackjackControls();
+      await dealCardToPlayer(bjCurrentIndex);
+      const score = bjHandValue(bjPlayers[bjCurrentIndex].hand);
+      if(score > 21){
+        bjPlayers[bjCurrentIndex].busted = true;
+        bjStatus.textContent = 'Bust! Je bent uitgespeeld.';
+        bjAnimating = false;
+        renderBlackjack();
+        await nextPlayer();
+        return;
+      }
+      if(score === 21){
+        bjPlayers[bjCurrentIndex].standing = true;
+        bjAnimating = false;
+        renderBlackjack();
+        await nextPlayer();
+        return;
+      }
+      bjAnimating = false;
+      renderBlackjack();
     };
 
-    standBtn.onclick = ()=>{ if(!blackjackAnimationActive) nextPlayer(); };
-    nextRoundBtn.onclick = ()=>{ if(!blackjackAnimationActive) startRound(); };
+    standBtn.onclick = ()=>{
+      if(standBtn.disabled) return;
+      bjPlayers[bjCurrentIndex].standing = true;
+      bjStatus.textContent = 'Je past. Volgende speler...';
+      renderBlackjack();
+      void nextPlayer();
+    };
+
+    nextRoundBtn.onclick = ()=>{
+      if(nextRoundBtn.disabled) return;
+      void startRound();
+    };
+
+    bjBuildShoe();
+    renderBlackjack();
 
     /* ---------------------------
        Poker logic (casino stijl)
