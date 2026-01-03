@@ -292,12 +292,14 @@
       background: linear-gradient(120deg, rgba(7,30,49,0.95), rgba(8,40,60,0.8));
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+      position: relative;
     }
 
     .menu-brand{
       display:flex;
       align-items:center;
       gap:12px;
+      margin-left: 54px;
     }
 
     .menu-logo{
@@ -366,6 +368,70 @@
       background: linear-gradient(120deg, var(--maria-blue), var(--maria-blue-bright));
       border: none;
       box-shadow: 0 8px 18px rgba(10,90,140,0.35);
+    }
+
+    .lucky-drop-btn{
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: linear-gradient(140deg, rgba(212,175,55,0.3), rgba(15,111,178,0.4));
+      box-shadow: 0 10px 18px rgba(0,0,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 0;
+    }
+
+    .lucky-drop-btn:hover{
+      transform: translateY(-1px);
+      filter: brightness(1.08);
+    }
+
+    .lucky-drop-icon{
+      font-size: 20px;
+    }
+
+    .lucky-drop-badge{
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(140deg, #ffd769, #b78608);
+      color: #3b2600;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    }
+
+    .lucky-drop-btn.has-available .lucky-drop-badge{
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .lucky-drop-btn.shake{
+      animation: luckyDropShake 0.6s ease-in-out;
+    }
+
+    @keyframes luckyDropShake{
+      0%{ transform: translateX(0); }
+      20%{ transform: translateX(-2px); }
+      40%{ transform: translateX(2px); }
+      60%{ transform: translateX(-1px); }
+      80%{ transform: translateX(1px); }
+      100%{ transform: translateX(0); }
     }
 
     .menu-hero{
@@ -476,6 +542,14 @@
       .menu-header{
         flex-direction: column;
         align-items: flex-start;
+        padding-top: 64px;
+      }
+      .menu-brand{
+        margin-left: 0;
+      }
+      .lucky-drop-btn{
+        top: 12px;
+        left: 12px;
       }
       .menu-actions{
         width:100%;
@@ -1177,6 +1251,10 @@
   <section id="dashboard">
     <div class="menu-wrapper">
       <header class="menu-header">
+        <button id="luckyDropBtn" class="lucky-drop-btn" aria-label="Open Lucky Drops" title="Lucky Drops">
+          <span class="lucky-drop-icon">🍀</span>
+          <span class="lucky-drop-badge" aria-hidden="true">!</span>
+        </button>
         <div class="menu-brand">
           <div class="menu-logo">♠</div>
           <div>
@@ -1242,11 +1320,6 @@
           <h4>Plinko Drop</h4>
           <p>Laat de bal vallen en pak multipliers met een smooth landing.</p>
           <button id="playPlinkoBtn" class="cta-button">Speel Plinko</button>
-        </div>
-        <div class="menu-card">
-          <h4>Lucky Boxes</h4>
-          <p>Open luxe boxes met Lucky Coins en win power-ups.</p>
-          <button id="openLuckyBoxesTab" class="cta-button alt">Open Lucky Boxes</button>
         </div>
       </div>
       <div id="lb-tab">🏆 Leaderboard</div>
@@ -1637,7 +1710,7 @@
     const playRouletteBtn = document.getElementById('playRouletteBtn');
     const playSlotsBtn = document.getElementById('playSlotsBtn');
     const playPlinkoBtn = document.getElementById('playPlinkoBtn');
-    const openLuckyBoxesTab = document.getElementById('openLuckyBoxesTab');
+    const luckyDropBtn = document.getElementById('luckyDropBtn');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
     const luckyCoinsEl = document.getElementById('luckyCoins');
     const luckyCoinProgressEl = document.getElementById('luckyCoinProgress');
@@ -1758,8 +1831,7 @@
       currentUser.key = key;
       ensureLuckyFields(currentUser);
       loginSection.style.display='none';
-      dashboard.style.display='block';
-      renderDashboard();
+      showDashboard(true);
       if(needsLuckyInit){
         saveCurrentUser();
       }
@@ -1798,8 +1870,7 @@
       };
       await saveCurrentUser();
       loginSection.style.display='none';
-      dashboard.style.display='block';
-      renderDashboard();
+      showDashboard(true);
     };
 
     function ensureLuckyFields(user){
@@ -1808,11 +1879,32 @@
       if(typeof user.luckyCoinProgress !== 'number') user.luckyCoinProgress = 0;
     }
 
+    function canPurchaseLuckyDrop(){
+      return !!currentUser && currentUser.luckyCoins >= 1;
+    }
+
+    function updateLuckyDropIndicator(){
+      if(!luckyDropBtn) return;
+      if(canPurchaseLuckyDrop()){
+        luckyDropBtn.classList.add('has-available');
+      } else {
+        luckyDropBtn.classList.remove('has-available');
+      }
+    }
+
+    function triggerLuckyDropShake(){
+      if(!luckyDropBtn || !canPurchaseLuckyDrop()) return;
+      luckyDropBtn.classList.remove('shake');
+      void luckyDropBtn.offsetWidth;
+      luckyDropBtn.classList.add('shake');
+    }
+
     function updateLuckyCoinDisplay(){
       if(!currentUser) return;
       ensureLuckyFields(currentUser);
       luckyCoinsEl.textContent = currentUser.luckyCoins;
       luckyCoinProgressEl.textContent = currentUser.luckyCoinProgress;
+      updateLuckyDropIndicator();
     }
 
     function applyLuckyCoinProgress(amount){
@@ -1852,6 +1944,14 @@
       updateLuckyCoinDisplay();
       if(currencyDisplay){
         currencyDisplay.style.display = 'flex';
+      }
+    }
+
+    function showDashboard(shouldShake = false){
+      dashboard.style.display = 'block';
+      renderDashboard();
+      if(shouldShake){
+        triggerLuckyDropShake();
       }
     }
 
@@ -2045,20 +2145,22 @@
       layoutPlinkoPegs();
     };
 
-    openLuckyBoxesTab.onclick = ()=>{
-      if(!currentUser) return alert('Je moet eerst inloggen!');
-      closeLeaderboardPopup();
-      dashboard.style.display = 'none';
-      blackjackSection.style.display = 'none';
-      pokerSection.style.display = 'none';
-      crapsSection.style.display = 'none';
-      baccaratSection.style.display = 'none';
-      rouletteSection.style.display = 'none';
-      slotsSection.style.display = 'none';
-      plinkoSection.style.display = 'none';
-      lootBoxSection.style.display = 'none';
-      lootBoxMenuSection.style.display = 'block';
-    };
+    if(luckyDropBtn){
+      luckyDropBtn.onclick = ()=>{
+        if(!currentUser) return alert('Je moet eerst inloggen!');
+        closeLeaderboardPopup();
+        dashboard.style.display = 'none';
+        blackjackSection.style.display = 'none';
+        pokerSection.style.display = 'none';
+        crapsSection.style.display = 'none';
+        baccaratSection.style.display = 'none';
+        rouletteSection.style.display = 'none';
+        slotsSection.style.display = 'none';
+        plinkoSection.style.display = 'none';
+        lootBoxSection.style.display = 'none';
+        lootBoxMenuSection.style.display = 'block';
+      };
+    }
 
     const lootBoxConfigs = {
       lucky: { name: 'Lucky Box', cost: 1, startLevel: 1 },
@@ -2159,7 +2261,7 @@ playHorseRaceBtn.onclick = () => {
       pokerSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
-      dashboard.style.display='block';
+      showDashboard(true);
     };
 
     backToMenuFromLoot.onclick = ()=>{
@@ -2169,32 +2271,32 @@ playHorseRaceBtn.onclick = () => {
 
     backToMenuFromLuckyBoxes.onclick = ()=>{
       lootBoxMenuSection.style.display = 'none';
-      dashboard.style.display = 'block';
+      showDashboard(true);
     };
 
     backFromCrapsBtn.onclick = ()=>{
       crapsSection.style.display = 'none';
-      dashboard.style.display = 'block';
+      showDashboard(true);
     };
 
     backFromBaccaratBtn.onclick = ()=>{
       baccaratSection.style.display = 'none';
-      dashboard.style.display = 'block';
+      showDashboard(true);
     };
 
     backFromRouletteBtn.onclick = ()=>{
       rouletteSection.style.display = 'none';
-      dashboard.style.display = 'block';
+      showDashboard(true);
     };
 
     backFromSlotsBtn.onclick = ()=>{
       slotsSection.style.display = 'none';
-      dashboard.style.display = 'block';
+      showDashboard(true);
     };
 
     backFromPlinkoBtn.onclick = ()=>{
       plinkoSection.style.display = 'none';
-      dashboard.style.display = 'block';
+      showDashboard(true);
     };
 
     /* ---------------------------
@@ -3185,7 +3287,7 @@ playHorseRaceBtn.onclick = () => {
     backFromPokerBtn.onclick = ()=>{
       pokerSection.style.display = 'none';
       blackjackSection.style.display = 'none';
-      dashboard.style.display = 'block';
+      showDashboard(true);
     };
 
     pokerCheckBtn.onclick = ()=>{
@@ -3228,7 +3330,7 @@ function showHorseRace(){
 
 backToMenuRace.onclick = () => {
     horseRaceSection.style.display = "none";
-    dashboard.style.display = "block";
+    showDashboard(true);
 };
 
 // START RACE
