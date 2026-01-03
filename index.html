@@ -980,7 +980,7 @@
     }
 
     .plinko-panel{
-      max-width: 860px;
+      max-width: 980px;
       margin: 0 auto;
     }
 
@@ -995,8 +995,8 @@
 
     .plinko-board{
       position: relative;
-      width: min(660px, 92vw);
-      height: 520px;
+      width: min(780px, 96vw);
+      height: 620px;
       margin: 26px auto 12px;
       border-radius: 24px;
       background: linear-gradient(160deg, rgba(22,18,44,0.96), rgba(10,8,22,0.96));
@@ -1007,7 +1007,7 @@
 
     .plinko-pegs{
       position: absolute;
-      inset: 24px 30px 120px 30px;
+      inset: 28px 36px 150px 36px;
     }
 
     .plinko-peg{
@@ -1038,7 +1038,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      height: 96px;
+      height: 110px;
       display: grid;
       grid-template-columns: repeat(9, minmax(0, 1fr));
       gap: 6px;
@@ -1068,6 +1068,12 @@
       margin-top: 12px;
       font-weight: 600;
       min-height: 24px;
+    }
+
+    .plinko-note{
+      font-size: 12px;
+      opacity: 0.7;
+      letter-spacing: 0.02em;
     }
 
     /* Global currency display */
@@ -1613,8 +1619,11 @@
     <p>Drop de bal en mik op de hoogste multiplier. Smooth animaties, snelle payouts.</p>
     <div class="plinko-panel">
       <div class="plinko-controls">
-        <label>Inzet (credits):</label>
+        <label for="plinkoBet">Inzet per bal (credits):</label>
         <input type="number" id="plinkoBet" min="10" value="150">
+        <label for="plinkoBallCount">Ballen:</label>
+        <input type="number" id="plinkoBallCount" min="1" max="15" value="10">
+        <span class="plinko-note" id="plinkoPerBall">Per bal: 150 credits</span>
         <button id="dropPlinkoBtn">Drop bal</button>
         <button id="backFromPlinkoBtn">Terug naar menu</button>
       </div>
@@ -1775,6 +1784,8 @@
 
     /* Plinko refs */
     const plinkoBetInput = document.getElementById('plinkoBet');
+    const plinkoBallCountInput = document.getElementById('plinkoBallCount');
+    const plinkoPerBall = document.getElementById('plinkoPerBall');
     const dropPlinkoBtn = document.getElementById('dropPlinkoBtn');
     const backFromPlinkoBtn = document.getElementById('backFromPlinkoBtn');
     const plinkoBoard = document.getElementById('plinkoBoard');
@@ -2634,9 +2645,11 @@ playHorseRaceBtn.onclick = () => {
     /* ---------------------------
        Plinko logic
        --------------------------- */
-    const plinkoSlotMultipliers = [0, 0.5, 1, 1.5, 2.5, 1.5, 1, 0.5, 0];
+    const plinkoSlotMultipliers = [3, 2, 1.5, 1, 0.6, 1, 1.5, 2, 3];
     const plinkoPegRows = 7;
-    const plinkoBallCount = 10;
+    const plinkoBallMin = 1;
+    const plinkoBallMax = 15;
+    let plinkoBallCount = 10;
     const plinkoBallRadius = 9;
     const plinkoPegRadius = 6;
     const plinkoGravity = 0.38;
@@ -2648,6 +2661,22 @@ playHorseRaceBtn.onclick = () => {
     let plinkoActiveBalls = [];
     let plinkoAnimationId = null;
     let plinkoActiveBatch = null;
+
+    function updatePlinkoPerBallLabel(){
+      if(!plinkoPerBall || !plinkoBetInput) return;
+      const bet = parseInt(plinkoBetInput.value, 10) || 0;
+      plinkoPerBall.textContent = `Per bal: ${bet} credits`;
+    }
+
+    function syncPlinkoBallCount(){
+      if(!plinkoBallCountInput) return plinkoBallCount;
+      const rawValue = parseInt(plinkoBallCountInput.value, 10);
+      const safeValue = Number.isFinite(rawValue) ? rawValue : plinkoBallCount;
+      const clamped = Math.max(plinkoBallMin, Math.min(plinkoBallMax, safeValue));
+      plinkoBallCount = clamped;
+      plinkoBallCountInput.value = clamped;
+      return plinkoBallCount;
+    }
 
     function renderPlinkoSlots(){
       if(!plinkoSlots) return;
@@ -2770,6 +2799,7 @@ playHorseRaceBtn.onclick = () => {
       renderDashboard();
       plinkoDropping = false;
       dropPlinkoBtn.disabled = false;
+      if(plinkoBallCountInput) plinkoBallCountInput.disabled = false;
       plinkoActiveBatch = null;
     }
 
@@ -2861,6 +2891,7 @@ playHorseRaceBtn.onclick = () => {
       if(!currentUser) return alert('Je moet eerst inloggen!');
       const bet = parseInt(plinkoBetInput.value, 10) || 0;
       if(bet < 10) return alert('Minimum inzet is 10 credits.');
+      syncPlinkoBallCount();
       const totalBet = bet * plinkoBallCount;
       if(currentUser.credits < totalBet) return alert('Je hebt niet genoeg credits!');
 
@@ -2870,6 +2901,7 @@ playHorseRaceBtn.onclick = () => {
 
       plinkoDropping = true;
       dropPlinkoBtn.disabled = true;
+      if(plinkoBallCountInput) plinkoBallCountInput.disabled = true;
       highlightPlinkoSlot(-1);
       plinkoStatus.textContent = `Dropping ${plinkoBallCount} ballen. Totale inzet ${totalBet} credits.`;
       plinkoActiveBatch = {
@@ -2891,6 +2923,9 @@ playHorseRaceBtn.onclick = () => {
     renderPlinkoSlots();
     layoutPlinkoPegs();
     dropPlinkoBtn.onclick = ()=>{ void dropPlinkoBall(); };
+    plinkoBetInput.addEventListener('input', updatePlinkoPerBallLabel);
+    plinkoBallCountInput?.addEventListener('input', syncPlinkoBallCount);
+    updatePlinkoPerBallLabel();
 
     /* ---------------------------
        Blackjack logic
