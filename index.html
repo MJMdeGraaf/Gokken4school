@@ -92,7 +92,7 @@
 
     /* ============================ Rest of page ============================ */
     body { margin:0; font-family: system-ui, sans-serif; background:#050515; color:#fff;}
-    #login, #dashboard, #blackjackSection, #pokerSection { display: none; padding: 20px; text-align:center; }
+    #login, #dashboard, #blackjackSection, #pokerSection, #baccaratSection { display: none; padding: 20px; text-align:center; }
     #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
     #dashboard { background: radial-gradient(circle at top, #4c1d7f 0, #050515 55%, #020208 100%); min-height:100vh; }
     #dashboard h2, #login h2 { margin-bottom:10px; }
@@ -211,6 +211,35 @@
 
     .poker-controls { margin-top:14px; }
 
+    /* Baccarat section */
+    #baccaratSection { background:#0c1c2e; min-height:100vh; color:white; }
+    .baccarat-table {
+      width:90%;
+      max-width:900px;
+      margin:20px auto;
+      background:linear-gradient(150deg,#1b3652,#0b1a29);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:0 10px 28px rgba(0,0,0,0.55);
+      border:2px solid rgba(255,215,0,0.3);
+    }
+    .baccarat-hands {
+      display:flex;
+      gap:18px;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .baccarat-hand {
+      flex:1 1 260px;
+      padding:12px;
+      border-radius:12px;
+      background:rgba(0,0,0,0.3);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .baccarat-cards { display:flex; gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap; }
+    .baccarat-controls { margin-top:10px; }
+    .baccarat-result { margin-top:14px; font-weight:bold; }
+
     /* Global credits display */
     #creditsDisplayGlobal{
       position: fixed;
@@ -275,6 +304,7 @@
     <button id="claimDailyBtn">Claim dagelijkse bonus</button><br>
     <button id="playBlackjackBtn">Speel Blackjack</button>
     <button id="playPokerBtn">Speel Poker</button>
+    <button id="playBaccaratBtn">Speel Baccarat</button>
     <button id="logoutBtn">Uitloggen</button>
     <button id="playHorseRaceBtn">🏇 Paardenrace</button>
 
@@ -317,6 +347,41 @@
       <button id="hitBtn">Hit</button>
       <button id="standBtn">Stand</button>
       <button id="nextRoundBtn" style="display:none">Volgende ronde</button>
+    </div>
+  </section>
+
+  <!-- Baccarat -->
+  <section id="baccaratSection">
+    <h2>Baccarat</h2>
+    <p>Kies je inzet en zet in op Speler, Bank of Gelijkspel. Uitbetaling: Speler 2x, Bank 1,95x, Gelijkspel 8x.</p>
+
+    <div class="baccarat-controls">
+      <label>Inzet (credits):</label>
+      <input type="number" id="baccaratBet" min="10" value="100">
+      <label>Inzet op:</label>
+      <select id="baccaratBetType">
+        <option value="player">Speler</option>
+        <option value="banker">Bank</option>
+        <option value="tie">Gelijkspel</option>
+      </select>
+      <button id="baccaratDealBtn">Deel kaarten</button>
+      <button id="backFromBaccaratBtn">Terug naar menu</button>
+    </div>
+
+    <div class="baccarat-table">
+      <div class="baccarat-hands">
+        <div class="baccarat-hand">
+          <h3>Speler</h3>
+          <div class="baccarat-cards" id="baccaratPlayerCards"></div>
+          <p>Totaal: <span id="baccaratPlayerTotal">0</span></p>
+        </div>
+        <div class="baccarat-hand">
+          <h3>Bank</h3>
+          <div class="baccarat-cards" id="baccaratBankerCards"></div>
+          <p>Totaal: <span id="baccaratBankerTotal">0</span></p>
+        </div>
+      </div>
+      <div class="baccarat-result" id="baccaratResult">Plaats je inzet en deel de kaarten.</div>
     </div>
   </section>
 
@@ -478,6 +543,7 @@
     const dashboard = document.getElementById('dashboard');
     const blackjackSection = document.getElementById('blackjackSection');
     const pokerSection = document.getElementById('pokerSection');
+    const baccaratSection = document.getElementById('baccaratSection');
     const backFromPokerBtn = document.getElementById('backFromPokerBtn');
 
     const usernameInput = document.getElementById('usernameInput');
@@ -490,6 +556,7 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
     const playPokerBtn = document.getElementById('playPokerBtn');
+    const playBaccaratBtn = document.getElementById('playBaccaratBtn');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
 
     const bgMusic = document.getElementById('bgMusic');
@@ -509,6 +576,17 @@
     const standBtn = document.getElementById('standBtn');
     const nextRoundBtn = document.getElementById('nextRoundBtn');
     const backToMenuBtn = document.getElementById('backToMenu');
+
+    /* Baccarat refs */
+    const baccaratBetInput = document.getElementById('baccaratBet');
+    const baccaratBetType = document.getElementById('baccaratBetType');
+    const baccaratDealBtn = document.getElementById('baccaratDealBtn');
+    const baccaratPlayerCards = document.getElementById('baccaratPlayerCards');
+    const baccaratBankerCards = document.getElementById('baccaratBankerCards');
+    const baccaratPlayerTotal = document.getElementById('baccaratPlayerTotal');
+    const baccaratBankerTotal = document.getElementById('baccaratBankerTotal');
+    const baccaratResult = document.getElementById('baccaratResult');
+    const backFromBaccaratBtn = document.getElementById('backFromBaccaratBtn');
 
     /* Poker refs */
     const pokerTableSelect = document.getElementById('pokerTableSelect');
@@ -610,6 +688,7 @@
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
+      baccaratSection.style.display = 'none';
       loginSection.style.display = 'flex';
       bgMusic.pause();
       const bar = document.getElementById('creditsDisplayGlobal');
@@ -633,24 +712,42 @@
     playBlackjackBtn.onclick = ()=>{
       dashboard.style.display='none';
       pokerSection.style.display='none';
+      baccaratSection.style.display='none';
       blackjackSection.style.display='block';
     };
 
     playPokerBtn.onclick = ()=>{
       dashboard.style.display='none';
       blackjackSection.style.display='none';
+      baccaratSection.style.display='none';
       pokerSection.style.display='block';
+    };
+
+    playBaccaratBtn.onclick = ()=>{
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='none';
+      baccaratSection.style.display='block';
     };
 const playHorseRaceBtn = document.getElementById("playHorseRaceBtn");
 
 playHorseRaceBtn.onclick = () => {
     dashboard.style.display = "none";
+    blackjackSection.style.display = "none";
+    pokerSection.style.display = "none";
+    baccaratSection.style.display = "none";
     horseRaceSection.style.display = "block";
 };
 
     backToMenuBtn.onclick = ()=>{
       blackjackSection.style.display='none';
       pokerSection.style.display='none';
+      baccaratSection.style.display='none';
+      dashboard.style.display='block';
+    };
+
+    backFromBaccaratBtn.onclick = ()=>{
+      baccaratSection.style.display='none';
       dashboard.style.display='block';
     };
 
@@ -929,6 +1026,78 @@ playHorseRaceBtn.onclick = () => {
     nextRoundBtn.onclick = ()=>{ nextRoundBtn.style.display='none'; startRound(); };
 
     /* ---------------------------
+       Baccarat logic
+       --------------------------- */
+    let baccaratDeck = [];
+
+    function createBaccaratDeck(){
+      baccaratDeck = [];
+      for(let s of suits){
+        for(let v of values){
+          baccaratDeck.push({suit:s, value:v});
+        }
+      }
+      for(let i=baccaratDeck.length-1;i>0;i--){
+        const j=Math.floor(Math.random()*(i+1));
+        [baccaratDeck[i],baccaratDeck[j]]=[baccaratDeck[j],baccaratDeck[i]];
+      }
+    }
+
+    function baccaratCardValue(card){
+      if(['10','J','Q','K'].includes(card.value)) return 0;
+      if(card.value === 'A') return 1;
+      return parseInt(card.value);
+    }
+
+    function baccaratTotal(hand){
+      const total = hand.reduce((sum,card)=>sum + baccaratCardValue(card),0);
+      return total % 10;
+    }
+
+    function renderBaccaratCards(container, hand){
+      container.innerHTML = hand.map(card => `<div class="card-bj">${card.value}${card.suit}</div>`).join('');
+    }
+
+    baccaratDealBtn.onclick = async ()=>{
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      const bet = parseInt(baccaratBetInput.value, 10);
+      if(Number.isNaN(bet) || bet < 10) return alert('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits.');
+
+      currentUser.credits -= bet;
+      await db.ref('users/'+currentUser.key).update({ credits: currentUser.credits });
+      renderDashboard();
+
+      createBaccaratDeck();
+      const playerHand = [baccaratDeck.pop(), baccaratDeck.pop()];
+      const bankerHand = [baccaratDeck.pop(), baccaratDeck.pop()];
+
+      const playerTotal = baccaratTotal(playerHand);
+      const bankerTotal = baccaratTotal(bankerHand);
+
+      renderBaccaratCards(baccaratPlayerCards, playerHand);
+      renderBaccaratCards(baccaratBankerCards, bankerHand);
+      baccaratPlayerTotal.textContent = playerTotal;
+      baccaratBankerTotal.textContent = bankerTotal;
+
+      let winner = 'tie';
+      if(playerTotal > bankerTotal) winner = 'player';
+      if(bankerTotal > playerTotal) winner = 'banker';
+
+      const betType = baccaratBetType.value;
+      const payoutMap = { player: 2, banker: 1.95, tie: 8 };
+      if(winner === betType){
+        const winAmount = Math.round(bet * payoutMap[winner]);
+        currentUser.credits += winAmount;
+        await db.ref('users/'+currentUser.key).update({ credits: currentUser.credits });
+        renderDashboard();
+        baccaratResult.textContent = `🎉 ${winner === 'player' ? 'Speler' : winner === 'banker' ? 'Bank' : 'Gelijkspel'} wint! Uitbetaling: ${winAmount} credits.`;
+      } else {
+        baccaratResult.textContent = `❌ ${winner === 'player' ? 'Speler' : winner === 'banker' ? 'Bank' : 'Gelijkspel'} wint. Je inzet is verloren.`;
+      }
+    };
+
+    /* ---------------------------
        Poker logic (bestaande logica)
        --------------------------- */
 
@@ -1098,6 +1267,7 @@ function showHorseRace(){
     dashboard.style.display = "none";
     blackjackSection.style.display = "none";
     pokerSection.style.display = "none";
+    baccaratSection.style.display = "none";
     horseRaceSection.style.display = "block";
 }
 
