@@ -2369,9 +2369,9 @@ startRaceBtn.onclick = async () => {
     let finished = false;
     let winner = null;
 
-    function raceTick(){
-        horses.forEach((horse, index) => {
-            if(finished) return;
+    async function raceTick(){
+        for (const [index, horse] of horses.entries()) {
+            if(finished) break;
 
             let move = Math.random() * 25 + 5; // smooth movement
             horse.style.left = (horse.offsetLeft + move) + "px";
@@ -2399,14 +2399,14 @@ startRaceBtn.onclick = async () => {
 
                 renderDashboard();
             }
-        });
+        }
 
         if(!finished){
             requestAnimationFrame(raceTick);
         }
     }
 
-    raceTick();
+    void raceTick();
 };
 
     /* ---------------------------
