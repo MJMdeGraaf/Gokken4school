@@ -257,7 +257,7 @@
       background:#050515;
       color:#fff;
     }
-    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection { display: none; padding: 20px; text-align:center; }
+    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection { display: none; padding: 20px; text-align:center; }
     #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
     #dashboard {
       background:
@@ -666,6 +666,105 @@
       margin-top: 12px;
     }
 
+    /* Slot machine */
+    #slotsSection{
+      min-height: 100vh;
+      color: #fff;
+      padding: 24px;
+      background: radial-gradient(circle at top, #351a1f 0, #12070b 55%, #050205 100%);
+      text-align: center;
+    }
+
+    .slots-machine{
+      --slot-symbol-size: 72px;
+      max-width: 720px;
+      margin: 30px auto;
+      padding: 24px;
+      border-radius: 20px;
+      background: linear-gradient(160deg, rgba(35,12,18,0.95), rgba(10,3,8,0.95));
+      border: 1px solid rgba(255,215,125,0.2);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    }
+
+    .slots-header{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .slots-reels{
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 20px auto;
+      max-width: 420px;
+    }
+
+    .slot-reel{
+      background: rgba(8,8,14,0.85);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 12px rgba(0,0,0,0.8);
+      overflow: hidden;
+      height: var(--slot-symbol-size);
+      position: relative;
+    }
+
+    .slot-reel::after{
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.08);
+      pointer-events: none;
+    }
+
+    .slot-reel-strip{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateY(0);
+      transition: transform 1s cubic-bezier(0.2, 0.6, 0.1, 1);
+      will-change: transform;
+    }
+
+    .slot-symbol{
+      height: var(--slot-symbol-size);
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      text-shadow: 0 8px 14px rgba(0,0,0,0.6);
+    }
+
+    .slot-reel.spinning .slot-reel-strip{
+      filter: blur(1.2px);
+    }
+
+    .slots-controls{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    .slots-status{
+      margin-top: 14px;
+      font-weight: 600;
+      min-height: 24px;
+    }
+
+    .slots-win{
+      color: #ffe28a;
+      text-shadow: 0 0 12px rgba(255,215,125,0.5);
+    }
+
     /* Global currency display */
     #currencyDisplay{
       position: fixed;
@@ -899,6 +998,11 @@
           <button id="playRouletteBtn" class="cta-button">Speel Roulette</button>
         </div>
         <div class="menu-card">
+          <h4>Slot Machines</h4>
+          <p>Drie rollen, dikke payouts. Trek de hendel en voel de spanning.</p>
+          <button id="playSlotsBtn" class="cta-button alt">Speel Slots</button>
+        </div>
+        <div class="menu-card">
           <h4>Lucky Boxes</h4>
           <p>Open luxe boxes met Lucky Coins en win power-ups.</p>
           <button id="openLuckyBoxesTab" class="cta-button alt">Open Lucky Boxes</button>
@@ -1108,6 +1212,36 @@
       </div>
     </div>
   </section>
+
+  <!-- Slots -->
+  <section id="slotsSection" style="display:none;">
+    <h2>🎰 Slot Machines</h2>
+    <p>Laat de rollen draaien en pak de jackpot.</p>
+    <div class="slots-machine">
+      <div class="slots-header">
+        <div><strong>Uitbetaling</strong>: 3 dezelfde = grote winst, 2 dezelfde = kleine winst.</div>
+        <div>Jackpot op 7️⃣ of 💎.</div>
+      </div>
+      <div class="slots-reels">
+        <div class="slot-reel">
+          <div class="slot-reel-strip" id="slotReelOne"></div>
+        </div>
+        <div class="slot-reel">
+          <div class="slot-reel-strip" id="slotReelTwo"></div>
+        </div>
+        <div class="slot-reel">
+          <div class="slot-reel-strip" id="slotReelThree"></div>
+        </div>
+      </div>
+      <div class="slots-controls">
+        <label>Inzet (credits):</label>
+        <input type="number" id="slotsBet" min="10" value="100">
+        <button id="spinSlotsBtn">Draaien</button>
+        <button id="backFromSlotsBtn">Terug naar menu</button>
+      </div>
+      <div class="slots-status" id="slotsStatus">Plaats je inzet en spin voor de winst.</div>
+    </div>
+  </section>
   
  <!-- ==================== PAARDENRACE SPEL ==================== -->
 <section id="horseRaceSection" style="display:none; text-align:center; padding:20px; color:white; background:#1b1b1b; height:100vh;">
@@ -1209,6 +1343,7 @@
     const crapsSection = document.getElementById('crapsSection');
     const baccaratSection = document.getElementById('baccaratSection');
     const rouletteSection = document.getElementById('rouletteSection');
+    const slotsSection = document.getElementById('slotsSection');
     const lootBoxMenuSection = document.getElementById('lootBoxMenuSection');
     const lootBoxSection = document.getElementById('lootBoxSection');
     const backFromPokerBtn = document.getElementById('backFromPokerBtn');
@@ -1232,6 +1367,7 @@
     const playCrapsBtn = document.getElementById('playCrapsBtn');
     const playBaccaratBtn = document.getElementById('playBaccaratBtn');
     const playRouletteBtn = document.getElementById('playRouletteBtn');
+    const playSlotsBtn = document.getElementById('playSlotsBtn');
     const openLuckyBoxesTab = document.getElementById('openLuckyBoxesTab');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
     const luckyCoinsEl = document.getElementById('luckyCoins');
@@ -1285,6 +1421,15 @@
     const rouletteStatus = document.getElementById('rouletteStatus');
     const spinRouletteBtn = document.getElementById('spinRouletteBtn');
     const backFromRouletteBtn = document.getElementById('backFromRouletteBtn');
+
+    /* Slots refs */
+    const slotsBetInput = document.getElementById('slotsBet');
+    const spinSlotsBtn = document.getElementById('spinSlotsBtn');
+    const backFromSlotsBtn = document.getElementById('backFromSlotsBtn');
+    const slotsStatus = document.getElementById('slotsStatus');
+    const slotReelOne = document.getElementById('slotReelOne');
+    const slotReelTwo = document.getElementById('slotReelTwo');
+    const slotReelThree = document.getElementById('slotReelThree');
 
     /* Poker refs */
     const pokerTableSelect = document.getElementById('pokerTableSelect');
@@ -1404,6 +1549,23 @@
       updateLuckyCoinDisplay();
     }
 
+    function recordGameResult(gameKey, outcome, winAmount = 0){
+      if(!currentUser) return;
+      const winKey = `${gameKey}Wins`;
+      const lossKey = `${gameKey}Losses`;
+      const gamesKey = `${gameKey}Games`;
+      currentUser[gamesKey] = (currentUser[gamesKey] || 0) + 1;
+      currentUser.gamesPlayed = (currentUser.gamesPlayed || 0) + 1;
+      if(outcome === 'win'){
+        currentUser[winKey] = (currentUser[winKey] || 0) + 1;
+        currentUser.wins = (currentUser.wins || 0) + 1;
+        currentUser.totalEarned = (currentUser.totalEarned || 0) + winAmount;
+      } else if(outcome === 'lose'){
+        currentUser[lossKey] = (currentUser[lossKey] || 0) + 1;
+        currentUser.losses = (currentUser.losses || 0) + 1;
+      }
+    }
+
     function renderDashboard(){
       if(!currentUser) return;
       ensureLuckyFields(currentUser);
@@ -1424,6 +1586,7 @@
       crapsSection.style.display = 'none';
       baccaratSection.style.display = 'none';
       rouletteSection.style.display = 'none';
+      slotsSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
       loginSection.style.display = 'flex';
@@ -1511,6 +1674,7 @@
       crapsSection.style.display='none';
       baccaratSection.style.display='none';
       rouletteSection.style.display='none';
+      slotsSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       blackjackSection.style.display='block';
@@ -1523,6 +1687,7 @@
       crapsSection.style.display='none';
       baccaratSection.style.display='none';
       rouletteSection.style.display='none';
+      slotsSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       pokerSection.style.display='block';
@@ -1535,6 +1700,7 @@
       pokerSection.style.display='none';
       baccaratSection.style.display='none';
       rouletteSection.style.display='none';
+      slotsSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       crapsSection.style.display='block';
@@ -1547,6 +1713,7 @@
       pokerSection.style.display='none';
       crapsSection.style.display='none';
       rouletteSection.style.display='none';
+      slotsSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       baccaratSection.style.display='block';
@@ -1559,9 +1726,23 @@
       pokerSection.style.display='none';
       crapsSection.style.display='none';
       baccaratSection.style.display='none';
+      slotsSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       rouletteSection.style.display='block';
+    };
+
+    playSlotsBtn.onclick = ()=>{
+      closeLeaderboardPopup();
+      dashboard.style.display='none';
+      blackjackSection.style.display='none';
+      pokerSection.style.display='none';
+      crapsSection.style.display='none';
+      baccaratSection.style.display='none';
+      rouletteSection.style.display='none';
+      lootBoxMenuSection.style.display='none';
+      lootBoxSection.style.display='none';
+      slotsSection.style.display='block';
     };
 
     openLuckyBoxesTab.onclick = ()=>{
@@ -1573,6 +1754,7 @@
       crapsSection.style.display = 'none';
       baccaratSection.style.display = 'none';
       rouletteSection.style.display = 'none';
+      slotsSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'block';
     };
@@ -1666,6 +1848,7 @@ playHorseRaceBtn.onclick = () => {
     crapsSection.style.display = "none";
     baccaratSection.style.display = "none";
     rouletteSection.style.display = "none";
+    slotsSection.style.display = "none";
     horseRaceSection.style.display = "block";
 };
 
@@ -1699,6 +1882,11 @@ playHorseRaceBtn.onclick = () => {
 
     backFromRouletteBtn.onclick = ()=>{
       rouletteSection.style.display = 'none';
+      dashboard.style.display = 'block';
+    };
+
+    backFromSlotsBtn.onclick = ()=>{
+      slotsSection.style.display = 'none';
       dashboard.style.display = 'block';
     };
 
@@ -1933,6 +2121,103 @@ playHorseRaceBtn.onclick = () => {
       await saveCurrentUser();
       renderDashboard();
     };
+
+    /* ---------------------------
+       Slots logic
+       --------------------------- */
+    const slotSymbols = ['🍒','🍋','🔔','🍀','⭐','💎','7️⃣','🍇'];
+    const slotReelStrips = [slotReelOne, slotReelTwo, slotReelThree];
+    const slotReelContainers = slotReelStrips.map(strip => strip.parentElement);
+    const slotSymbolSize = 72;
+    const slotRepeats = 6;
+    let slotsSpinning = false;
+
+    function buildSlotReel(strip){
+      strip.innerHTML = '';
+      const fragment = document.createDocumentFragment();
+      for(let i = 0; i < slotRepeats; i++){
+        slotSymbols.forEach(symbol => {
+          const div = document.createElement('div');
+          div.className = 'slot-symbol';
+          div.textContent = symbol;
+          fragment.appendChild(div);
+        });
+      }
+      strip.appendChild(fragment);
+    }
+
+    slotReelStrips.forEach(buildSlotReel);
+
+    function spinSlotReel(strip, container, stopIndex, duration, loops){
+      return new Promise((resolve)=>{
+        const finalIndex = (loops * slotSymbols.length) + stopIndex;
+        const offset = -(finalIndex * slotSymbolSize);
+        container.classList.add('spinning');
+        strip.style.transition = 'none';
+        strip.style.transform = 'translateY(0px)';
+        void strip.offsetHeight;
+        strip.style.transition = `transform ${duration}ms cubic-bezier(0.15, 0.65, 0.2, 1)`;
+        strip.style.transform = `translateY(${offset}px)`;
+        strip.addEventListener('transitionend', () => {
+          container.classList.remove('spinning');
+          resolve();
+        }, { once: true });
+      });
+    }
+
+    async function spinSlots(){
+      if(slotsSpinning) return;
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      const bet = parseInt(slotsBetInput.value) || 0;
+      if(bet < 10) return alert('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+
+      currentUser.credits -= bet;
+      await saveCurrentUser();
+      renderDashboard();
+
+      slotsSpinning = true;
+      spinSlotsBtn.disabled = true;
+      slotsStatus.classList.remove('slots-win');
+      slotsStatus.textContent = 'De rollen draaien...';
+
+      const results = slotReelStrips.map(() => Math.floor(Math.random() * slotSymbols.length));
+      const spinPromises = slotReelStrips.map((strip, index) => {
+        const loops = 3 + index;
+        const duration = 1200 + (index * 350);
+        return spinSlotReel(strip, slotReelContainers[index], results[index], duration, loops);
+      });
+
+      await Promise.all(spinPromises);
+
+      const [first, second, third] = results;
+      let winAmount = 0;
+      if(first === second && second === third){
+        const symbol = slotSymbols[first];
+        const multiplier = symbol === '7️⃣' ? 20 : symbol === '💎' ? 15 : 10;
+        winAmount = bet * multiplier;
+      } else if(first === second || first === third || second === third){
+        winAmount = bet * 2;
+      }
+
+      if(winAmount > 0){
+        currentUser.credits += winAmount;
+        applyLuckyCoinProgress(winAmount);
+        recordGameResult('slots', 'win', winAmount);
+        slotsStatus.textContent = `Winst! Je ontvangt ${winAmount} credits.`;
+        slotsStatus.classList.add('slots-win');
+      } else {
+        recordGameResult('slots', 'lose');
+        slotsStatus.textContent = 'Geen match deze spin. Probeer opnieuw.';
+      }
+
+      await saveCurrentUser();
+      renderDashboard();
+      slotsSpinning = false;
+      spinSlotsBtn.disabled = false;
+    }
+
+    spinSlotsBtn.onclick = ()=>{ void spinSlots(); };
 
     /* ---------------------------
        Blackjack logic
@@ -2363,6 +2648,7 @@ function showHorseRace(){
     crapsSection.style.display = "none";
     baccaratSection.style.display = "none";
     rouletteSection.style.display = "none";
+    slotsSection.style.display = "none";
     horseRaceSection.style.display = "block";
 }
 
@@ -2480,6 +2766,12 @@ startRaceBtn.onclick = async () => {
         extra: (u)=>`${u.rouletteGames?Math.round(100*u.rouletteWins/u.rouletteGames):0}%`
       },
       {
+        key: 'slotswinrate',
+        title: 'Slots Win Percentage',
+        value: (u)=>u.slotsGames ? (u.slotsWins/u.slotsGames) : 0,
+        extra: (u)=>`${u.slotsGames?Math.round(100*u.slotsWins/u.slotsGames):0}%`
+      },
+      {
         key: 'horsewinrate',
         title: 'Horse Race Win Percentage',
         value: (u)=>u.horseGames ? (u.horseWins/u.horseGames) : 0,
@@ -2512,6 +2804,9 @@ startRaceBtn.onclick = async () => {
         rouletteWins: u.rouletteWins||0,
         rouletteLosses: u.rouletteLosses||0,
         rouletteGames: u.rouletteGames||0,
+        slotsWins: u.slotsWins||0,
+        slotsLosses: u.slotsLosses||0,
+        slotsGames: u.slotsGames||0,
         horseWins: u.horseWins||0,
         horseLosses: u.horseLosses||0,
         horseGames: u.horseGames||0
