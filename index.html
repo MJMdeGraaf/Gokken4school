@@ -2534,7 +2534,18 @@ playHorseRaceBtn.onclick = () => {
        --------------------------- */
     const plinkoSlotMultipliers = [0, 0.5, 1, 1.5, 2.5, 1.5, 1, 0.5, 0];
     const plinkoPegRows = 7;
+    const plinkoBallCount = 10;
+    const plinkoBallRadius = 9;
+    const plinkoPegRadius = 6;
+    const plinkoGravity = 0.38;
+    const plinkoBounce = 0.72;
+    const plinkoCenterBias = 0.0018;
     let plinkoDropping = false;
+    let plinkoPegPoints = [];
+    let plinkoBoardMetrics = null;
+    let plinkoActiveBalls = [];
+    let plinkoAnimationId = null;
+    let plinkoActiveBatch = null;
 
     function renderPlinkoSlots(){
       if(!plinkoSlots) return;
@@ -2551,29 +2562,35 @@ playHorseRaceBtn.onclick = () => {
       if(!plinkoPegs || !plinkoBoard) return;
       plinkoPegs.innerHTML = '';
       const boardRect = plinkoBoard.getBoundingClientRect();
-      const pegAreaHeight = boardRect.height - 140;
+      const pegRect = plinkoPegs.getBoundingClientRect();
+      const pegAreaHeight = pegRect.height;
+      const pegAreaWidth = pegRect.width;
+      plinkoPegPoints = [];
       for(let row = 0; row < plinkoPegRows; row += 1){
         const cols = 6 + row;
         for(let col = 0; col < cols; col += 1){
           const peg = document.createElement('div');
           peg.className = 'plinko-peg';
-          const x = ((col + 1) / (cols + 1)) * boardRect.width;
+          const x = ((col + 1) / (cols + 1)) * pegAreaWidth;
           const y = ((row + 1) / (plinkoPegRows + 1)) * pegAreaHeight;
           peg.style.left = `${x}px`;
           peg.style.top = `${y}px`;
           plinkoPegs.appendChild(peg);
+          plinkoPegPoints.push({
+            x: x + (pegRect.left - boardRect.left),
+            y: y + (pegRect.top - boardRect.top)
+          });
         }
       }
-    }
-
-    function pickPlinkoSlot(){
-      const steps = 8;
-      let position = Math.floor(plinkoSlotMultipliers.length / 2);
-      for(let i = 0; i < steps; i += 1){
-        position += Math.random() < 0.5 ? -1 : 1;
-        position = Math.max(0, Math.min(plinkoSlotMultipliers.length - 1, position));
-      }
-      return position;
+      const slotHeight = plinkoSlots?.getBoundingClientRect().height || 96;
+      plinkoBoardMetrics = {
+        width: boardRect.width,
+        height: boardRect.height,
+        slotWidth: boardRect.width / plinkoSlotMultipliers.length,
+        slotHeight,
+        centerX: boardRect.width / 2,
+        landingY: boardRect.height - slotHeight + plinkoBallRadius
+      };
     }
 
     function highlightPlinkoSlot(index){
@@ -2583,17 +2600,158 @@ playHorseRaceBtn.onclick = () => {
       });
     }
 
-    function buildPlinkoKeyframes(targetX, dropHeight, slotWidth){
-      const steps = 6;
-      const frames = [];
-      for(let i = 0; i <= steps; i += 1){
-        const progress = i / steps;
-        const jitter = (Math.random() - 0.5) * slotWidth * 0.35 * (1 - progress);
-        const x = (targetX * progress) + jitter;
-        const y = dropHeight * progress;
-        frames.push({ transform: `translate(${x}px, ${y}px)` });
+    function gaussianRandom(mean, deviation){
+      let u = 0;
+      let v = 0;
+      while(u === 0) u = Math.random();
+      while(v === 0) v = Math.random();
+      const value = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+      return value * deviation + mean;
+    }
+
+    function spawnPlinkoBall(){
+      if(!plinkoBoardMetrics) return;
+      const startSpread = plinkoBoardMetrics.width * 0.12;
+      const startX = Math.min(
+        plinkoBoardMetrics.width - plinkoBallRadius,
+        Math.max(
+          plinkoBallRadius,
+          gaussianRandom(plinkoBoardMetrics.centerX, startSpread)
+        )
+      );
+      const ball = document.createElement('div');
+      ball.className = 'plinko-ball';
+      plinkoBoard.appendChild(ball);
+      const ballState = {
+        el: ball,
+        x: startX,
+        y: plinkoBallRadius + 8,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: 0,
+        settled: false
+      };
+      plinkoActiveBalls.push(ballState);
+      renderPlinkoBall(ballState);
+    }
+
+    function renderPlinkoBall(ballState){
+      ballState.el.style.left = `${ballState.x - plinkoBallRadius}px`;
+      ballState.el.style.top = `${ballState.y - plinkoBallRadius}px`;
+    }
+
+    function settlePlinkoBall(ballState, slotIndex){
+      if(!plinkoActiveBatch) return;
+      ballState.settled = true;
+      highlightPlinkoSlot(slotIndex);
+      const multiplier = plinkoSlotMultipliers[slotIndex];
+      const winAmount = Math.round(plinkoActiveBatch.bet * multiplier);
+      plinkoActiveBatch.totalWin += winAmount;
+      plinkoActiveBatch.landed += 1;
+      plinkoStatus.textContent = `Bal ${plinkoActiveBatch.landed}/${plinkoBallCount} landt op ${multiplier}x.`;
+      setTimeout(() => {
+        ballState.el.remove();
+      }, 400);
+    }
+
+    async function finishPlinkoBatch(){
+      if(!plinkoActiveBatch) return;
+      const totalWin = plinkoActiveBatch.totalWin;
+      if(totalWin > 0){
+        currentUser.credits += totalWin;
+        applyLuckyCoinProgress(totalWin);
       }
-      return frames;
+      const net = totalWin - plinkoActiveBatch.totalBet;
+      const outcome = totalWin >= plinkoActiveBatch.totalBet ? 'win' : 'lose';
+      recordGameResult('plinko', outcome, totalWin);
+      plinkoStatus.textContent = `Alle ${plinkoBallCount} ballen klaar. Totale winst: ${totalWin} credits (netto ${net}).`;
+      await saveCurrentUser();
+      renderDashboard();
+      plinkoDropping = false;
+      dropPlinkoBtn.disabled = false;
+      plinkoActiveBatch = null;
+    }
+
+    function updatePlinkoBalls(delta){
+      if(!plinkoBoardMetrics) return;
+      const ballCount = plinkoActiveBalls.length;
+      if(ballCount === 0) return;
+      const maxX = plinkoBoardMetrics.width - plinkoBallRadius;
+      const minX = plinkoBallRadius;
+      for(let i = plinkoActiveBalls.length - 1; i >= 0; i -= 1){
+        const ball = plinkoActiveBalls[i];
+        if(ball.settled) continue;
+        ball.vy += plinkoGravity * delta;
+        ball.vx += (plinkoBoardMetrics.centerX - ball.x) * plinkoCenterBias * delta;
+        ball.x += ball.vx * delta;
+        ball.y += ball.vy * delta;
+
+        if(ball.x <= minX){
+          ball.x = minX;
+          ball.vx *= -0.5;
+        }
+        if(ball.x >= maxX){
+          ball.x = maxX;
+          ball.vx *= -0.5;
+        }
+
+        for(const peg of plinkoPegPoints){
+          const dx = ball.x - peg.x;
+          const dy = ball.y - peg.y;
+          const distance = Math.hypot(dx, dy);
+          const minDistance = plinkoBallRadius + plinkoPegRadius;
+          if(distance > 0 && distance < minDistance){
+            const nx = dx / distance;
+            const ny = dy / distance;
+            const overlap = minDistance - distance;
+            ball.x += nx * overlap;
+            ball.y += ny * overlap;
+            const dot = ball.vx * nx + ball.vy * ny;
+            if(dot < 0){
+              ball.vx -= 2 * dot * nx;
+              ball.vy -= 2 * dot * ny;
+            }
+            ball.vx *= plinkoBounce;
+            ball.vy *= plinkoBounce;
+            ball.vx += (Math.random() - 0.5) * 0.2;
+          }
+        }
+
+        if(ball.y >= plinkoBoardMetrics.landingY){
+          const slotIndex = Math.max(
+            0,
+            Math.min(
+              plinkoSlotMultipliers.length - 1,
+              Math.floor(ball.x / plinkoBoardMetrics.slotWidth)
+            )
+          );
+          settlePlinkoBall(ball, slotIndex);
+          plinkoActiveBalls.splice(i, 1);
+          continue;
+        }
+
+        renderPlinkoBall(ball);
+      }
+
+      if(plinkoActiveBatch && plinkoActiveBatch.landed >= plinkoBallCount && plinkoActiveBalls.length === 0){
+        void finishPlinkoBatch();
+      }
+    }
+
+    function startPlinkoAnimation(){
+      if(plinkoAnimationId) return;
+      let lastTime = null;
+      const step = (timestamp) => {
+        if(lastTime === null) lastTime = timestamp;
+        const delta = Math.min(2, (timestamp - lastTime) / 16.67);
+        lastTime = timestamp;
+        updatePlinkoBalls(delta);
+        if(plinkoActiveBalls.length > 0){
+          plinkoAnimationId = requestAnimationFrame(step);
+        } else {
+          plinkoAnimationId = null;
+        }
+      };
+      plinkoAnimationId = requestAnimationFrame(step);
     }
 
     async function dropPlinkoBall(){
@@ -2601,60 +2759,30 @@ playHorseRaceBtn.onclick = () => {
       if(!currentUser) return alert('Je moet eerst inloggen!');
       const bet = parseInt(plinkoBetInput.value, 10) || 0;
       if(bet < 10) return alert('Minimum inzet is 10 credits.');
-      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+      const totalBet = bet * plinkoBallCount;
+      if(currentUser.credits < totalBet) return alert('Je hebt niet genoeg credits!');
 
-      currentUser.credits -= bet;
+      currentUser.credits -= totalBet;
       await saveCurrentUser();
       renderDashboard();
 
       plinkoDropping = true;
       dropPlinkoBtn.disabled = true;
       highlightPlinkoSlot(-1);
-
-      const boardRect = plinkoBoard.getBoundingClientRect();
-      const slotCount = plinkoSlotMultipliers.length;
-      const slotWidth = boardRect.width / slotCount;
-      const slotIndex = pickPlinkoSlot();
-      const targetX = (slotIndex + 0.5) * slotWidth - (boardRect.width / 2);
-      const dropHeight = boardRect.height - 140;
-
-      const ball = document.createElement('div');
-      ball.className = 'plinko-ball';
-      plinkoBoard.appendChild(ball);
-
-      const animation = ball.animate(
-        buildPlinkoKeyframes(targetX, dropHeight, slotWidth),
-        {
-          duration: 1700,
-          easing: 'cubic-bezier(0.22, 0.61, 0.36, 1)',
-          fill: 'forwards'
-        }
-      );
-
-      animation.onfinish = async () => {
-        highlightPlinkoSlot(slotIndex);
-        const multiplier = plinkoSlotMultipliers[slotIndex];
-        const winAmount = Math.round(bet * multiplier);
-        if(winAmount > 0){
-          currentUser.credits += winAmount;
-          applyLuckyCoinProgress(winAmount);
-        }
-        const outcome = winAmount >= bet ? 'win' : 'lose';
-        if(outcome === 'win'){
-          recordGameResult('plinko', 'win', winAmount);
-          plinkoStatus.textContent = `Nice! ${multiplier}x multiplier en ${winAmount} credits terug.`;
-        } else {
-          recordGameResult('plinko', 'lose');
-          plinkoStatus.textContent = `Bal landt op ${multiplier}x. Probeer opnieuw!`;
-        }
-        await saveCurrentUser();
-        renderDashboard();
-        setTimeout(() => {
-          ball.remove();
-        }, 250);
-        plinkoDropping = false;
-        dropPlinkoBtn.disabled = false;
+      plinkoStatus.textContent = `Dropping ${plinkoBallCount} ballen. Totale inzet ${totalBet} credits.`;
+      plinkoActiveBatch = {
+        bet,
+        totalBet,
+        totalWin: 0,
+        landed: 0
       };
+
+      layoutPlinkoPegs();
+      for(let i = 0; i < plinkoBallCount; i += 1){
+        spawnPlinkoBall();
+        startPlinkoAnimation();
+        await new Promise(resolve => setTimeout(resolve, 140));
+      }
     }
 
     window.addEventListener('resize', ()=>{ layoutPlinkoPegs(); });
