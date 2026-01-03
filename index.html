@@ -71,8 +71,8 @@
     /* ============================ Music menu style ============================ */
     #musicMenu{
       position: fixed;
-      right: 20px;
-      bottom: 70px;
+      left: 20px;
+      bottom: 80px;
       width: 300px;
       background: rgba(0,0,0,0.92);
       color: white;
@@ -88,6 +88,25 @@
 
     #musicMenu input[type=range]{
       width: 80%;
+    }
+
+    #musicControl{
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.45);
+      z-index: 99998;
+    }
+
+    #musicControl img{
+      width: 22px;
+      height: 22px;
     }
 
     /* ============================ Loot box styles ============================ */
@@ -864,7 +883,9 @@
         <div class="menu-card">
           <h4>Casino Sound</h4>
           <p>Vibe harder met luxe soundtracks. Pas direct je muziek aan.</p>
-          <button id="musicControl" class="cta-button alt">🎵 Muziek</button>
+          <button id="musicControl" class="cta-button alt" aria-label="Muziek menu">
+            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path fill='%23ffffff' d='M48 6v36.6a9.4 9.4 0 1 1-4-7.7V18.4l-20 4.6V48a9.4 9.4 0 1 1-4-7.7V13.3L48 6z'/></svg>" alt="Kwartnoot">
+          </button>
         </div>
       </div>
 
@@ -1915,7 +1936,24 @@ playHorseRaceBtn.onclick = () => {
     musicVolume.value = 0.4;
     bgMusic.volume = 0.4;
 
-    musicControl.onclick = () => { musicMenu.style.display = (musicMenu.style.display==='block'?'none':'block'); };
+    function startMusic(){
+      const sources = bgMusic.querySelectorAll('source');
+      const index = parseInt(musicTrackSelect.value);
+      const selectedSource = sources[index] || sources[0];
+      if(selectedSource && bgMusic.src !== selectedSource.src){
+        bgMusic.src = selectedSource.src;
+        bgMusic.load();
+      }
+      bgMusic.play().catch(()=>{});
+    }
+
+    musicControl.onclick = () => {
+      const isOpen = musicMenu.style.display === 'block';
+      musicMenu.style.display = isOpen ? 'none' : 'block';
+      if(!isOpen){
+        startMusic();
+      }
+    };
     musicVolume.oninput = ()=>{ bgMusic.volume = parseFloat(musicVolume.value); };
     musicTrackSelect.onchange = ()=>{
       const index = parseInt(musicTrackSelect.value);
@@ -1924,7 +1962,7 @@ playHorseRaceBtn.onclick = () => {
         bgMusic.pause();
         bgMusic.src = sources[index].src;
         bgMusic.load();
-        bgMusic.play().catch(()=>{});
+        startMusic();
       }
     };
     muteBtn.onclick = ()=>{ bgMusic.muted = !bgMusic.muted; muteBtn.textContent = bgMusic.muted ? '🔇 Unmute' : '🎵 Mute'; };
