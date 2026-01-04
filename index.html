@@ -1097,6 +1097,73 @@
       box-shadow: 0 10px 28px rgba(0,0,0,0.5);
     }
 
+    .craps-panel{
+      background: linear-gradient(160deg, rgba(8, 16, 30, 0.88), rgba(3, 6, 14, 0.96));
+      border: 1px solid rgba(255, 215, 128, 0.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+    }
+
+    .craps-header{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .craps-header h2{
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 1px;
+      color: #ffe9b0;
+      text-transform: uppercase;
+    }
+
+    .craps-header p{
+      margin: 0;
+      font-size: 14px;
+      color: #cfe2ff;
+    }
+
+    .craps-meta{
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 13px;
+      color: #c7d8ff;
+      margin-top: 4px;
+    }
+
+    .craps-meta span{
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 215, 128, 0.2);
+      background: rgba(12, 24, 48, 0.6);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .craps-field{
+      margin: 16px auto;
+      padding: 22px 18px;
+      border-radius: 24px;
+      background: radial-gradient(circle at top, #1f6c43 0%, #0f4a2d 45%, #0b2f1d 100%);
+      border: 2px solid rgba(255, 215, 128, 0.35);
+      box-shadow: inset 0 0 24px rgba(0,0,0,0.4), 0 16px 32px rgba(0,0,0,0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .craps-field::before{
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      pointer-events: none;
+      box-shadow: 0 0 18px rgba(255, 215, 128, 0.15);
+    }
+
     .dice-row{
       display:flex;
       justify-content:center;
@@ -1116,15 +1183,62 @@
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
     }
 
+    .craps-dice{
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .craps-die{
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      font-size: 44px;
+      color: #1b2233;
+      background: linear-gradient(160deg, #f9f5ef, #e8ded0);
+      border: 2px solid rgba(255, 215, 128, 0.7);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.6);
+      text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .craps-die::after{
+      content: "";
+      position: absolute;
+      inset: 8px 10px 14px;
+      border-radius: 10px;
+      background: linear-gradient(140deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
     .dice-roll{
-      animation: diceRoll 0.55s ease;
+      animation: diceRoll 0.85s cubic-bezier(0.25, 0.75, 0.3, 1.1);
     }
 
     @keyframes diceRoll{
-      0% { transform: rotate(0deg) scale(1); }
-      30% { transform: rotate(12deg) scale(1.1); }
-      60% { transform: rotate(-10deg) scale(0.96); }
-      100% { transform: rotate(0deg) scale(1); }
+      0% { transform: translateX(-12px) translateY(6px) rotate(0deg) scale(0.9); filter: blur(0px); }
+      25% { transform: translateX(18px) translateY(-8px) rotate(95deg) scale(1.05); filter: blur(0.6px); }
+      55% { transform: translateX(-10px) translateY(10px) rotate(190deg) scale(0.95); filter: blur(0.2px); }
+      80% { transform: translateX(8px) translateY(-4px) rotate(310deg) scale(1.04); filter: blur(0px); }
+      100% { transform: translateX(0) translateY(0) rotate(360deg) scale(1); filter: blur(0px); }
+    }
+
+    .craps-status{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #dce8ff;
+    }
+
+    .craps-point{
+      font-weight: 700;
+      font-size: 16px;
+      color: #ffe9b0;
     }
 
     .baccarat-row,
@@ -1934,17 +2048,27 @@
 
   <!-- Craps -->
   <section id="crapsSection" style="display:none;">
-    <h2>🎲 Craps</h2>
-    <p>Come-out roll: 7/11 wint, 2/3/12 verliest. Anders zet je een punt.</p>
-    <div class="table-game-panel">
+    <div class="table-game-panel craps-panel">
+      <div class="craps-header">
+        <h2>🎲 Craps Royale</h2>
+        <p>Come-out roll: 7/11 wint, 2/3/12 verliest. Anders zet je een punt.</p>
+        <div class="craps-meta">
+          <span>Hoge inzet, hoge winst</span>
+          <span>Premium felt tafel</span>
+        </div>
+      </div>
       <label>Inzet (credits):</label>
       <input type="number" id="crapsBet" min="10" value="100">
-      <div class="dice-row">
-        <div id="crapsDieOne">⚀</div>
-        <div id="crapsDieTwo">⚀</div>
+      <div class="craps-field">
+        <div class="dice-row craps-dice">
+          <div id="crapsDieOne" class="craps-die">⚀</div>
+          <div id="crapsDieTwo" class="craps-die">⚀</div>
+        </div>
       </div>
-      <div id="crapsPoint">Punt: -</div>
-      <div id="crapsStatus">Plaats je inzet en gooi de dobbelstenen.</div>
+      <div class="craps-status">
+        <div id="crapsPoint" class="craps-point">Punt: -</div>
+        <div id="crapsStatus">Plaats je inzet en gooi de dobbelstenen.</div>
+      </div>
       <div style="margin-top:12px;">
         <button id="rollCrapsBtn">Gooi</button>
         <button id="resetCrapsBtn">Reset ronde</button>
