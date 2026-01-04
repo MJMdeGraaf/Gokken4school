@@ -1574,29 +1574,244 @@
       animation: dealCard 0.35s ease;
     }
 
-    .roulette-wheel{
-      width: 180px;
-      height: 180px;
+    #rouletteSection{
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,0.2), transparent 55%),
+        radial-gradient(circle at 20% 20%, rgba(114,179,255,0.2), transparent 50%),
+        linear-gradient(160deg, #05070f 0, #0b1120 45%, #05060b 100%);
+    }
+
+    .roulette-panel{
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      background: linear-gradient(160deg, rgba(9, 20, 38, 0.94), rgba(6, 12, 24, 0.98));
+      border: 1px solid rgba(255, 215, 128, 0.2);
+      box-shadow: 0 24px 50px rgba(0,0,0,0.6);
+    }
+
+    .roulette-panel::before{
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      pointer-events: none;
+      box-shadow: inset 0 0 16px rgba(255, 215, 128, 0.08);
+    }
+
+    .roulette-layout{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+      gap: 24px;
+      align-items: center;
+    }
+
+    .roulette-stage{
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 0;
+      min-height: 360px;
+    }
+
+    .roulette-wheel-frame{
+      position: relative;
+      width: 320px;
+      height: 320px;
       border-radius: 50%;
-      background: conic-gradient(#c62828 0 20deg, #111 20deg 40deg, #c62828 40deg 60deg, #111 60deg 80deg, #c62828 80deg 100deg, #111 100deg 120deg, #c62828 120deg 140deg, #111 140deg 160deg, #c62828 160deg 180deg, #1b7d3d 180deg 200deg, #111 200deg 220deg, #c62828 220deg 240deg, #111 240deg 260deg, #c62828 260deg 280deg, #111 280deg 300deg, #c62828 300deg 320deg, #111 320deg 340deg, #c62828 340deg 360deg);
-      border: 6px solid #d4af37;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.65);
-      margin: 0 auto;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), rgba(10,10,15,0.9));
+      border: 2px solid rgba(255, 215, 128, 0.5);
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.6), 0 25px 50px rgba(0,0,0,0.6);
+      display: grid;
+      place-items: center;
     }
 
-    .roulette-wheel.spinning{
-      animation: rouletteSpin 1.2s cubic-bezier(0.22, 0.6, 0.2, 1);
+    .roulette-wheel{
+      width: 250px;
+      height: 250px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #1b7d3d 0 9.73deg,
+        #111 9.73deg 19.46deg,
+        #c62828 19.46deg 29.19deg,
+        #111 29.19deg 38.92deg,
+        #c62828 38.92deg 48.65deg,
+        #111 48.65deg 58.38deg,
+        #c62828 58.38deg 68.11deg,
+        #111 68.11deg 77.84deg,
+        #c62828 77.84deg 87.57deg,
+        #111 87.57deg 97.3deg,
+        #c62828 97.3deg 107.03deg,
+        #111 107.03deg 116.76deg,
+        #c62828 116.76deg 126.49deg,
+        #111 126.49deg 136.22deg,
+        #c62828 136.22deg 145.95deg,
+        #111 145.95deg 155.68deg,
+        #c62828 155.68deg 165.41deg,
+        #111 165.41deg 175.14deg,
+        #c62828 175.14deg 184.87deg,
+        #111 184.87deg 194.6deg,
+        #c62828 194.6deg 204.33deg,
+        #111 204.33deg 214.06deg,
+        #c62828 214.06deg 223.79deg,
+        #111 223.79deg 233.52deg,
+        #c62828 233.52deg 243.25deg,
+        #111 243.25deg 252.98deg,
+        #c62828 252.98deg 262.71deg,
+        #111 262.71deg 272.44deg,
+        #c62828 272.44deg 282.17deg,
+        #111 282.17deg 291.9deg,
+        #c62828 291.9deg 301.63deg,
+        #111 301.63deg 311.36deg,
+        #c62828 311.36deg 321.09deg,
+        #111 321.09deg 330.82deg,
+        #c62828 330.82deg 340.55deg,
+        #111 340.55deg 350.28deg,
+        #c62828 350.28deg 360deg
+      );
+      border: 8px solid rgba(212, 175, 55, 0.9);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.55);
+      position: relative;
     }
 
-    @keyframes rouletteSpin{
-      from { transform: rotate(0deg); }
-      to { transform: rotate(920deg); }
+    .roulette-wheel::before{
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255,255,255,0.2);
+      box-shadow: inset 0 0 20px rgba(255, 215, 128, 0.2);
+    }
+
+    .roulette-wheel-center{
+      position: absolute;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fce9b5, #b38a1c 60%, #6b4a0c 100%);
+      border: 4px solid rgba(255, 235, 170, 0.8);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.45);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .roulette-pocket-ring{
+      position: absolute;
+      inset: 30px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.5);
+    }
+
+    .roulette-ball-orbit{
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .roulette-ball{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #d9d9d9 65%, #a2a2a2 100%);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+      transform: translate(-50%, -50%) translateY(-134px);
+    }
+
+    .roulette-ball.is-dropping{
+      animation: rouletteBallDrop 0.5s cubic-bezier(0.25, 0.8, 0.2, 1) forwards;
+    }
+
+    @keyframes rouletteBallDrop{
+      0%{ transform: translate(-50%, -50%) translateY(-134px) scale(1); }
+      60%{ transform: translate(-50%, -50%) translateY(-104px) scale(0.95); }
+      100%{ transform: translate(-50%, -50%) translateY(-94px) scale(0.9); }
+    }
+
+    .roulette-pointer{
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-bottom: 18px solid #f6e9c4;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.6));
+    }
+
+    .roulette-legend{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
+      padding: 12px;
+    }
+
+    .roulette-legend h3{
+      margin: 0;
+      font-size: 22px;
+      color: #ffe9b0;
+    }
+
+    .roulette-legend p{
+      margin: 0;
+      color: #cfe2ff;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .roulette-glow{
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: #f9f2d9;
+    }
+
+    .roulette-glow span{
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(10,20,35,0.7);
+      border: 1px solid rgba(255, 215, 128, 0.2);
     }
 
     .roulette-result{
       font-size: 20px;
       font-weight: 700;
       margin-top: 12px;
+    }
+
+    @media (max-width: 860px){
+      .roulette-layout{
+        grid-template-columns: 1fr;
+      }
+      .roulette-stage{
+        min-height: 300px;
+      }
+      .roulette-wheel-frame{
+        width: 260px;
+        height: 260px;
+      }
+      .roulette-wheel{
+        width: 210px;
+        height: 210px;
+      }
+      .roulette-ball{
+        transform: translate(-50%, -50%) translateY(-112px);
+      }
+      @keyframes rouletteBallDrop{
+        0%{ transform: translate(-50%, -50%) translateY(-112px) scale(1); }
+        60%{ transform: translate(-50%, -50%) translateY(-88px) scale(0.95); }
+        100%{ transform: translate(-50%, -50%) translateY(-80px) scale(0.9); }
+      }
     }
 
     /* Slot machine */
@@ -2743,25 +2958,49 @@
 
   <!-- Roulette -->
   <section id="rouletteSection" style="display:none;">
-    <h2>🎡 Roulette</h2>
-    <p>Kies je inzettype en draai het wiel.</p>
-    <div class="table-game-panel">
-      <label>Inzet (credits):</label>
-      <input type="number" id="rouletteBet" min="10" value="150">
-      <label style="margin-left:8px;">Inzettype:</label>
-      <select id="rouletteBetType">
-        <option value="color">Kleur</option>
-        <option value="number">Nummer</option>
-      </select>
-      <div class="roulette-row">
-        <select id="rouletteColor">
-          <option value="red">Rood</option>
-          <option value="black">Zwart</option>
-          <option value="green">Groen (0)</option>
-        </select>
-        <input type="number" id="rouletteNumber" min="0" max="36" value="7" style="width:90px;">
+    <h2>🎡 Roulette Royale</h2>
+    <p>Ervaar een premium wiel met live spin en een vallende bal.</p>
+    <div class="table-game-panel roulette-panel">
+      <div class="roulette-layout">
+        <div>
+          <label>Inzet (credits):</label>
+          <input type="number" id="rouletteBet" min="10" value="150">
+          <label style="margin-left:8px;">Inzettype:</label>
+          <select id="rouletteBetType">
+            <option value="color">Kleur</option>
+            <option value="number">Nummer</option>
+          </select>
+          <div class="roulette-row">
+            <select id="rouletteColor">
+              <option value="red">Rood</option>
+              <option value="black">Zwart</option>
+              <option value="green">Groen (0)</option>
+            </select>
+            <input type="number" id="rouletteNumber" min="0" max="36" value="7" style="width:90px;">
+          </div>
+          <div class="roulette-legend">
+            <h3>VIP tafel</h3>
+            <p>Volg de bal terwijl hij over de baan danst en in de socket valt.</p>
+            <div class="roulette-glow">
+              <span>Live wheel spin</span>
+              <span>Ultra smooth easing</span>
+              <span>Premium finish</span>
+            </div>
+          </div>
+        </div>
+        <div class="roulette-stage" aria-live="polite">
+          <div class="roulette-wheel-frame">
+            <div class="roulette-pointer"></div>
+            <div class="roulette-wheel" id="rouletteWheel">
+              <div class="roulette-pocket-ring"></div>
+              <div class="roulette-wheel-center"></div>
+            </div>
+            <div class="roulette-ball-orbit" id="rouletteBallOrbit">
+              <div class="roulette-ball" id="rouletteBall"></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="roulette-wheel"></div>
       <div class="roulette-result" id="rouletteResult">Resultaat: -</div>
       <div id="rouletteStatus">Plaats je inzet en draai.</div>
       <div style="margin-top:12px;">
@@ -3069,7 +3308,9 @@
     const rouletteStatus = document.getElementById('rouletteStatus');
     const spinRouletteBtn = document.getElementById('spinRouletteBtn');
     const backFromRouletteBtn = document.getElementById('backFromRouletteBtn');
-    const rouletteWheel = document.querySelector('.roulette-wheel');
+    const rouletteWheel = document.getElementById('rouletteWheel');
+    const rouletteBallOrbit = document.getElementById('rouletteBallOrbit');
+    const rouletteBall = document.getElementById('rouletteBall');
 
     /* Slots refs */
     const slotsBetInput = document.getElementById('slotsBet');
@@ -3912,6 +4153,14 @@ playHorseRaceBtn.onclick = () => {
     const rouletteRedNumbers = new Set([
       1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36
     ]);
+    const rouletteWheelOrder = [
+      0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8,
+      23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12,
+      35, 3, 26
+    ];
+    const rouletteSlotAngle = 360 / rouletteWheelOrder.length;
+    let rouletteWheelRotation = 0;
+    let rouletteBallRotation = 0;
 
     function rouletteColorFor(number){
       if(number === 0) return 'green';
@@ -3941,15 +4190,55 @@ playHorseRaceBtn.onclick = () => {
       rouletteBetType.disabled = true;
       rouletteColor.disabled = true;
       rouletteNumber.disabled = true;
-      rouletteWheel?.classList.add('spinning');
       rouletteStatus.textContent = 'Het wiel draait...';
-      await sleep(1100);
+      rouletteResult.textContent = 'Resultaat: -';
+
+      rouletteWheel?.getAnimations().forEach(anim => anim.cancel());
+      rouletteBallOrbit?.getAnimations().forEach(anim => anim.cancel());
+      rouletteBall?.classList.remove('is-dropping');
+
+      const spinTurns = 4 + Math.floor(Math.random() * 3);
+      const resultNumber = Math.floor(Math.random() * 37);
+      const resultIndex = rouletteWheelOrder.indexOf(resultNumber);
+      const targetAngle = (resultIndex * rouletteSlotAngle) + (rouletteSlotAngle / 2);
+      const finalRotation = (spinTurns * 360) + (360 - targetAngle);
+      const spinDuration = 3000 + Math.random() * 800;
+      const orbitDuration = spinDuration * 0.78;
+
+      rouletteWheel?.animate(
+        [
+          { transform: `rotate(${rouletteWheelRotation}deg)` },
+          { transform: `rotate(${rouletteWheelRotation + finalRotation}deg)` }
+        ],
+        {
+          duration: spinDuration,
+          easing: 'cubic-bezier(0.16, 0.7, 0.12, 1)',
+          fill: 'forwards'
+        }
+      );
+
+      rouletteBallOrbit?.animate(
+        [
+          { transform: `rotate(${rouletteBallRotation}deg)` },
+          { transform: `rotate(${rouletteBallRotation - (spinTurns * 360 + targetAngle)}deg)` }
+        ],
+        {
+          duration: orbitDuration,
+          easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+          fill: 'forwards'
+        }
+      );
+
+      setTimeout(() => {
+        rouletteBall?.classList.add('is-dropping');
+      }, orbitDuration);
+
+      await sleep(spinDuration);
 
       currentUser.credits -= bet;
       await saveCurrentUser();
       renderDashboard();
 
-      const resultNumber = Math.floor(Math.random() * 37);
       const resultColor = rouletteColorFor(resultNumber);
       rouletteResult.textContent = `Resultaat: ${resultNumber} (${resultColor})`;
 
@@ -3987,7 +4276,8 @@ playHorseRaceBtn.onclick = () => {
 
       await saveCurrentUser();
       renderDashboard();
-      rouletteWheel?.classList.remove('spinning');
+      rouletteWheelRotation = (rouletteWheelRotation + finalRotation) % 360;
+      rouletteBallRotation = (rouletteBallRotation - (spinTurns * 360 + targetAngle)) % 360;
       rouletteSpinning = false;
       spinRouletteBtn.disabled = false;
       rouletteBetInput.disabled = false;
