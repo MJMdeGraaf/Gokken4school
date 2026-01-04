@@ -137,6 +137,118 @@
         box-shadow: 0 8px 16px rgba(0,0,0,0.4);
     }
 
+    /* ============================ GAME RESULT OVERLAY ============================ */
+    .game-result-overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 18, 0.78);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+      z-index: 100000;
+    }
+
+    .game-result-overlay.is-visible{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .game-result-card{
+      position: relative;
+      width: min(420px, 90vw);
+      padding: 26px 28px 22px;
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(15, 35, 75, 0.96), rgba(8, 16, 36, 0.96));
+      color: #f5f8ff;
+      text-align: center;
+      border: 2px solid rgba(140, 200, 255, 0.2);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+      animation: resultPop 0.35s ease;
+      overflow: hidden;
+    }
+
+    .game-result-card::before{
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 20px;
+      border: 2px solid transparent;
+      background: conic-gradient(from 180deg, rgba(255,255,255,0.05), rgba(255,215,128,0.65), rgba(114,179,255,0.65), rgba(255,255,255,0.05)) border-box;
+      mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0);
+      mask-composite: exclude;
+      animation: resultGlow 2s linear infinite;
+      opacity: 0.85;
+      pointer-events: none;
+    }
+
+    .game-result-card.win{
+      border-color: rgba(255, 221, 128, 0.7);
+      box-shadow: 0 25px 50px rgba(255, 221, 128, 0.25);
+    }
+
+    .game-result-card.lose{
+      border-color: rgba(255, 120, 120, 0.6);
+      box-shadow: 0 25px 50px rgba(255, 120, 120, 0.22);
+    }
+
+    .game-result-card.push{
+      border-color: rgba(160, 200, 255, 0.6);
+    }
+
+    .game-result-title{
+      font-size: 26px;
+      letter-spacing: 0.6px;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .game-result-message{
+      font-size: 16px;
+      color: #dfe9ff;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .game-result-actions{
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .game-result-actions button{
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: linear-gradient(135deg, #1f6be3, #0e3b7c);
+      color: #f8fbff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+
+    .game-result-actions button.secondary{
+      background: rgba(255,255,255,0.08);
+    }
+
+    .game-result-actions button:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 10px 18px rgba(0,0,0,0.35);
+    }
+
+    @keyframes resultPop{
+      from{ transform: scale(0.92); opacity: 0; }
+      to{ transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes resultGlow{
+      0%{ filter: hue-rotate(0deg); }
+      100%{ filter: hue-rotate(360deg); }
+    }
+
     /* ============================ Loot box styles ============================ */
     #lootBoxMenuSection{
       background: radial-gradient(circle at top, #2a1b4a 0, #050515 60%, #020208 100%);
@@ -1097,6 +1209,73 @@
       box-shadow: 0 10px 28px rgba(0,0,0,0.5);
     }
 
+    .craps-panel{
+      background: linear-gradient(160deg, rgba(8, 16, 30, 0.88), rgba(3, 6, 14, 0.96));
+      border: 1px solid rgba(255, 215, 128, 0.18);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+    }
+
+    .craps-header{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .craps-header h2{
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 1px;
+      color: #ffe9b0;
+      text-transform: uppercase;
+    }
+
+    .craps-header p{
+      margin: 0;
+      font-size: 14px;
+      color: #cfe2ff;
+    }
+
+    .craps-meta{
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 13px;
+      color: #c7d8ff;
+      margin-top: 4px;
+    }
+
+    .craps-meta span{
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 215, 128, 0.2);
+      background: rgba(12, 24, 48, 0.6);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
+    }
+
+    .craps-field{
+      margin: 16px auto;
+      padding: 22px 18px;
+      border-radius: 24px;
+      background: radial-gradient(circle at top, #1f6c43 0%, #0f4a2d 45%, #0b2f1d 100%);
+      border: 2px solid rgba(255, 215, 128, 0.35);
+      box-shadow: inset 0 0 24px rgba(0,0,0,0.4), 0 16px 32px rgba(0,0,0,0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .craps-field::before{
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      pointer-events: none;
+      box-shadow: 0 0 18px rgba(255, 215, 128, 0.15);
+    }
+
     .dice-row{
       display:flex;
       justify-content:center;
@@ -1116,15 +1295,62 @@
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
     }
 
+    .craps-dice{
+      margin: 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    .craps-die{
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      font-size: 44px;
+      color: #1b2233;
+      background: linear-gradient(160deg, #f9f5ef, #e8ded0);
+      border: 2px solid rgba(255, 215, 128, 0.7);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.6);
+      text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .craps-die::after{
+      content: "";
+      position: absolute;
+      inset: 8px 10px 14px;
+      border-radius: 10px;
+      background: linear-gradient(140deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
     .dice-roll{
-      animation: diceRoll 0.55s ease;
+      animation: diceRoll 0.85s cubic-bezier(0.25, 0.75, 0.3, 1.1);
     }
 
     @keyframes diceRoll{
-      0% { transform: rotate(0deg) scale(1); }
-      30% { transform: rotate(12deg) scale(1.1); }
-      60% { transform: rotate(-10deg) scale(0.96); }
-      100% { transform: rotate(0deg) scale(1); }
+      0% { transform: translateX(-12px) translateY(6px) rotate(0deg) scale(0.9); filter: blur(0px); }
+      25% { transform: translateX(18px) translateY(-8px) rotate(95deg) scale(1.05); filter: blur(0.6px); }
+      55% { transform: translateX(-10px) translateY(10px) rotate(190deg) scale(0.95); filter: blur(0.2px); }
+      80% { transform: translateX(8px) translateY(-4px) rotate(310deg) scale(1.04); filter: blur(0px); }
+      100% { transform: translateX(0) translateY(0) rotate(360deg) scale(1); filter: blur(0px); }
+    }
+
+    .craps-status{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #dce8ff;
+    }
+
+    .craps-point{
+      font-weight: 700;
+      font-size: 16px;
+      color: #ffe9b0;
     }
 
     .baccarat-row,
@@ -2179,17 +2405,27 @@
 
   <!-- Craps -->
   <section id="crapsSection" style="display:none;">
-    <h2>🎲 Craps</h2>
-    <p>Come-out roll: 7/11 wint, 2/3/12 verliest. Anders zet je een punt.</p>
-    <div class="table-game-panel">
+    <div class="table-game-panel craps-panel">
+      <div class="craps-header">
+        <h2>🎲 Craps Royale</h2>
+        <p>Come-out roll: 7/11 wint, 2/3/12 verliest. Anders zet je een punt.</p>
+        <div class="craps-meta">
+          <span>Hoge inzet, hoge winst</span>
+          <span>Premium felt tafel</span>
+        </div>
+      </div>
       <label>Inzet (credits):</label>
       <input type="number" id="crapsBet" min="10" value="100">
-      <div class="dice-row">
-        <div id="crapsDieOne">⚀</div>
-        <div id="crapsDieTwo">⚀</div>
+      <div class="craps-field">
+        <div class="dice-row craps-dice">
+          <div id="crapsDieOne" class="craps-die">⚀</div>
+          <div id="crapsDieTwo" class="craps-die">⚀</div>
+        </div>
       </div>
-      <div id="crapsPoint">Punt: -</div>
-      <div id="crapsStatus">Plaats je inzet en gooi de dobbelstenen.</div>
+      <div class="craps-status">
+        <div id="crapsPoint" class="craps-point">Punt: -</div>
+        <div id="crapsStatus">Plaats je inzet en gooi de dobbelstenen.</div>
+      </div>
       <div style="margin-top:12px;">
         <button id="rollCrapsBtn">Gooi</button>
         <button id="resetCrapsBtn">Reset ronde</button>
@@ -2402,6 +2638,18 @@
       </div>
   </div>
 
+  <!-- Game result overlay -->
+  <div id="gameResultOverlay" class="game-result-overlay" aria-hidden="true">
+    <div class="game-result-card" id="gameResultCard">
+      <div class="game-result-title" id="gameResultTitle">Resultaat</div>
+      <div class="game-result-message" id="gameResultMessage"></div>
+      <div class="game-result-actions" id="gameResultActions">
+        <button id="gameResultPlayAgain">Speel opnieuw</button>
+        <button id="gameResultMainMenu" class="secondary">Hoofdmenu</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Firebase v8 (online accounts & leaderboards) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -2580,10 +2828,76 @@
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
 
+    const gameResultOverlay = document.getElementById('gameResultOverlay');
+    const gameResultCard = document.getElementById('gameResultCard');
+    const gameResultTitle = document.getElementById('gameResultTitle');
+    const gameResultMessage = document.getElementById('gameResultMessage');
+    const gameResultActions = document.getElementById('gameResultActions');
+    const gameResultPlayAgain = document.getElementById('gameResultPlayAgain');
+    const gameResultMainMenu = document.getElementById('gameResultMainMenu');
+
     function closeLeaderboardPopup(){
       if(lbPopup){
         lbPopup.style.display = 'none';
       }
+    }
+
+    let gameResultAutoClose = null;
+    let gameResultPlayAgainHandler = null;
+    let gameResultMainMenuHandler = null;
+
+    function hideGameResultOverlay(){
+      if(!gameResultOverlay) return;
+      gameResultOverlay.classList.remove('is-visible');
+      gameResultOverlay.setAttribute('aria-hidden', 'true');
+      gameResultPlayAgainHandler = null;
+      gameResultMainMenuHandler = null;
+      if(gameResultAutoClose){
+        clearTimeout(gameResultAutoClose);
+        gameResultAutoClose = null;
+      }
+    }
+
+    function showGameResultOverlay({ outcome = 'win', title, message, showActions = false, autoCloseMs = 2200, onPlayAgain, onMainMenu } = {}){
+      if(!gameResultOverlay || !gameResultCard) return;
+      if(gameResultAutoClose){
+        clearTimeout(gameResultAutoClose);
+        gameResultAutoClose = null;
+      }
+      const resolvedTitle = title || (outcome === 'win' ? 'Je wint!' : outcome === 'lose' ? 'Je verliest' : 'Gelijkspel');
+      gameResultTitle.textContent = resolvedTitle;
+      gameResultMessage.textContent = message || '';
+      gameResultCard.classList.remove('win', 'lose', 'push');
+      gameResultCard.classList.add(outcome === 'lose' ? 'lose' : outcome === 'push' ? 'push' : 'win');
+      gameResultActions.style.display = showActions ? 'flex' : 'none';
+      gameResultPlayAgainHandler = typeof onPlayAgain === 'function' ? onPlayAgain : null;
+      gameResultMainMenuHandler = typeof onMainMenu === 'function' ? onMainMenu : null;
+      gameResultOverlay.classList.add('is-visible');
+      gameResultOverlay.setAttribute('aria-hidden', 'false');
+
+      if(!showActions){
+        gameResultAutoClose = setTimeout(() => {
+          hideGameResultOverlay();
+        }, autoCloseMs);
+      }
+    }
+
+    if(gameResultPlayAgain){
+      gameResultPlayAgain.addEventListener('click', () => {
+        hideGameResultOverlay();
+        if(gameResultPlayAgainHandler){
+          gameResultPlayAgainHandler();
+        }
+      });
+    }
+
+    if(gameResultMainMenu){
+      gameResultMainMenu.addEventListener('click', () => {
+        hideGameResultOverlay();
+        if(gameResultMainMenuHandler){
+          gameResultMainMenuHandler();
+        }
+      });
     }
 
     const sleep = (ms)=>new Promise(resolve=>setTimeout(resolve, ms));
@@ -2726,6 +3040,7 @@
 
     function showDashboard(shouldShake = false){
       dashboard.style.display = 'block';
+      hideGameResultOverlay();
       renderDashboard();
       if(shouldShake){
         triggerLuckyDropShake();
@@ -3137,6 +3452,11 @@ playHorseRaceBtn.onclick = () => {
           recordGameResult('craps', 'win', winAmount);
           crapsStatusEl.textContent = `Come-out ${total}! Je wint ${winAmount} credits.`;
           crapsPointEl.textContent = 'Punt: -';
+          showGameResultOverlay({
+            outcome: 'win',
+            title: 'Craps: winst!',
+            message: `Come-out ${total}. +${winAmount} credits.`
+          });
           await saveCurrentUser();
           renderDashboard();
           crapsBet = 0;
@@ -3144,6 +3464,11 @@ playHorseRaceBtn.onclick = () => {
           recordGameResult('craps', 'lose');
           crapsStatusEl.textContent = `Come-out ${total}. Je verliest je inzet.`;
           crapsPointEl.textContent = 'Punt: -';
+          showGameResultOverlay({
+            outcome: 'lose',
+            title: 'Craps: verlies',
+            message: `Come-out ${total}. Je verliest je inzet.`
+          });
           await saveCurrentUser();
           renderDashboard();
           crapsBet = 0;
@@ -3159,6 +3484,11 @@ playHorseRaceBtn.onclick = () => {
           applyLuckyCoinProgress(winAmount);
           recordGameResult('craps', 'win', winAmount);
           crapsStatusEl.textContent = `Je rolt ${total} en maakt je punt! +${winAmount} credits.`;
+          showGameResultOverlay({
+            outcome: 'win',
+            title: 'Craps: winst!',
+            message: `Punt geraakt met ${total}. +${winAmount} credits.`
+          });
           await saveCurrentUser();
           renderDashboard();
           crapsPoint = null;
@@ -3167,6 +3497,11 @@ playHorseRaceBtn.onclick = () => {
         } else if(total === 7){
           recordGameResult('craps', 'lose');
           crapsStatusEl.textContent = '7-out! Je verliest je inzet.';
+          showGameResultOverlay({
+            outcome: 'lose',
+            title: 'Craps: verlies',
+            message: '7-out! Je verliest je inzet.'
+          });
           await saveCurrentUser();
           renderDashboard();
           crapsPoint = null;
@@ -3264,9 +3599,19 @@ playHorseRaceBtn.onclick = () => {
         applyLuckyCoinProgress(winAmount);
         recordGameResult('baccarat', 'win', winAmount);
         baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}! Je wint ${winAmount} credits.`;
+        showGameResultOverlay({
+          outcome: 'win',
+          title: 'Baccarat: winst!',
+          message: `Winner: ${winner.toUpperCase()}. +${winAmount} credits.`
+        });
       } else {
         recordGameResult('baccarat', 'lose');
         baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}. Je verliest je inzet.`;
+        showGameResultOverlay({
+          outcome: 'lose',
+          title: 'Baccarat: verlies',
+          message: `Winner: ${winner.toUpperCase()}. Je verliest je inzet.`
+        });
       }
 
       await saveCurrentUser();
@@ -3337,9 +3682,19 @@ playHorseRaceBtn.onclick = () => {
         applyLuckyCoinProgress(winAmount);
         recordGameResult('roulette', 'win', winAmount);
         rouletteStatus.textContent = `Je wint ${winAmount} credits!`;
+        showGameResultOverlay({
+          outcome: 'win',
+          title: 'Roulette: winst!',
+          message: `Je wint ${winAmount} credits.`
+        });
       } else {
         recordGameResult('roulette', 'lose');
         rouletteStatus.textContent = 'Helaas, geen winst deze draai.';
+        showGameResultOverlay({
+          outcome: 'lose',
+          title: 'Roulette: verlies',
+          message: 'Geen winst deze draai.'
+        });
       }
 
       await saveCurrentUser();
@@ -3439,9 +3794,19 @@ playHorseRaceBtn.onclick = () => {
         recordGameResult('slots', 'win', winAmount);
         slotsStatus.textContent = `Winst! Je ontvangt ${winAmount} credits.`;
         slotsStatus.classList.add('slots-win');
+        showGameResultOverlay({
+          outcome: 'win',
+          title: 'Slots: winst!',
+          message: `Je ontvangt ${winAmount} credits.`
+        });
       } else {
         recordGameResult('slots', 'lose');
         slotsStatus.textContent = 'Geen match deze spin. Probeer opnieuw.';
+        showGameResultOverlay({
+          outcome: 'lose',
+          title: 'Slots: verlies',
+          message: 'Geen match deze spin.'
+        });
       }
 
       await saveCurrentUser();
@@ -3605,6 +3970,11 @@ playHorseRaceBtn.onclick = () => {
       const outcome = totalWin >= plinkoActiveBatch.totalBet ? 'win' : 'lose';
       recordGameResult('plinko', outcome, totalWin);
       plinkoStatus.textContent = `Alle ${plinkoBallCount} ballen klaar. Totale winst: ${totalWin} credits (netto ${net}).`;
+      showGameResultOverlay({
+        outcome,
+        title: outcome === 'win' ? 'Plinko: winst!' : 'Plinko: verlies',
+        message: `Totale winst: ${totalWin} credits (netto ${net}).`
+      });
       await saveCurrentUser();
       renderDashboard();
       plinkoDropping = false;
@@ -3987,6 +4357,8 @@ playHorseRaceBtn.onclick = () => {
     function checkWinners(){
       const dealerScore = bjHandValue(bjDealer.hand);
       const results = [];
+      let userOutcome = null;
+      let userDelta = 0;
 
       bjPlayers.forEach((player, index)=>{
         const playerScore = bjHandValue(player.hand);
@@ -4017,6 +4389,8 @@ playHorseRaceBtn.onclick = () => {
             currentUser.bjLosses = (currentUser.bjLosses || 0) + 1;
           }
           currentUser.bjGames = (currentUser.bjGames || 0) + 1;
+          userOutcome = outcome;
+          userDelta = delta;
         }
 
         const text = outcome === 'win'
@@ -4033,10 +4407,26 @@ playHorseRaceBtn.onclick = () => {
       if(currentUser){
         saveCurrentUser().then(renderDashboard);
       }
+      if(userOutcome){
+        const outcomeLabel = userOutcome === 'win'
+          ? `Je wint ${userDelta} credits.`
+          : userOutcome === 'push'
+            ? 'Gelijkspel! Je krijgt je inzet terug.'
+            : 'Helaas, je verliest deze ronde.';
+        showGameResultOverlay({
+          outcome: userOutcome === 'push' ? 'push' : userOutcome,
+          title: userOutcome === 'win' ? 'Blackjack: winst!' : userOutcome === 'push' ? 'Blackjack: gelijkspel' : 'Blackjack: verlies',
+          message: outcomeLabel,
+          showActions: true,
+          onPlayAgain: () => { void startRound(); },
+          onMainMenu: () => { backToMenuBtn?.click(); }
+        });
+      }
     }
 
     async function startRound(){
       if(!currentUser) return;
+      hideGameResultOverlay();
       const requestedBet = parseInt(betAmountInput.value, 10) || 100;
       if(currentUser.credits < requestedBet){
         alert('Je hebt niet genoeg credits voor deze inzet.');
@@ -4402,20 +4792,52 @@ playHorseRaceBtn.onclick = () => {
     }
 
     function pokerAwardPot(winners, handName){
-      const share = Math.floor(pokerPot / winners.length);
-      const remainder = pokerPot % winners.length;
+      const potTotal = pokerPot;
+      const share = Math.floor(potTotal / winners.length);
+      const remainder = potTotal % winners.length;
       winners.forEach((winner, idx)=>{
         winner.stack += share + (idx === 0 ? remainder : 0);
       });
       const names = winners.map(w=>w.name).join(' & ');
       if(handName === 'folds'){
-        pokerStatusEl.textContent = `${names} wint ${pokerPot} omdat iedereen foldt.`;
+        pokerStatusEl.textContent = `${names} wint ${potTotal} omdat iedereen foldt.`;
       } else {
-        pokerStatusEl.textContent = `${names} wint ${pokerPot} met ${handName}.`;
+        pokerStatusEl.textContent = `${names} wint ${potTotal} met ${handName}.`;
       }
       pokerDealerStatusEl.textContent = `Pot uitbetaald aan ${names}.`;
       pokerPot = 0;
       pokerRevealHands = handName !== 'folds';
+      return { potTotal, share, remainder };
+    }
+
+    function pokerHandleHandComplete({ winners, handName, potInfo }){
+      pokerHandActive = false;
+      pkRender();
+      updatePokerTurnState();
+      const userIdx = pokerUserIndex();
+      if(userIdx === -1 || !currentUser) return;
+      const user = pokerPlayers[userIdx];
+      const userWon = winners.some(w=>w.key === user.key);
+      let winAmount = 0;
+      if(userWon && potInfo){
+        const winnerIndex = winners.findIndex(w=>w.key === user.key);
+        winAmount = potInfo.share + (winnerIndex === 0 ? potInfo.remainder : 0);
+        applyLuckyCoinProgress(winAmount);
+      }
+      recordGameResult('pk', userWon ? 'win' : 'lose', winAmount);
+      saveCurrentUser().then(renderDashboard);
+      const detail = handName === 'folds' ? 'fold' : handName;
+      const message = userWon
+        ? `Je wint ${winAmount} chips met ${detail}.`
+        : `Je verliest deze hand (${detail}).`;
+      showGameResultOverlay({
+        outcome: userWon ? 'win' : 'lose',
+        title: userWon ? 'Poker: winst!' : 'Poker: verlies',
+        message,
+        showActions: true,
+        onPlayAgain: () => { pkNewHand(); },
+        onMainMenu: () => { leavePokerTable({ silent: true, goToMenu: true }); }
+      });
     }
 
     function pokerShowdown(){
@@ -4435,10 +4857,8 @@ playHorseRaceBtn.onclick = () => {
       scored.sort((a,b)=>pkCompareHands(b.score,a.score));
       const best = scored[0].score;
       const winners = scored.filter(s=>pkCompareHands(s.score, best) === 0).map(s=>s.player);
-      pokerAwardPot(winners, best.name);
-      pokerHandActive = false;
-      pkRender();
-      setTimeout(()=>{ pkNewHand(); }, 2500);
+      const potInfo = pokerAwardPot(winners, best.name);
+      pokerHandleHandComplete({ winners, handName: best.name, potInfo });
     }
 
     function pokerProceedToNextStage({skipAction=false} = {}){
@@ -4489,11 +4909,12 @@ playHorseRaceBtn.onclick = () => {
       if(active.length <= 1){
         const winner = active[0];
         if(winner){
-          pokerAwardPot([winner], 'folds');
+          const potInfo = pokerAwardPot([winner], 'folds');
+          pokerHandleHandComplete({ winners: [winner], handName: 'folds', potInfo });
+        } else {
+          pokerHandActive = false;
+          pkRender();
         }
-        pokerHandActive = false;
-        pkRender();
-        setTimeout(()=>{ pkNewHand(); }, 2200);
         return;
       }
 
@@ -4578,6 +4999,7 @@ playHorseRaceBtn.onclick = () => {
     }
 
     function pkNewHand(){
+      hideGameResultOverlay();
       if(pokerPlayers.length < 2){
         pokerHandActive = false;
         pokerDealerStatusEl.textContent = 'Wacht op minimaal 2 spelers.';
@@ -4686,22 +5108,39 @@ playHorseRaceBtn.onclick = () => {
       dashboard.style.display='none';
     };
 
-    leavePokerBtn.onclick = ()=>{
+    function leavePokerTable({ silent = false, goToMenu = false } = {}){
       if(!currentUser) return;
       const idx = pokerPlayers.findIndex(p=>p.key===currentUser.key);
       if(idx===-1){
-        alert('Je zit niet aan de tafel.');
+        if(!silent){
+          alert('Je zit niet aan de tafel.');
+        }
         return;
       }
       const pl = pokerPlayers[idx];
       currentUser.credits += pl.stack;
       pokerPlayers.splice(idx,1);
+      pokerHandActive = false;
+      pokerPot = 0;
+      pokerCommunity = [];
+      pokerRevealHands = false;
       setPokerControlsEnabled(false);
       pokerDealerStatusEl.textContent = 'Speler verlaat de tafel.';
+      pkRender();
       saveCurrentUser().then(()=>{
         renderDashboard();
-        alert('Tafel verlaten. Je hebt nu weer '+currentUser.credits+' credits.');
+        if(!silent){
+          alert('Tafel verlaten. Je hebt nu weer '+currentUser.credits+' credits.');
+        }
+        if(goToMenu){
+          pokerSection.style.display = 'none';
+          showDashboard(true);
+        }
       });
+    }
+
+    leavePokerBtn.onclick = ()=>{
+      leavePokerTable();
     };
 
     backFromPokerBtn.onclick = ()=>{
@@ -4905,18 +5344,41 @@ startRaceBtn.onclick = async () => {
     }
 
     async function raceTick(){
-        for (const state of horseStates) {
-            if(state.finished) continue;
+        for (const [index, horse] of horses.entries()) {
+            if(finished) break;
 
-            let move = Math.random() * 22 + 6;
-            state.horse.style.left = (state.horse.offsetLeft + move) + "px";
-            const finishX = laneFinishX(state.horse);
+            let move = Math.random() * 25 + 5; // smooth movement
+            horse.style.left = (horse.offsetLeft + move) + "px";
 
-            if(state.horse.offsetLeft >= finishX){
-                state.horse.style.left = finishX + "px";
-                state.finished = true;
-                state.finishTime = performance.now() - startTime;
-                raceStatus.textContent = `Paard ${state.index + 1} heeft de finish gehaald!`;
+            if(horse.offsetLeft >= 820){ // finish line
+                finished = true;
+                winner = index + 1;
+
+                if(winner === chosenHorse){
+                    const winAmount = bet * 3;
+                    currentUser.credits += winAmount;
+                    applyLuckyCoinProgress(winAmount);
+                    recordGameResult('horse', 'win', winAmount);
+                    await saveCurrentUser();
+                    renderDashboard();
+                    showGameResultOverlay({
+                      outcome: 'win',
+                      title: 'Paardenrace: winst!',
+                      message: `Je paard wint! +${winAmount} credits.`
+                    });
+
+                } else {
+                    recordGameResult('horse', 'lose');
+                    await saveCurrentUser();
+                    renderDashboard();
+                    showGameResultOverlay({
+                      outcome: 'lose',
+                      title: 'Paardenrace: verlies',
+                      message: `Paard ${winner} wint. Je hebt verloren.`
+                    });
+                }
+
+                renderDashboard();
             }
         }
 
