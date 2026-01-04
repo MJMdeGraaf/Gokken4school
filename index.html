@@ -1924,6 +1924,7 @@
     background: linear-gradient(135deg, rgba(15, 52, 22, 0.95), rgba(10, 26, 16, 0.98));
     box-shadow: 0 25px 45px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.04);
     overflow: hidden;
+    z-index: 1;
 }
 
 .race-track::before{
@@ -1971,6 +1972,7 @@
             #1b1b1b 24px
         );
     box-shadow: 0 0 20px rgba(255, 233, 175, 0.5), inset 0 0 0 2px rgba(255,255,255,0.2);
+    z-index: 2;
 }
 
 .finish-banner{
@@ -1986,6 +1988,7 @@
     text-transform: uppercase;
     border: 1px solid rgba(255, 218, 140, 0.8);
     box-shadow: 0 8px 18px rgba(0,0,0,0.45);
+    z-index: 2;
 }
 
 .raceLane {
@@ -1996,6 +1999,7 @@
     border: 1px solid rgba(255, 215, 140, 0.45);
     background: linear-gradient(90deg, rgba(21, 69, 30, 0.9), rgba(13, 44, 20, 0.95));
     overflow: hidden;
+    z-index: 1;
 }
 
 .raceLane::after{
@@ -2034,6 +2038,7 @@
     box-shadow: 0 12px 24px rgba(0,0,0,0.4);
     transition: left 0.18s linear;
     animation: gallop 0.45s ease-in-out infinite;
+    z-index: 3;
 }
 
 .horse.winner{
@@ -2045,6 +2050,64 @@
 
 .horse-emoji{
     font-size: 22px;
+}
+
+.horse-name{
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.horse-tag{
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.horse--sprinter{
+    background: linear-gradient(120deg, rgba(255, 220, 120, 0.95), rgba(255, 142, 82, 0.92));
+    border-color: rgba(255, 214, 140, 0.9);
+    color: #4a2200;
+}
+
+.horse--sprinter .horse-tag{
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.45);
+    color: #6a2a00;
+}
+
+.horse--steady{
+    background: linear-gradient(120deg, rgba(124, 170, 255, 0.95), rgba(64, 96, 180, 0.9));
+    border-color: rgba(170, 210, 255, 0.75);
+}
+
+.horse--steady .horse-tag{
+    background: rgba(18, 30, 64, 0.35);
+}
+
+.horse--precision{
+    background: linear-gradient(120deg, rgba(116, 255, 208, 0.92), rgba(34, 140, 120, 0.9));
+    border-color: rgba(154, 255, 225, 0.8);
+    color: #053a2f;
+}
+
+.horse--precision .horse-tag{
+    background: rgba(5, 60, 50, 0.3);
+    color: rgba(215, 255, 245, 0.9);
+}
+
+.horse--wild{
+    background: linear-gradient(120deg, rgba(255, 120, 138, 0.95), rgba(160, 36, 62, 0.92));
+    border-color: rgba(255, 160, 190, 0.8);
+}
+
+.horse--wild .horse-tag{
+    background: rgba(60, 10, 24, 0.35);
+    color: rgba(255, 220, 230, 0.9);
 }
 
 .race-status{
@@ -2548,7 +2611,7 @@
                     <option value="1">Paard 1 – ⚡ Sprinter</option>
                     <option value="2">Paard 2 – 🛡 Steady Boy</option>
                     <option value="3">Paard 3 – 🎯 Precision</option>
-                    <option value="4">Paard 4 – 🎲 Wild Power</option>
+                    <option value="4">Paard 4 – 🔥 Wild Power</option>
                 </select>
             </div>
             <div class="race-controls-row">
@@ -2574,30 +2637,34 @@
 
             <div class="raceLane" id="lane1">
                 <div class="lane-label">Lane 1</div>
-                <div class="horse" id="horse1">
-                    <span class="horse-emoji">🐎</span>
-                    <span>Sprinter</span>
+                <div class="horse horse--sprinter" id="horse1" data-horse-name="Sprinter">
+                    <span class="horse-emoji">⚡</span>
+                    <span class="horse-name">Sprinter</span>
+                    <span class="horse-tag">Bliksemsnel</span>
                 </div>
             </div>
             <div class="raceLane" id="lane2">
                 <div class="lane-label">Lane 2</div>
-                <div class="horse" id="horse2">
-                    <span class="horse-emoji">🐎</span>
-                    <span>Steady Boy</span>
+                <div class="horse horse--steady" id="horse2" data-horse-name="Steady Boy">
+                    <span class="horse-emoji">🛡️</span>
+                    <span class="horse-name">Steady Boy</span>
+                    <span class="horse-tag">Staalvast</span>
                 </div>
             </div>
             <div class="raceLane" id="lane3">
                 <div class="lane-label">Lane 3</div>
-                <div class="horse" id="horse3">
-                    <span class="horse-emoji">🐎</span>
-                    <span>Precision</span>
+                <div class="horse horse--precision" id="horse3" data-horse-name="Precision">
+                    <span class="horse-emoji">🎯</span>
+                    <span class="horse-name">Precision</span>
+                    <span class="horse-tag">Haarscherp</span>
                 </div>
             </div>
             <div class="raceLane" id="lane4">
                 <div class="lane-label">Lane 4</div>
-                <div class="horse" id="horse4">
-                    <span class="horse-emoji">🐎</span>
-                    <span>Wild Power</span>
+                <div class="horse horse--wild" id="horse4" data-horse-name="Wild Power">
+                    <span class="horse-emoji">🔥</span>
+                    <span class="horse-name">Wild Power</span>
+                    <span class="horse-tag">Ongetemd</span>
                 </div>
             </div>
 
@@ -5231,6 +5298,8 @@ const horseBetInput = document.getElementById("horseBet");
 const horseSelect = document.getElementById("horseSelect");
 const raceStatus = document.getElementById("raceStatus");
 const raceResults = document.getElementById("raceResults");
+const raceTrack = document.getElementById("raceTrack");
+const finishLine = document.getElementById("finishLine");
 
 const horses = [
     document.getElementById("horse1"),
@@ -5238,6 +5307,9 @@ const horses = [
     document.getElementById("horse3"),
     document.getElementById("horse4")
 ];
+const horseMeta = horses.map((horse, index) => ({
+    name: horse?.dataset?.horseName || `Paard ${index + 1}`
+}));
 let raceInProgress = false;
 
 function showHorseRace(){
@@ -5286,19 +5358,24 @@ startRaceBtn.onclick = async () => {
     raceInProgress = true;
     startRaceBtn.disabled = true;
 
-    const finishOffset = 90;
+    await new Promise(requestAnimationFrame);
     const startTime = performance.now();
     const horseStates = horses.map((horse, index) => ({
         horse,
         index,
         finished: false,
-        finishTime: null
+        finishTime: null,
+        position: 0,
+        pace: 1.6 + Math.random() * 1.6
     }));
-
-    const laneFinishX = (horse) => {
-        const lane = horse.parentElement;
-        return Math.max(0, lane.clientWidth - horse.offsetWidth - finishOffset);
-    };
+    const finishPositions = horseStates.map((state) => {
+        const lane = state.horse.parentElement;
+        const laneRect = lane.getBoundingClientRect();
+        const finishRect = finishLine.getBoundingClientRect();
+        const horseWidth = state.horse.offsetWidth;
+        const finishX = finishRect.left - laneRect.left - horseWidth + finishRect.width;
+        return Math.max(0, Math.min(finishX, lane.clientWidth - horseWidth));
+    });
 
     async function finalizeRace(states){
         const ranking = [...states].sort((a, b) => a.finishTime - b.finishTime);
@@ -5312,7 +5389,7 @@ startRaceBtn.onclick = async () => {
           <div class="race-results-grid">
             ${ranking.map((entry, idx) => `
               <div class="race-result-item">
-                <span>#${idx + 1} — Paard ${entry.index + 1}</span>
+                <span>#${idx + 1} — ${horseMeta[entry.index].name}</span>
                 <span>${(entry.finishTime / 1000).toFixed(2)}s</span>
               </div>
             `).join("")}
@@ -5322,7 +5399,7 @@ startRaceBtn.onclick = async () => {
 
         raceResults.innerHTML = resultsHtml;
         raceResults.classList.add("show");
-        raceStatus.textContent = `Race klaar! Paard ${winner} wint.`;
+        raceStatus.textContent = `Race klaar! ${horseMeta[winner - 1].name} wint.`;
 
         if(winner === chosenHorse){
             const winAmount = bet * 3;
@@ -5343,55 +5420,33 @@ startRaceBtn.onclick = async () => {
         startRaceBtn.disabled = false;
     }
 
-    async function raceTick(){
-        for (const [index, horse] of horses.entries()) {
-            if(finished) break;
+    let lastFrame = startTime;
+    function raceTick(now){
+        const delta = Math.min(2.5, (now - lastFrame) / 16.67);
+        lastFrame = now;
 
-            let move = Math.random() * 25 + 5; // smooth movement
-            horse.style.left = (horse.offsetLeft + move) + "px";
+        horseStates.forEach((state, index) => {
+            if(state.finished) return;
+            const tempoBoost = Math.random() * 2.6;
+            const stride = (state.pace + tempoBoost) * delta;
+            state.position = Math.min(state.position + stride, finishPositions[index]);
+            state.horse.style.left = `${state.position}px`;
 
-            if(horse.offsetLeft >= 820){ // finish line
-                finished = true;
-                winner = index + 1;
-
-                if(winner === chosenHorse){
-                    const winAmount = bet * 3;
-                    currentUser.credits += winAmount;
-                    applyLuckyCoinProgress(winAmount);
-                    recordGameResult('horse', 'win', winAmount);
-                    await saveCurrentUser();
-                    renderDashboard();
-                    showGameResultOverlay({
-                      outcome: 'win',
-                      title: 'Paardenrace: winst!',
-                      message: `Je paard wint! +${winAmount} credits.`
-                    });
-
-                } else {
-                    recordGameResult('horse', 'lose');
-                    await saveCurrentUser();
-                    renderDashboard();
-                    showGameResultOverlay({
-                      outcome: 'lose',
-                      title: 'Paardenrace: verlies',
-                      message: `Paard ${winner} wint. Je hebt verloren.`
-                    });
-                }
-
-                renderDashboard();
+            if(state.position >= finishPositions[index]){
+                state.finished = true;
+                state.finishTime = now - startTime;
             }
-        }
+        });
 
-        const allFinished = horseStates.every(state => state.finished);
-        if(allFinished){
-            await finalizeRace(horseStates);
+        if(horseStates.every(state => state.finished)){
+            void finalizeRace(horseStates);
             return;
         }
 
         requestAnimationFrame(raceTick);
     }
 
-    void raceTick();
+    requestAnimationFrame(raceTick);
 };
 
     /* ---------------------------
