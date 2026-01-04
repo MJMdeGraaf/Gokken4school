@@ -370,7 +370,170 @@
       color:#fff;
     }
     #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection { display: none; padding: 20px; text-align:center; }
-    #login { background: radial-gradient(circle at top, #551a8b 0, #050515 55%, #020208 100%); height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:8px; }
+    #login {
+      position: relative;
+      background:
+        radial-gradient(circle at top, rgba(15,111,178,0.28), transparent 52%),
+        radial-gradient(circle at 15% 30%, rgba(212,175,55,0.2), transparent 45%),
+        linear-gradient(150deg, #02070f 0, #040f1e 45%, #020408 100%);
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding: 48px 20px;
+      overflow: hidden;
+    }
+
+    #login::before{
+      content:"";
+      position:absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 85% 20%, rgba(114,179,255,0.18), transparent 40%),
+        radial-gradient(circle at 10% 90%, rgba(212,175,55,0.14), transparent 35%);
+      pointer-events: none;
+    }
+
+    .login-shell{
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      width: 100%;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.85fr);
+      gap: 32px;
+      padding: 34px;
+      border-radius: 26px;
+      background: linear-gradient(130deg, rgba(7, 22, 40, 0.9), rgba(6, 16, 32, 0.95));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+    }
+
+    .login-branding{
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      text-align: left;
+      padding: 10px 6px;
+    }
+
+    .login-logo{
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: linear-gradient(140deg, var(--maria-blue), var(--maria-blue-bright));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: var(--casino-cream);
+      font-size: 26px;
+      box-shadow: 0 0 18px rgba(15,111,178,0.45);
+    }
+
+    .login-branding h2{
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0.4px;
+    }
+
+    .login-branding p{
+      margin: 0;
+      color: rgba(246,233,196,0.8);
+      line-height: 1.5;
+      max-width: 340px;
+    }
+
+    .login-highlights{
+      display: grid;
+      gap: 10px;
+    }
+
+    .login-pill{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(12, 34, 56, 0.7);
+      border: 1px solid rgba(140,200,255,0.25);
+      color: #eaf3ff;
+      font-size: 14px;
+      letter-spacing: 0.2px;
+    }
+
+    .login-pill span{
+      color: var(--casino-gold);
+      font-weight: 700;
+    }
+
+    .login-card{
+      background: linear-gradient(160deg, rgba(10, 28, 48, 0.95), rgba(7, 18, 34, 0.92));
+      border-radius: 22px;
+      padding: 26px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 22px 35px rgba(0,0,0,0.45);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .login-card h3{
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .login-card p{
+      margin: 0;
+      color: rgba(185,216,255,0.75);
+      font-size: 14px;
+    }
+
+    .login-field{
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+      color: rgba(246,233,196,0.85);
+    }
+
+    .login-field input{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(140,200,255,0.2);
+      background: rgba(8, 18, 32, 0.9);
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    }
+
+    .login-field input:focus{
+      outline: none;
+      border-color: rgba(255,221,128,0.6);
+      box-shadow: 0 0 0 2px rgba(255,221,128,0.15);
+    }
+
+    .login-actions{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .login-actions button{
+      width: 100%;
+    }
+
+    .login-note{
+      font-size: 12px;
+      color: rgba(185,216,255,0.7);
+    }
+
+    @media (max-width: 860px){
+      .login-shell{
+        grid-template-columns: 1fr;
+        padding: 26px;
+      }
+    }
     #dashboard {
       background:
         radial-gradient(circle at top, rgba(15,111,178,0.25), transparent 40%),
@@ -2216,11 +2379,35 @@
 
   <!-- Login / Account aanmaken -->
   <section id="login">
-    <h2>Welkom! Maak een account of log in</h2>
-    <input type="text" id="usernameInput" placeholder="Gebruikersnaam">
-    <input type="password" id="passwordInput" placeholder="Wachtwoord">
-    <button id="loginBtn">Login</button>
-    <button id="createAccountBtn">Account aanmaken</button>
+    <div class="login-shell">
+      <div class="login-branding">
+        <div class="login-logo">♠</div>
+        <h2>Ignatius Casino</h2>
+        <p>Stap binnen in de premium lounge. Snel inloggen, exclusieve bonussen en een luxe casino vibe.</p>
+        <div class="login-highlights">
+          <div class="login-pill"><span>✦</span> Dagelijkse bonus & vip drops</div>
+          <div class="login-pill"><span>✦</span> Multiplayer tafels met live feeling</div>
+          <div class="login-pill"><span>✦</span> Veilig account, instant toegang</div>
+        </div>
+      </div>
+      <div class="login-card">
+        <h3>Welkom terug</h3>
+        <p>Log in met je account of maak direct een nieuwe speler aan.</p>
+        <label class="login-field">
+          Gebruikersnaam
+          <input type="text" id="usernameInput" placeholder="Voer je gebruikersnaam in">
+        </label>
+        <label class="login-field">
+          Wachtwoord
+          <input type="password" id="passwordInput" placeholder="Voer je wachtwoord in">
+        </label>
+        <div class="login-actions">
+          <button id="loginBtn">Inloggen</button>
+          <button id="createAccountBtn">Account aanmaken</button>
+        </div>
+        <small class="login-note">Door verder te gaan ga je akkoord met de huisregels van Ignatius Casino.</small>
+      </div>
+    </div>
   </section>
 
   <!-- Dashboard -->
