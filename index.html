@@ -1776,6 +1776,57 @@
       position: relative;
     }
 
+    .roulette-pocket-layer,
+    .roulette-hatch-layer{
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .roulette-pocket-layer{
+      z-index: 2;
+    }
+
+    .roulette-hatch-layer{
+      z-index: 3;
+    }
+
+    .roulette-number{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-96px) rotate(calc(-1 * var(--angle)));
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .roulette-number.red{
+      color: #ffd6d6;
+    }
+
+    .roulette-number.black{
+      color: #e3e8f4;
+    }
+
+    .roulette-number.green{
+      color: #c8ffe2;
+    }
+
+    .roulette-hatch{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2px;
+      height: 22px;
+      border-radius: 2px;
+      background: linear-gradient(180deg, rgba(255, 236, 196, 0.85), rgba(180, 120, 30, 0.45));
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      transform: translate(-50%, -50%) rotate(var(--angle)) translateY(-82px);
+    }
+
     .roulette-wheel::before{
       content: "";
       position: absolute;
@@ -1796,6 +1847,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      z-index: 5;
     }
 
     .roulette-pocket-ring{
@@ -1804,6 +1856,7 @@
       border-radius: 50%;
       border: 2px solid rgba(255,255,255,0.12);
       box-shadow: inset 0 0 18px rgba(0,0,0,0.5);
+      z-index: 4;
     }
 
     .roulette-ball-orbit{
@@ -1821,17 +1874,17 @@
       border-radius: 50%;
       background: radial-gradient(circle at 30% 30%, #ffffff, #d9d9d9 65%, #a2a2a2 100%);
       box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-      transform: translate(-50%, -50%) translateY(-134px);
+      transform: translate(-50%, -50%) translateY(var(--ball-orbit-radius, -134px));
     }
 
     .roulette-ball.is-dropping{
-      animation: rouletteBallDrop 0.5s cubic-bezier(0.25, 0.8, 0.2, 1) forwards;
+      animation: rouletteBallDrop var(--ball-drop-duration, 520ms) cubic-bezier(0.25, 0.8, 0.2, 1) forwards;
     }
 
     @keyframes rouletteBallDrop{
-      0%{ transform: translate(-50%, -50%) translateY(-134px) scale(1); }
-      60%{ transform: translate(-50%, -50%) translateY(-104px) scale(0.95); }
-      100%{ transform: translate(-50%, -50%) translateY(-94px) scale(0.9); }
+      0%{ transform: translate(-50%, -50%) translateY(var(--ball-orbit-radius, -134px)) scale(1); }
+      60%{ transform: translate(-50%, -50%) translateY(var(--ball-drop-mid, -108px)) scale(0.96); }
+      100%{ transform: translate(-50%, -50%) translateY(var(--ball-drop-end, -94px)) scale(0.92); }
     }
 
     .roulette-pointer{
@@ -3092,6 +3145,8 @@
           <div class="roulette-wheel-frame">
             <div class="roulette-pointer"></div>
             <div class="roulette-wheel" id="rouletteWheel">
+              <div class="roulette-pocket-layer" id="roulettePocketLayer"></div>
+              <div class="roulette-hatch-layer" id="rouletteHatchLayer"></div>
               <div class="roulette-pocket-ring"></div>
               <div class="roulette-wheel-center"></div>
             </div>
@@ -3409,6 +3464,8 @@
     const spinRouletteBtn = document.getElementById('spinRouletteBtn');
     const backFromRouletteBtn = document.getElementById('backFromRouletteBtn');
     const rouletteWheel = document.getElementById('rouletteWheel');
+    const roulettePocketLayer = document.getElementById('roulettePocketLayer');
+    const rouletteHatchLayer = document.getElementById('rouletteHatchLayer');
     const rouletteBallOrbit = document.getElementById('rouletteBallOrbit');
     const rouletteBall = document.getElementById('rouletteBall');
 
@@ -4280,6 +4337,26 @@ playHorseRaceBtn.onclick = () => {
       return rouletteRedNumbers.has(number) ? 'red' : 'black';
     }
 
+    function buildRouletteWheelDecor(){
+      if(!roulettePocketLayer || !rouletteHatchLayer) return;
+      roulettePocketLayer.innerHTML = '';
+      rouletteHatchLayer.innerHTML = '';
+      rouletteWheelOrder.forEach((number, index) => {
+        const startAngle = index * rouletteSlotAngle;
+        const centerAngle = startAngle + (rouletteSlotAngle / 2);
+        const label = document.createElement('div');
+        label.className = `roulette-number ${rouletteColorFor(number)}`;
+        label.textContent = number;
+        label.style.setProperty('--angle', `${centerAngle}deg`);
+        roulettePocketLayer.appendChild(label);
+
+        const hatch = document.createElement('div');
+        hatch.className = 'roulette-hatch';
+        hatch.style.setProperty('--angle', `${startAngle}deg`);
+        rouletteHatchLayer.appendChild(hatch);
+      });
+    }
+
     function updateRouletteInputs(){
       const type = rouletteBetType.value;
       rouletteColor.disabled = type !== 'color';
@@ -4287,6 +4364,7 @@ playHorseRaceBtn.onclick = () => {
     }
 
     rouletteBetType.onchange = updateRouletteInputs;
+    buildRouletteWheelDecor();
     updateRouletteInputs();
 
     let rouletteSpinning = false;
@@ -4309,6 +4387,10 @@ playHorseRaceBtn.onclick = () => {
       rouletteWheel?.getAnimations().forEach(anim => anim.cancel());
       rouletteBallOrbit?.getAnimations().forEach(anim => anim.cancel());
       rouletteBall?.classList.remove('is-dropping');
+      rouletteBall?.style.setProperty('--ball-orbit-radius', '-134px');
+      rouletteBall?.style.setProperty('--ball-drop-mid', '-106px');
+      rouletteBall?.style.setProperty('--ball-drop-end', '-92px');
+      rouletteBall?.style.setProperty('--ball-drop-duration', '520ms');
 
       const spinTurns = 4 + Math.floor(Math.random() * 3);
       const resultNumber = Math.floor(Math.random() * 37);
@@ -4317,6 +4399,7 @@ playHorseRaceBtn.onclick = () => {
       const finalRotation = (spinTurns * 360) + (360 - targetAngle);
       const spinDuration = 3000 + Math.random() * 800;
       const orbitDuration = spinDuration * 0.78;
+      const dropDuration = 520;
 
       rouletteWheel?.animate(
         [
@@ -4343,10 +4426,11 @@ playHorseRaceBtn.onclick = () => {
       );
 
       setTimeout(() => {
+        rouletteStatus.textContent = 'De bal stuitert tussen de hatches...';
         rouletteBall?.classList.add('is-dropping');
       }, orbitDuration);
 
-      await sleep(spinDuration);
+      await sleep(spinDuration + dropDuration);
 
       currentUser.credits -= bet;
       await saveCurrentUser();
