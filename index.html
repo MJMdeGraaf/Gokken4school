@@ -4415,7 +4415,7 @@ playHorseRaceBtn.onclick = () => {
       const dropDuration = 520;
       const pocketInset = rouletteSlotAngle * 0.2;
       const pocketJitter = (Math.random() - 0.5) * (rouletteSlotAngle - pocketInset * 2);
-      const ballTargetAngle = targetAngle + pocketJitter;
+      const ballTargetAngle = pocketJitter;
 
       rouletteWheel?.animate(
         [
