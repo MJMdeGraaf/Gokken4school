@@ -137,6 +137,152 @@
         box-shadow: 0 8px 16px rgba(0,0,0,0.4);
     }
 
+    /* ============================ GAME HELP PANEL ============================ */
+    .help-fab{
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 221, 128, 0.8);
+      background: linear-gradient(135deg, #ffe08a, #c9961e);
+      color: #2b1a00;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 14px 26px rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      z-index: 9999;
+    }
+
+    .help-fab.is-visible{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .help-fab:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 18px 30px rgba(0,0,0,0.5);
+    }
+
+    .help-panel{
+      position: fixed;
+      right: 24px;
+      bottom: 86px;
+      width: min(360px, 92vw);
+      background: linear-gradient(160deg, rgba(10, 26, 48, 0.98), rgba(6, 14, 30, 0.98));
+      border-radius: 18px;
+      border: 1px solid rgba(114, 179, 255, 0.3);
+      box-shadow: 0 22px 40px rgba(0,0,0,0.55);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px) scale(0.98);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 10000;
+    }
+
+    .help-panel.is-open{
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    .help-panel-header{
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .help-panel-title{
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .help-panel-subtitle{
+      font-size: 13px;
+      color: rgba(214, 229, 255, 0.8);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .help-close{
+      border: none;
+      background: rgba(255, 255, 255, 0.08);
+      color: #f6e9c4;
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .help-steps{
+      display: grid;
+      gap: 10px;
+    }
+
+    .help-step{
+      display: grid;
+      grid-template-columns: 38px 1fr;
+      gap: 10px;
+      align-items: center;
+      background: rgba(15, 40, 86, 0.55);
+      border-radius: 12px;
+      padding: 10px 12px;
+      border: 1px solid rgba(140, 200, 255, 0.2);
+    }
+
+    .help-icon{
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255, 215, 128, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .help-step-title{
+      font-size: 14px;
+      font-weight: 700;
+      color: #f6fbff;
+    }
+
+    .help-step-text{
+      font-size: 12.5px;
+      color: rgba(214, 229, 255, 0.8);
+      line-height: 1.4;
+      margin-top: 2px;
+    }
+
+    @media (max-width: 720px){
+      .help-panel{
+        right: 14px;
+        bottom: 76px;
+      }
+      .help-fab{
+        right: 14px;
+        bottom: 18px;
+      }
+    }
+
     /* ============================ GAME RESULT OVERLAY ============================ */
     .game-result-overlay{
       position: fixed;
@@ -3321,6 +3467,19 @@
       <div class="plinko-status" id="plinkoStatus">Plaats je inzet en drop een bal.</div>
     </div>
   </section>
+
+  <!-- Game rules help -->
+  <button id="helpFab" class="help-fab" aria-label="Spelregels openen" title="Spelregels">?</button>
+  <div id="helpPanel" class="help-panel" aria-hidden="true">
+    <div class="help-panel-header">
+      <div>
+        <div class="help-panel-title" id="helpTitle"></div>
+        <div class="help-panel-subtitle" id="helpSubtitle"></div>
+      </div>
+      <button id="helpClose" class="help-close" aria-label="Sluiten">✕</button>
+    </div>
+    <div id="helpSteps" class="help-steps"></div>
+  </div>
   
   <!-- Leaderboard popup -->
   <div id="lb-popup">
@@ -3527,6 +3686,13 @@
     const lbTitle = document.getElementById('lb-title');
     const lbContent = document.getElementById('lb-content');
 
+    const helpFab = document.getElementById('helpFab');
+    const helpPanel = document.getElementById('helpPanel');
+    const helpTitle = document.getElementById('helpTitle');
+    const helpSubtitle = document.getElementById('helpSubtitle');
+    const helpSteps = document.getElementById('helpSteps');
+    const helpClose = document.getElementById('helpClose');
+
     const gameResultOverlay = document.getElementById('gameResultOverlay');
     const gameResultCard = document.getElementById('gameResultCard');
     const gameResultTitle = document.getElementById('gameResultTitle');
@@ -3539,6 +3705,147 @@
       if(lbPopup){
         lbPopup.style.display = 'none';
       }
+    }
+
+    const helpContent = {
+      blackjack: {
+        title: 'Blackjack — spelregels',
+        subtitle: 'Kom zo dicht mogelijk bij 21 zonder erover te gaan.',
+        steps: [
+          { icon: '💶', title: 'Inzet & start', text: 'Kies je inzet en klik op “Start ronde”.' },
+          { icon: '🃏', title: 'Hit of Stand', text: 'Hit pakt een kaart, Stand stopt jouw hand.' },
+          { icon: '🏆', title: 'Dealer speelt uit', text: 'Dealer trekt tot 17. Hoogste score wint.' }
+        ]
+      },
+      poker: {
+        title: 'Texas Hold’em Poker',
+        subtitle: 'Speel met blinds en maak de beste 5-kaarten hand.',
+        steps: [
+          { icon: '🪙', title: 'Koop je in', text: 'Kies een tafel en betaal de buy‑in.' },
+          { icon: '🗣️', title: 'Acties', text: 'Check/Call, Bet/Raise of Fold als jij aan de beurt bent.' },
+          { icon: '🏅', title: 'Win de pot', text: 'Beste hand wint of iedereen foldt.' }
+        ]
+      },
+      craps: {
+        title: 'Craps Royale',
+        subtitle: 'Come‑out roll bepaalt jouw punt.',
+        steps: [
+          { icon: '💶', title: 'Plaats inzet', text: 'Zet minimaal 10 credits in.' },
+          { icon: '🎲', title: 'Come‑out roll', text: '7/11 wint, 2/3/12 verliest; anders wordt het je punt.' },
+          { icon: '🎯', title: 'Punt halen', text: 'Gooi je punt opnieuw voor winst; 7 verliest.' }
+        ]
+      },
+      baccarat: {
+        title: 'Baccarat',
+        subtitle: 'Kies Player, Banker of Tie. Dichtst bij 9 wint.',
+        steps: [
+          { icon: '🪙', title: 'Kies inzet', text: 'Plaats je inzet op Player, Banker of Tie.' },
+          { icon: '🂡', title: 'Kaarten waardes', text: 'A=1, 10/figuren=0, totalen modulo 10.' },
+          { icon: '🏆', title: 'Winnaar', text: 'De hoogste score wint de ronde.' }
+        ]
+      },
+      roulette: {
+        title: 'Roulette Royale',
+        subtitle: 'Kies kleur of nummer en laat het wiel draaien.',
+        steps: [
+          { icon: '🎯', title: 'Selecteer type', text: 'Kies kleur (rood/zwart/groen) of een nummer.' },
+          { icon: '🎡', title: 'Spin', text: 'Klik “Draaien” en volg de bal.' },
+          { icon: '💰', title: 'Uitbetaling', text: 'Kleur = 2x, groen = 14x, nummer = 36x.' }
+        ]
+      },
+      slots: {
+        title: 'Slot Machines',
+        subtitle: 'Drie rollen met snelle payouts.',
+        steps: [
+          { icon: '🎰', title: 'Spin', text: 'Plaats inzet en trek aan de hendel.' },
+          { icon: '✨', title: 'Matches', text: '3 dezelfde wint, 2 dezelfde = 2x inzet.' },
+          { icon: '💎', title: 'Bonus', text: '7️⃣ betaalt 20x, 💎 betaalt 15x, andere 3‑op‑rij 10x.' }
+        ]
+      },
+      plinko: {
+        title: 'Plinko Drop',
+        subtitle: 'Drop ballen en pak multipliers.',
+        steps: [
+          { icon: '🪙', title: 'Inzet per bal', text: 'Kies inzet en aantal ballen.' },
+          { icon: '🔻', title: 'Drop', text: 'Laat de bal vallen en volg de route.' },
+          { icon: '📈', title: 'Multipliers', text: 'Vakken geven 0,6x tot 3x uitbetaling.' }
+        ]
+      },
+      horse: {
+        title: 'Paardenrace Royale',
+        subtitle: 'Kies je paard en volg de finish.',
+        steps: [
+          { icon: '🐎', title: 'Kies paard', text: 'Selecteer je favoriet en inzet.' },
+          { icon: '🏁', title: 'Start', text: 'Klik “Start race” en volg de sprint.' },
+          { icon: '💵', title: 'Payout', text: 'De winnaar betaalt 3x je inzet.' }
+        ]
+      },
+      'lootbox-menu': {
+        title: 'Lucky Boxes',
+        subtitle: 'Ruil Lucky Coins voor rewards.',
+        steps: [
+          { icon: '🪙', title: 'Kies box', text: 'Selecteer 1/5/10 Lucky Coins box.' },
+          { icon: '🎁', title: 'Open', text: 'Elke box geeft 3 upgrade‑kansen.' },
+          { icon: '💳', title: 'Beloning', text: 'Hoger level = hogere credits.' }
+        ]
+      },
+      'lootbox-open': {
+        title: 'Lucky Box openen',
+        subtitle: 'Upgrade in drie klikken.',
+        steps: [
+          { icon: '🎁', title: 'Klik om te upgraden', text: 'Elke klik heeft 12,5% kans op level‑up.' },
+          { icon: '⭐', title: 'Drie kansen', text: 'Je hebt precies 3 klikken.' },
+          { icon: '🏆', title: 'Beloning', text: 'Na afloop krijg je credits op basis van level.' }
+        ]
+      }
+    };
+
+    let activeHelpKey = null;
+
+    function renderHelpContent(key){
+      const content = helpContent[key];
+      if(!content) return;
+      helpTitle.textContent = content.title;
+      helpSubtitle.textContent = content.subtitle;
+      helpSteps.innerHTML = content.steps.map(step => `
+        <div class="help-step">
+          <div class="help-icon">${step.icon}</div>
+          <div>
+            <div class="help-step-title">${step.title}</div>
+            <div class="help-step-text">${step.text}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setHelpContext(key){
+      activeHelpKey = key;
+      if(!helpFab || !helpPanel) return;
+      if(!key || !helpContent[key]){
+        helpFab.classList.remove('is-visible');
+        helpPanel.classList.remove('is-open');
+        helpPanel.setAttribute('aria-hidden', 'true');
+        return;
+      }
+      renderHelpContent(key);
+      helpFab.classList.add('is-visible');
+      helpPanel.classList.remove('is-open');
+      helpPanel.setAttribute('aria-hidden', 'true');
+    }
+
+    if(helpFab){
+      helpFab.addEventListener('click', () => {
+        if(!activeHelpKey) return;
+        const isOpen = helpPanel.classList.toggle('is-open');
+        helpPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      });
+    }
+
+    if(helpClose){
+      helpClose.addEventListener('click', () => {
+        helpPanel.classList.remove('is-open');
+        helpPanel.setAttribute('aria-hidden', 'true');
+      });
     }
 
     let gameResultAutoClose = null;
@@ -3741,6 +4048,7 @@
       dashboard.style.display = 'block';
       hideGameResultOverlay();
       renderDashboard();
+      setHelpContext(null);
       if(shouldShake){
         triggerLuckyDropShake();
       }
@@ -3760,6 +4068,7 @@
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
       loginSection.style.display = 'flex';
+      setHelpContext(null);
       if(currencyDisplay) currencyDisplay.style.display = 'none';
     };
 
@@ -3849,6 +4158,7 @@
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       blackjackSection.style.display='block';
+      setHelpContext('blackjack');
     };
 
     playPokerBtn.onclick = ()=>{
@@ -3863,6 +4173,7 @@
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       pokerSection.style.display='block';
+      setHelpContext('poker');
     };
 
     playCrapsBtn.onclick = ()=>{
@@ -3877,6 +4188,7 @@
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       crapsSection.style.display='block';
+      setHelpContext('craps');
     };
 
     playBaccaratBtn.onclick = ()=>{
@@ -3891,6 +4203,7 @@
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       baccaratSection.style.display='block';
+      setHelpContext('baccarat');
     };
 
     playRouletteBtn.onclick = ()=>{
@@ -3905,6 +4218,7 @@
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       rouletteSection.style.display='block';
+      setHelpContext('roulette');
     };
 
     playSlotsBtn.onclick = ()=>{
@@ -3919,6 +4233,7 @@
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
       slotsSection.style.display='block';
+      setHelpContext('slots');
     };
 
     playPlinkoBtn.onclick = ()=>{
@@ -3934,22 +4249,24 @@
       lootBoxSection.style.display='none';
       plinkoSection.style.display='block';
       layoutPlinkoPegs();
+      setHelpContext('plinko');
     };
 
     if(luckyDropBtn){
       luckyDropBtn.onclick = ()=>{
-        if(!currentUser) return alert('Je moet eerst inloggen!');
-        closeLeaderboardPopup();
-        dashboard.style.display = 'none';
+      if(!currentUser) return alert('Je moet eerst inloggen!');
+      closeLeaderboardPopup();
+      dashboard.style.display = 'none';
         blackjackSection.style.display = 'none';
         pokerSection.style.display = 'none';
         crapsSection.style.display = 'none';
         baccaratSection.style.display = 'none';
         rouletteSection.style.display = 'none';
         slotsSection.style.display = 'none';
-        plinkoSection.style.display = 'none';
-        lootBoxSection.style.display = 'none';
-        lootBoxMenuSection.style.display = 'block';
+      plinkoSection.style.display = 'none';
+      lootBoxSection.style.display = 'none';
+      lootBoxMenuSection.style.display = 'block';
+      setHelpContext('lootbox-menu');
       };
     }
 
@@ -4020,6 +4337,7 @@
       pokerSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'block';
+      setHelpContext('lootbox-open');
       updateLuckyCoinDisplay();
       updateLootBoxUI();
       saveCurrentUser();
@@ -4058,6 +4376,7 @@ playHorseRaceBtn.onclick = () => {
     slotsSection.style.display = "none";
     plinkoSection.style.display = "none";
     horseRaceSection.style.display = "block";
+    setHelpContext('horse');
 };
 
     backToMenuBtn.onclick = ()=>{
@@ -4071,6 +4390,7 @@ playHorseRaceBtn.onclick = () => {
     backToMenuFromLoot.onclick = ()=>{
       lootBoxSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'block';
+      setHelpContext('lootbox-menu');
     };
 
     backToMenuFromLuckyBoxes.onclick = ()=>{
@@ -5897,6 +6217,7 @@ playHorseRaceBtn.onclick = () => {
       pkNewHand();
       pokerSection.style.display='block';
       dashboard.style.display='none';
+      setHelpContext('poker');
     };
 
     function leavePokerTable({ silent = false, goToMenu = false } = {}){
@@ -6048,6 +6369,7 @@ function showHorseRace(){
     lootBoxMenuSection.style.display = "none";
     lootBoxSection.style.display = "none";
     horseRaceSection.style.display = "block";
+    setHelpContext('horse');
 }
 
 backToMenuRace.onclick = () => {
