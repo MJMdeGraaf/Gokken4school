@@ -2084,10 +2084,17 @@
       box-shadow: 0 10px 24px rgba(0,0,0,0.55);
     }
 
-    .poker-table {
+    .poker-table-shell{
       width: 92%;
       max-width: 1100px;
-      margin: 20px auto;
+      margin: 20px auto 40px;
+      position: relative;
+      padding: 34px 8px 46px;
+    }
+
+    .poker-table {
+      width: 100%;
+      margin: 0;
       background: radial-gradient(circle at 50% 20%, #1f6b57 0, #0d2b24 65%, #061511 100%);
       border-radius: 20px;
       padding: 20px 24px;
@@ -2140,6 +2147,37 @@
       margin-top: 16px;
     }
 
+    .poker-user-spot{
+      margin-top: 10px;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: rgba(6, 12, 20, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+      min-height: 96px;
+    }
+
+    .poker-user-spot h4{
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: 0.4px;
+    }
+
+    .poker-user-spot .hand{
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .poker-user-spot .card-pk{
+      width: 82px;
+      height: 118px;
+      font-size: 16px;
+    }
+
     .poker-community {
       display: flex;
       justify-content: center;
@@ -2150,16 +2188,19 @@
     .card-pk {
       width: 72px;
       height: 102px;
-      background: #fdfdfd;
-      color: #0b0b0b;
+      background: linear-gradient(160deg, #ffffff 0%, #f6f0e7 100%);
+      color: #111;
       border-radius: 10px;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-weight: bold;
+      font-weight: 700;
+      font-family: "Georgia", "Times New Roman", serif;
+      position: relative;
+      padding: 8px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.7);
       animation: dealCard 0.35s ease;
-      border: 2px solid #d5b467;
+      border: 1px solid #d6c4a4;
     }
 
     .card-pk.back {
@@ -2175,11 +2216,40 @@
       font-size: 28px;
     }
 
+    .card-pk .card-corner{
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .card-pk .card-corner.bottom{
+      top: auto;
+      left: auto;
+      right: 8px;
+      bottom: 6px;
+      transform: rotate(180deg);
+    }
+
+    .card-pk .card-center{
+      font-size: 26px;
+      font-weight: 700;
+    }
+
+    .card-pk .card-red{
+      color: #c11a2b;
+    }
+
     .poker-seats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-      gap: 14px;
-      margin-top: 18px;
+      position: absolute;
+      inset: -18px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-content: space-between;
+      gap: 10px;
+      pointer-events: none;
     }
 
     .poker-player {
@@ -2188,6 +2258,24 @@
       background: rgba(0,0,0,0.4);
       border: 1px solid rgba(255,255,255,0.08);
       position: relative;
+      pointer-events: auto;
+    }
+
+    .poker-player.bot{
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(5, 8, 14, 0.6);
+      transform: scale(0.72);
+      transform-origin: center;
+      min-width: 130px;
+      max-width: 160px;
+      font-size: 11px;
+    }
+
+    .poker-player.bot .card-pk{
+      width: 50px;
+      height: 70px;
+      font-size: 11px;
     }
 
     .poker-player.active {
@@ -2384,7 +2472,7 @@
       font-size: 48px;
     }
 
-    .dice-row div{
+    .dice-row div:not(.craps-die){
       width: 64px;
       height: 64px;
       display:flex;
@@ -2402,15 +2490,18 @@
     }
 
     .craps-die{
-      width: 70px;
-      height: 70px;
-      border-radius: 16px;
-      font-size: 44px;
-      color: #1b2233;
-      background: linear-gradient(160deg, #f9f5ef, #e8ded0);
-      border: 2px solid rgba(255, 215, 128, 0.7);
-      box-shadow: 0 16px 30px rgba(0,0,0,0.4), inset 0 0 0 2px rgba(255,255,255,0.6);
-      text-shadow: 0 2px 3px rgba(0,0,0,0.2);
+      width: 78px;
+      height: 78px;
+      border-radius: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      place-items: center;
+      color: #f6d676;
+      background: linear-gradient(160deg, #0b0b0f, #1b1b22);
+      border: 2px solid rgba(255, 215, 128, 0.8);
+      box-shadow: 0 18px 30px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.08);
+      text-shadow: 0 2px 6px rgba(0,0,0,0.55);
       position: relative;
       overflow: hidden;
     }
@@ -2420,10 +2511,32 @@
       position: absolute;
       inset: 8px 10px 14px;
       border-radius: 10px;
-      background: linear-gradient(140deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
-      opacity: 0.7;
+      background: linear-gradient(140deg, rgba(255,255,255,0.25), rgba(255,255,255,0));
+      opacity: 0.5;
       pointer-events: none;
     }
+
+    .craps-pip{
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #f6d676;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      filter: drop-shadow(0 0 4px rgba(255, 215, 128, 0.35));
+    }
+
+    .craps-pip.pos-0{ grid-area: 1 / 1; }
+    .craps-pip.pos-1{ grid-area: 1 / 2; }
+    .craps-pip.pos-2{ grid-area: 1 / 3; }
+    .craps-pip.pos-3{ grid-area: 2 / 1; }
+    .craps-pip.pos-4{ grid-area: 2 / 2; }
+    .craps-pip.pos-5{ grid-area: 2 / 3; }
+    .craps-pip.pos-6{ grid-area: 3 / 1; }
+    .craps-pip.pos-7{ grid-area: 3 / 2; }
+    .craps-pip.pos-8{ grid-area: 3 / 3; }
 
     .dice-roll{
       animation: diceRoll 0.85s cubic-bezier(0.25, 0.75, 0.3, 1.1);
@@ -4176,6 +4289,16 @@
           <option value="5000">Tafel 5000</option>
         </select>
         <div style="margin-top:10px;">
+          <label for="pokerBotCount">Bots:</label>
+          <select id="pokerBotCount">
+            <option value="1">1 bot</option>
+            <option value="2">2 bots</option>
+            <option value="3" selected>3 bots</option>
+            <option value="4">4 bots</option>
+            <option value="5">5 bots</option>
+          </select>
+        </div>
+        <div style="margin-top:10px;">
           <button id="joinPokerBtn">Deelnemen</button>
           <button id="leavePokerBtn">Tafel verlaten</button>
           <button id="backFromPokerBtn">Terug naar menu</button>
@@ -4188,35 +4311,38 @@
       </div>
     </div>
 
-    <div class="poker-table">
-      <div class="poker-dealer">
-        <div class="dealer-avatar">🃏</div>
-        <div class="dealer-info">
-          <h3>Dealer Sofia</h3>
-          <p id="pokerDealerStatus">Dealer wacht op spelers...</p>
+    <div class="poker-table-shell">
+      <div class="poker-table">
+        <div class="poker-dealer">
+          <div class="dealer-avatar">🃏</div>
+          <div class="dealer-info">
+            <h3>Dealer Sofia</h3>
+            <p id="pokerDealerStatus">Dealer wacht op spelers...</p>
+          </div>
         </div>
-      </div>
 
-      <div class="poker-board">
-        <div class="poker-community" id="pokerCommunity"></div>
+        <div class="poker-board">
+          <div class="poker-community" id="pokerCommunity"></div>
+          <div class="poker-user-spot" id="pokerUserSpot"></div>
+        </div>
+
+        <div class="poker-actions">
+          <div class="poker-action-row">
+            <button id="pokerCheckBtn">Check / Call</button>
+            <button id="pokerBetBtn">Bet / Raise</button>
+            <button id="pokerFoldBtn">Fold</button>
+          </div>
+          <div class="poker-action-row">
+            <label for="pokerBetAmount">Raise naar:</label>
+            <input type="number" id="pokerBetAmount" min="0" value="200" style="width:120px;">
+          </div>
+          <div class="poker-status">
+            <strong>Status:</strong> <span id="pokerStatus">Sluit je aan om te spelen.</span>
+          </div>
+        </div>
       </div>
 
       <div class="poker-seats" id="pokerPlayers"></div>
-
-      <div class="poker-actions">
-        <div class="poker-action-row">
-          <button id="pokerCheckBtn">Check / Call</button>
-          <button id="pokerBetBtn">Bet / Raise</button>
-          <button id="pokerFoldBtn">Fold</button>
-        </div>
-        <div class="poker-action-row">
-          <label for="pokerBetAmount">Raise naar:</label>
-          <input type="number" id="pokerBetAmount" min="0" value="200" style="width:120px;">
-        </div>
-        <div class="poker-status">
-          <strong>Status:</strong> <span id="pokerStatus">Sluit je aan om te spelen.</span>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -4235,8 +4361,8 @@
       <input type="number" id="crapsBet" min="10" value="100">
       <div class="craps-field">
         <div class="dice-row craps-dice">
-          <div id="crapsDieOne" class="craps-die">⚀</div>
-          <div id="crapsDieTwo" class="craps-die">⚀</div>
+          <div id="crapsDieOne" class="craps-die" data-value="1"></div>
+          <div id="crapsDieTwo" class="craps-die" data-value="1"></div>
         </div>
       </div>
       <div class="craps-status">
@@ -5925,11 +6051,13 @@
     const pokerTableSelect = document.getElementById('pokerTableSelect');
     const joinPokerBtn = document.getElementById('joinPokerBtn');
     const leavePokerBtn = document.getElementById('leavePokerBtn');
+    const pokerBotCountSelect = document.getElementById('pokerBotCount');
     const pokerPotEl = document.getElementById('pokerPot');
     const pokerBlindsEl = document.getElementById('pokerBlinds');
     const pokerStageEl = document.getElementById('pokerStage');
     const pokerCommunityEl = document.getElementById('pokerCommunity');
     const pokerPlayersEl = document.getElementById('pokerPlayers');
+    const pokerUserSpotEl = document.getElementById('pokerUserSpot');
     const pokerCheckBtn = document.getElementById('pokerCheckBtn');
     const pokerBetBtn = document.getElementById('pokerBetBtn');
     const pokerFoldBtn = document.getElementById('pokerFoldBtn');
@@ -7026,6 +7154,10 @@ playHorseRaceBtn.onclick = () => {
 };
 
     backToMenuBtn.onclick = ()=>{
+      if(bjRoundActive || bjAnimating){
+        showSiteMessage('Je kan niet weggaan terwijl je nog in een blackjack-ronde zit.');
+        return;
+      }
       endTrackingSession('blackjack');
       resetBlackjackSession();
       blackjackSection.style.display='none';
@@ -7047,6 +7179,10 @@ playHorseRaceBtn.onclick = () => {
     };
 
     backFromCrapsBtn.onclick = ()=>{
+      if(crapsRolling || crapsBet > 0 || crapsPoint !== null){
+        showSiteMessage('Je kan niet weggaan terwijl je nog in een craps-ronde zit.');
+        return;
+      }
       endTrackingSession('craps');
       crapsSection.style.display = 'none';
       showDashboard(true);
@@ -7079,7 +7215,14 @@ playHorseRaceBtn.onclick = () => {
     /* ---------------------------
        Craps / Baccarat / Roulette logic
        --------------------------- */
-    const diceFaces = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+    const crapsPipLayouts = {
+      1: [4],
+      2: [0, 8],
+      3: [0, 4, 8],
+      4: [0, 2, 6, 8],
+      5: [0, 2, 4, 6, 8],
+      6: [0, 2, 3, 5, 6, 8]
+    };
     let crapsPoint = null;
     let crapsBet = 0;
     let crapsRolling = false;
@@ -7088,9 +7231,16 @@ playHorseRaceBtn.onclick = () => {
       return Math.floor(Math.random() * 6) + 1;
     }
 
+    function renderCrapsDie(dieEl, value){
+      if(!dieEl) return;
+      const layout = crapsPipLayouts[value] || [];
+      dieEl.dataset.value = value;
+      dieEl.innerHTML = layout.map(pos => `<span class="craps-pip pos-${pos}">💀</span>`).join('');
+    }
+
     function updateCrapsDice(d1, d2){
-      crapsDieOne.textContent = diceFaces[d1 - 1];
-      crapsDieTwo.textContent = diceFaces[d2 - 1];
+      renderCrapsDie(crapsDieOne, d1);
+      renderCrapsDie(crapsDieTwo, d2);
     }
 
     function resetCrapsRound(){
@@ -8390,11 +8540,18 @@ playHorseRaceBtn.onclick = () => {
     let pokerHandActive = false;
     let pokerSmallBlindIndex = 0;
     let pokerBigBlindIndex = 0;
+    let pokerDesiredBots = 3;
 
     function pkDraw(){ return pkDeck.pop(); }
 
     function pkFormatCard(card){
-      return `${card.value}${card.suit}`;
+      const isRed = card.suit === '♥' || card.suit === '♦';
+      const colorClass = isRed ? 'card-red' : '';
+      return `
+        <span class="card-corner ${colorClass}">${card.value}${card.suit}</span>
+        <span class="card-center ${colorClass}">${card.suit}</span>
+        <span class="card-corner bottom ${colorClass}">${card.value}${card.suit}</span>
+      `;
     }
 
     function pkValueNum(value){
@@ -8562,24 +8719,49 @@ playHorseRaceBtn.onclick = () => {
         .map(()=>'<div class="card-pk back"></div>').join('');
       pokerCommunityEl.innerHTML = communityMarkup + placeholderMarkup;
 
-      pokerPlayersEl.innerHTML = pokerPlayers.map((p,i)=>{
-        const isYou = currentUser && p.key===currentUser.key;
-        const isActing = pokerHandActive && i===pokerCurrentPlayerIndex;
-        const showHand = isYou || pokerRevealHands;
+      const userIndex = pokerUserIndex();
+      const userPlayer = userIndex !== -1 ? pokerPlayers[userIndex] : null;
+      if(userPlayer){
+        const isActing = pokerHandActive && userIndex === pokerCurrentPlayerIndex;
         const badges = [];
-        if(i===pokerDealerIndex) badges.push('D');
-        if(i===pokerSmallBlindIndex) badges.push('SB');
-        if(i===pokerBigBlindIndex) badges.push('BB');
-        return `<div class="poker-player ${isActing ? 'active' : ''}">
-          <h4>${p.name} ${isYou?'(jij)':''}
+        if(userIndex === pokerDealerIndex) badges.push('D');
+        if(userIndex === pokerSmallBlindIndex) badges.push('SB');
+        if(userIndex === pokerBigBlindIndex) badges.push('BB');
+        const showHand = pokerHandActive || userPlayer.hand.length;
+        pokerUserSpotEl.innerHTML = `
+          <h4>${userPlayer.name} (jij)
             <span class="poker-badges">${badges.map(b=>`<span>${b}</span>`).join('')}</span>
           </h4>
-          <div class="hand">${p.hand.map(c=>showHand ? `<div class="card-pk">${pkFormatCard(c)}</div>` : '<div class="card-pk back"></div>').join('')}</div>
-          <div class="poker-info-row">Stack: ${p.stack}</div>
-          <div class="poker-info-row">Bet: ${p.bet} | Totaal: ${p.committed}</div>
-          <div class="poker-seat-row">Seat ${p.seat} ${p.folded?'[FOLD]':''} ${p.allIn?'[ALL-IN]':''}</div>
-        </div>`;
-      }).join('');
+          <div class="hand">${userPlayer.hand.map(c=>showHand ? `<div class="card-pk">${pkFormatCard(c)}</div>` : '<div class="card-pk back"></div>').join('')}</div>
+          <div class="poker-info-row">Stack: ${userPlayer.stack}</div>
+          <div class="poker-info-row">Bet: ${userPlayer.bet} | Totaal: ${userPlayer.committed}</div>
+          <div class="poker-seat-row">Seat ${userPlayer.seat} ${userPlayer.folded?'[FOLD]':''} ${userPlayer.allIn?'[ALL-IN]':''}</div>
+          ${isActing ? '<div class="poker-seat-row">Aan zet</div>' : ''}
+        `;
+      } else {
+        pokerUserSpotEl.innerHTML = '<small>Sluit je aan om jouw hand te zien.</small>';
+      }
+
+      pokerPlayersEl.innerHTML = pokerPlayers
+        .map((p,i)=>({ player: p, index: i }))
+        .filter(({ player })=>!(currentUser && player.key === currentUser.key))
+        .map(({ player, index })=>{
+          const isActing = pokerHandActive && index === pokerCurrentPlayerIndex;
+          const showHand = pokerRevealHands;
+          const badges = [];
+          if(index===pokerDealerIndex) badges.push('D');
+          if(index===pokerSmallBlindIndex) badges.push('SB');
+          if(index===pokerBigBlindIndex) badges.push('BB');
+          return `<div class="poker-player ${player.isBot ? 'bot' : ''} ${isActing ? 'active' : ''}">
+            <h4>${player.name}
+              <span class="poker-badges">${badges.map(b=>`<span>${b}</span>`).join('')}</span>
+            </h4>
+            <div class="hand">${player.hand.map(c=>showHand ? `<div class="card-pk">${pkFormatCard(c)}</div>` : '<div class="card-pk back"></div>').join('')}</div>
+            <div class="poker-info-row">Stack: ${player.stack}</div>
+            <div class="poker-info-row">Bet: ${player.bet} | Totaal: ${player.committed}</div>
+            <div class="poker-seat-row">Seat ${player.seat} ${player.folded?'[FOLD]':''} ${player.allIn?'[ALL-IN]':''}</div>
+          </div>`;
+        }).join('');
     }
 
     function pokerUserIndex(){
@@ -8897,11 +9079,22 @@ playHorseRaceBtn.onclick = () => {
       }
     }
 
-    function PK_addBotsIfNeeded(){
-      const desiredSeats = 6;
+    function PK_syncBots(){
+      const desiredBots = Math.max(1, pokerDesiredBots || 1);
+      const botPlayers = pokerPlayers.filter(p=>p.isBot);
+      if(botPlayers.length > desiredBots){
+        let removeCount = botPlayers.length - desiredBots;
+        for(let i = pokerPlayers.length - 1; i >= 0 && removeCount > 0; i -= 1){
+          if(pokerPlayers[i].isBot){
+            pokerPlayers.splice(i, 1);
+            removeCount -= 1;
+          }
+        }
+      }
+
       const occupiedSeats = new Set(pokerPlayers.map(p=>p.seat));
       let nextSeat = 1;
-      while(occupiedSeats.size < desiredSeats){
+      while(pokerPlayers.filter(p=>p.isBot).length < desiredBots){
         while(occupiedSeats.has(nextSeat)) nextSeat++;
         const seatIdx = nextSeat;
         occupiedSeats.add(seatIdx);
@@ -8932,6 +9125,9 @@ playHorseRaceBtn.onclick = () => {
         return;
       }
       pokerTableMin = min;
+      if(pokerBotCountSelect){
+        pokerDesiredBots = Math.max(1, parseInt(pokerBotCountSelect.value, 10) || 1);
+      }
 
       if(pokerPlayers.some(p=>p.key===currentUser.key)){
         showSiteMessage('Je zit al aan de tafel.');
@@ -8956,13 +9152,21 @@ playHorseRaceBtn.onclick = () => {
         seat
       });
 
-      PK_addBotsIfNeeded();
+      PK_syncBots();
       saveCurrentUser().then(renderDashboard);
       pkNewHand();
       pokerSection.style.display='block';
       dashboard.style.display='none';
       setHelpContext('poker');
     };
+
+    function pokerUserHasActiveStake(){
+      const idx = pokerUserIndex();
+      if(idx === -1) return false;
+      const player = pokerPlayers[idx];
+      if(!player) return false;
+      return pokerHandActive && (player.bet > 0 || player.committed > 0 || !player.folded);
+    }
 
     function leavePokerTable({ silent = false, goToMenu = false } = {}){
       if(!currentUser) return;
@@ -8973,9 +9177,9 @@ playHorseRaceBtn.onclick = () => {
         }
         return;
       }
-      if(pokerHandActive && !pokerIsUserTurn()){
+      if(pokerUserHasActiveStake()){
         if(!silent){
-          showSiteMessage('Je kan alleen van de tafel weg als je aan zet bent.');
+          showSiteMessage('Je kan niet weggaan terwijl je nog in de hand zit of een bet hebt lopen.');
         }
         return;
       }
@@ -9023,6 +9227,10 @@ playHorseRaceBtn.onclick = () => {
     };
 
     backFromPokerBtn.onclick = ()=>{
+      if(pokerUserHasActiveStake()){
+        showSiteMessage('Je kan niet weggaan terwijl je nog in de hand zit of een bet hebt lopen.');
+        return;
+      }
       endTrackingSession('poker');
       pokerSection.style.display = 'none';
       blackjackSection.style.display = 'none';
