@@ -687,6 +687,13 @@
       --theme-login-pill-border: rgba(140, 200, 255, 0.35);
       --theme-login-input-bg: rgba(11, 79, 123, 0.35);
       --theme-login-input-border: rgba(140, 200, 255, 0.25);
+      --theme-login-logo-bg: linear-gradient(140deg, var(--maria-blue), var(--maria-blue-bright));
+      --theme-login-logo-color: var(--casino-cream);
+      --theme-login-logo-shadow: 0 0 18px rgba(15,111,178,0.45);
+      --theme-claim-daily-bg: linear-gradient(120deg, var(--maria-blue), var(--maria-blue-bright));
+      --theme-claim-daily-border: 1px solid rgba(140, 200, 255, 0.35);
+      --theme-claim-daily-color: #f8fbff;
+      --theme-claim-daily-shadow: 0 8px 18px rgba(10,90,140,0.35);
       --theme-leaderboard-tab-bg: linear-gradient(120deg, rgba(11, 79, 123, 0.95), rgba(15, 111, 178, 0.95));
       --theme-leaderboard-popup-bg: linear-gradient(160deg, rgba(7, 20, 45, 0.98), rgba(4, 10, 22, 0.98));
       --theme-leaderboard-entry-bg: rgba(15, 40, 86, 0.6);
@@ -767,13 +774,13 @@
       width: 58px;
       height: 58px;
       border-radius: 16px;
-      background: linear-gradient(140deg, var(--maria-blue), var(--maria-blue-bright));
+      background: var(--theme-login-logo-bg);
       display:flex;
       align-items:center;
       justify-content:center;
-      color: var(--casino-cream);
+      color: var(--theme-login-logo-color);
       font-size: 26px;
-      box-shadow: 0 0 18px rgba(15,111,178,0.45);
+      box-shadow: var(--theme-login-logo-shadow);
     }
 
     .login-branding h2{
@@ -1010,10 +1017,10 @@
     }
 
     #claimDailyBtn{
-      background: linear-gradient(120deg, var(--maria-blue), var(--maria-blue-bright));
-      border: none;
-      color: #f8fbff;
-      box-shadow: 0 8px 18px rgba(10,90,140,0.35);
+      background: var(--theme-claim-daily-bg);
+      border: var(--theme-claim-daily-border);
+      color: var(--theme-claim-daily-color);
+      box-shadow: var(--theme-claim-daily-shadow);
     }
 
     #logoutBtn{
@@ -3680,6 +3687,13 @@
       --theme-layout-seat: rgba(8, 28, 24, 0.65);
       --theme-layout-panel: rgba(6, 22, 20, 0.7);
       --theme-layout-border: rgba(255,255,255,0.1);
+      --theme-login-logo-bg: linear-gradient(140deg, var(--theme-primary), var(--theme-secondary));
+      --theme-login-logo-color: var(--theme-cream);
+      --theme-login-logo-shadow: 0 0 18px rgba(15,111,178,0.45);
+      --theme-claim-daily-bg: linear-gradient(120deg, var(--theme-primary), var(--theme-secondary));
+      --theme-claim-daily-border: 1px solid rgba(140, 200, 255, 0.35);
+      --theme-claim-daily-color: #f8fbff;
+      --theme-claim-daily-shadow: 0 8px 18px rgba(10,90,140,0.35);
     }
 
     body{
@@ -4926,6 +4940,11 @@
         loginPillBorder: rgbaFromHex(palette.secondary, 0.45),
         loginInputBg: rgbaFromHex(palette.primary, 0.38),
         loginInputBorder: rgbaFromHex(palette.secondary, 0.35),
+        loginLogoBg: `linear-gradient(140deg, ${palette.primary}, ${palette.secondary})`,
+        loginLogoShadow: `0 0 18px ${rgbaFromHex(palette.secondary, 0.45)}`,
+        claimDailyBg: `linear-gradient(120deg, ${rgbaFromHex(palette.primary, 0.9)}, ${rgbaFromHex(palette.secondary, 0.9)})`,
+        claimDailyBorder: `1px solid ${rgbaFromHex(palette.secondary, 0.45)}`,
+        claimDailyShadow: `0 8px 18px ${rgbaFromHex(palette.primary, 0.35)}`,
         leaderboardTabBg: `linear-gradient(120deg, ${rgbaFromHex(palette.primary, 0.95)}, ${rgbaFromHex(palette.secondary, 0.95)})`,
         leaderboardPopupBg: `linear-gradient(160deg, ${rgbaFromHex(palette.primary, 0.95)}, ${rgbaFromHex(palette.secondary, 0.88)})`,
         leaderboardEntryBg: `linear-gradient(135deg, ${rgbaFromHex(palette.primary, 0.55)}, ${rgbaFromHex(palette.secondary, 0.4)})`,
@@ -5131,6 +5150,13 @@
       root.style.setProperty('--theme-layout-seat', palette.layoutSeat);
       root.style.setProperty('--theme-layout-panel', palette.layoutPanel);
       root.style.setProperty('--theme-layout-border', palette.layoutBorder);
+      root.style.setProperty('--theme-login-logo-bg', surfaces.loginLogoBg);
+      root.style.setProperty('--theme-login-logo-color', palette.cream);
+      root.style.setProperty('--theme-login-logo-shadow', surfaces.loginLogoShadow);
+      root.style.setProperty('--theme-claim-daily-bg', surfaces.claimDailyBg);
+      root.style.setProperty('--theme-claim-daily-border', surfaces.claimDailyBorder);
+      root.style.setProperty('--theme-claim-daily-color', palette.cream);
+      root.style.setProperty('--theme-claim-daily-shadow', surfaces.claimDailyShadow);
       root.style.setProperty('--theme-leaderboard-tab-bg', surfaces.leaderboardTabBg);
       root.style.setProperty('--theme-leaderboard-popup-bg', surfaces.leaderboardPopupBg);
       root.style.setProperty('--theme-leaderboard-entry-bg', surfaces.leaderboardEntryBg);
@@ -5170,8 +5196,15 @@
       root.style.setProperty('--theme-login-pill-border', loginSurfaces.loginPillBorder);
       root.style.setProperty('--theme-login-input-bg', loginSurfaces.loginInputBg);
       root.style.setProperty('--theme-login-input-border', loginSurfaces.loginInputBorder);
+      root.style.setProperty('--theme-login-logo-bg', loginSurfaces.loginLogoBg);
+      root.style.setProperty('--theme-login-logo-color', loginPalette.cream);
+      root.style.setProperty('--theme-login-logo-shadow', loginSurfaces.loginLogoShadow);
       root.style.setProperty('--theme-menu-surface', menuSurfaces.menuSurface);
       root.style.setProperty('--theme-menu-surface-light', menuSurfaces.menuSurfaceLight);
+      root.style.setProperty('--theme-claim-daily-bg', menuSurfaces.claimDailyBg);
+      root.style.setProperty('--theme-claim-daily-border', menuSurfaces.claimDailyBorder);
+      root.style.setProperty('--theme-claim-daily-color', menuPalette.cream);
+      root.style.setProperty('--theme-claim-daily-shadow', menuSurfaces.claimDailyShadow);
 
       Object.keys(gameLabels).forEach((gameKey) => applyGameSkin(gameKey));
     }
