@@ -2211,6 +2211,14 @@
       animation: dealCard 0.35s ease;
     }
 
+    .baccarat-label{
+      width: 100%;
+      text-align: center;
+      font-weight: 700;
+      color: #f8f4eb;
+      letter-spacing: 0.4px;
+    }
+
     #rouletteSection{
       background:
         radial-gradient(circle at top, rgba(212,175,55,0.2), transparent 55%),
@@ -5817,9 +5825,35 @@ playHorseRaceBtn.onclick = () => {
       return hand.reduce((sum, card)=>sum + card.points, 0) % 10;
     }
 
-    function renderBaccaratHand(row, hand, label){
-      row.innerHTML = `<strong style="width:100%; text-align:center;">${label} (${baccaratScore(hand)})</strong>` +
-        hand.map(card=>`<div class="baccarat-card">${card.value}${card.suit}</div>`).join('');
+    function initBaccaratRow(row, label){
+      row.innerHTML = '';
+      const labelEl = document.createElement('strong');
+      labelEl.className = 'baccarat-label';
+      labelEl.textContent = `${label} (0)`;
+      row.appendChild(labelEl);
+    }
+
+    function updateBaccaratLabel(row, hand, label){
+      const labelEl = row.querySelector('.baccarat-label');
+      if(labelEl){
+        labelEl.textContent = `${label} (${baccaratScore(hand)})`;
+      }
+    }
+
+    function appendBaccaratCard(row, card){
+      const cardEl = document.createElement('div');
+      cardEl.className = 'baccarat-card';
+      cardEl.textContent = `${card.value}${card.suit}`;
+      row.appendChild(cardEl);
+    }
+
+    async function dealBaccaratCard(hand, row, label, delay = 320){
+      const card = baccaratCard();
+      hand.push(card);
+      appendBaccaratCard(row, card);
+      updateBaccaratLabel(row, hand, label);
+      await sleep(delay);
+      return card;
     }
 
     dealBaccaratBtn.onclick = async ()=>{
@@ -5833,26 +5867,32 @@ playHorseRaceBtn.onclick = () => {
       baccaratBetInput.disabled = true;
       baccaratBetType.disabled = true;
       baccaratStatusEl.textContent = 'Kaarten worden gedeeld...';
-      await sleep(450);
 
       currentUser.credits -= bet;
       updateTracking('baccarat', { betAmount: bet, gamesPlayed: 1 });
       await saveCurrentUser();
       renderDashboard();
 
-      const playerHand = [baccaratCard(), baccaratCard()];
-      const bankerHand = [baccaratCard(), baccaratCard()];
+      const playerHand = [];
+      const bankerHand = [];
+      initBaccaratRow(baccaratPlayerRow, 'Player');
+      initBaccaratRow(baccaratBankerRow, 'Banker');
+      await sleep(200);
+      await dealBaccaratCard(playerHand, baccaratPlayerRow, 'Player');
+      await dealBaccaratCard(bankerHand, baccaratBankerRow, 'Banker');
+      await dealBaccaratCard(playerHand, baccaratPlayerRow, 'Player');
+      await dealBaccaratCard(bankerHand, baccaratBankerRow, 'Banker');
 
       const playerScore = baccaratScore(playerHand);
       const bankerScore = baccaratScore(bankerHand);
 
       if(playerScore < 8 && bankerScore < 8){
         if(playerScore <= 5){
-          playerHand.push(baccaratCard());
+          await dealBaccaratCard(playerHand, baccaratPlayerRow, 'Player');
         }
         const newBankerScore = baccaratScore(bankerHand);
         if(newBankerScore <= 5){
-          bankerHand.push(baccaratCard());
+          await dealBaccaratCard(bankerHand, baccaratBankerRow, 'Banker');
         }
       }
 
@@ -5861,9 +5901,6 @@ playHorseRaceBtn.onclick = () => {
       let winner = 'tie';
       if(finalPlayerScore > finalBankerScore) winner = 'player';
       if(finalBankerScore > finalPlayerScore) winner = 'banker';
-
-      renderBaccaratHand(baccaratPlayerRow, playerHand, 'Player');
-      renderBaccaratHand(baccaratBankerRow, bankerHand, 'Banker');
 
       let winAmount = 0;
       if(baccaratBetType.value === winner){
