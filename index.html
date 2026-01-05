@@ -2962,6 +2962,133 @@
       margin-top: 16px;
     }
 
+    /* Player tracking panel */
+    #playerTrackingPanel{
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 8, 18, 0.82);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100001;
+    }
+
+    .tracking-card{
+      width: min(1080px, 94vw);
+      max-height: 90vh;
+      overflow: hidden;
+      background: linear-gradient(160deg, rgba(12, 24, 46, 0.97), rgba(6, 12, 26, 0.98));
+      border-radius: 18px;
+      border: 1px solid rgba(140, 200, 255, 0.2);
+      box-shadow: 0 28px 60px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tracking-header{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      gap: 12px;
+    }
+
+    .tracking-header h3{
+      margin: 0 0 6px;
+      font-size: 20px;
+    }
+
+    .tracking-header p{
+      margin: 0;
+      color: rgba(210, 225, 255, 0.78);
+      font-size: 13px;
+    }
+
+    .tracking-close{
+      border: none;
+      background: rgba(255,255,255,0.08);
+      color: #f6e9c4;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tracking-controls{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 12px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(8, 18, 34, 0.7);
+    }
+
+    .tracking-controls button{
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 221, 128, 0.6);
+      background: rgba(255, 215, 128, 0.12);
+      color: #f6e9c4;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .tracking-game-label{
+      font-weight: 700;
+      letter-spacing: 0.4px;
+    }
+
+    .tracking-tables{
+      padding: 16px 22px 24px;
+      overflow: auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .tracking-table-block h4{
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .tracking-table{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: rgba(10, 22, 40, 0.7);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .tracking-table th,
+    .tracking-table td{
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .tracking-table th:first-child,
+    .tracking-table td:first-child{
+      text-align: left;
+      font-weight: 600;
+      color: #f6fbff;
+    }
+
+    .tracking-table thead th{
+      background: rgba(255,255,255,0.06);
+      color: rgba(214, 229, 255, 0.9);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+
+    .tracking-table tbody tr:last-child td{
+      border-bottom: none;
+    }
+
 /* ===== Paardenrace Lanes ===== */
 #horseRaceSection{
     background: radial-gradient(circle at top, rgba(18, 36, 20, 0.95) 0, rgba(8, 14, 10, 0.98) 60%, #050507 100%);
@@ -3336,6 +3463,25 @@
         <button id="devLuckyBtn" class="menu-action-btn primary">Geef oneindig lucky coins</button>
         <button id="closeDevPortal" class="menu-action-btn">Sluiten</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Player tracking panel -->
+  <div id="playerTrackingPanel" aria-hidden="true">
+    <div class="tracking-card">
+      <header class="tracking-header">
+        <div>
+          <h3>Player Tracking</h3>
+          <p>Statistieken per game per dag. Exporteerbaar als tabel.</p>
+        </div>
+        <button id="closeTrackingPanel" class="tracking-close" aria-label="Sluiten">✕</button>
+      </header>
+      <div class="tracking-controls">
+        <button id="trackingPrevGame" type="button">◀</button>
+        <span id="trackingGameLabel" class="tracking-game-label">Blackjack</span>
+        <button id="trackingNextGame" type="button">▶</button>
+      </div>
+      <div id="trackingTables" class="tracking-tables"></div>
     </div>
   </div>
 
@@ -4006,6 +4152,12 @@
     const devCreditsBtn = document.getElementById('devCreditsBtn');
     const devLuckyBtn = document.getElementById('devLuckyBtn');
     const closeDevPortal = document.getElementById('closeDevPortal');
+    const playerTrackingPanel = document.getElementById('playerTrackingPanel');
+    const closeTrackingPanel = document.getElementById('closeTrackingPanel');
+    const trackingPrevGame = document.getElementById('trackingPrevGame');
+    const trackingNextGame = document.getElementById('trackingNextGame');
+    const trackingGameLabel = document.getElementById('trackingGameLabel');
+    const trackingTables = document.getElementById('trackingTables');
     const claimDailyBtn = document.getElementById('claimDailyBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     const playBlackjackBtn = document.getElementById('playBlackjackBtn');
@@ -4641,6 +4793,7 @@
       currentUser.key = key;
       ensureLuckyFields(currentUser);
       ensureSkinFields(currentUser);
+      ensureTrackingFields(currentUser);
       loginSection.style.display='none';
       showDashboard(true);
       applyAllSkins();
@@ -4681,6 +4834,7 @@
         pkGames: 0
       };
       ensureSkinFields(currentUser);
+      ensureTrackingFields(currentUser);
       await saveCurrentUser();
       loginSection.style.display='none';
       showDashboard(true);
@@ -4750,6 +4904,263 @@
       }
     }
 
+    const trackingSessions = {};
+    let trackingGameIndex = 0;
+    let trackingUsersCache = [];
+    let trackingDatesCache = [];
+
+    function ensureTrackingFields(user){
+      if(!user) return;
+      if(!user.tracking || typeof user.tracking !== 'object'){
+        user.tracking = { days: {} };
+      }
+      if(!user.tracking.days || typeof user.tracking.days !== 'object'){
+        user.tracking.days = {};
+      }
+    }
+
+    function getDateKey(date = new Date()){
+      return date.toISOString().slice(0, 10);
+    }
+
+    function getTrackingDates(){
+      const dates = [];
+      const today = new Date();
+      for(let offset = 6; offset >= 0; offset -= 1){
+        const date = new Date(today);
+        date.setDate(today.getDate() - offset);
+        dates.push(getDateKey(date));
+      }
+      return dates;
+    }
+
+    function getTrackingDayEntry(user, dateKey){
+      ensureTrackingFields(user);
+      if(!user.tracking.days[dateKey]){
+        user.tracking.days[dateKey] = { totalCreditsNet: 0, games: {} };
+      }
+      return user.tracking.days[dateKey];
+    }
+
+    function getTrackingGameEntry(dayEntry, gameKey){
+      if(!dayEntry.games[gameKey]){
+        dayEntry.games[gameKey] = { bets: 0, net: 0, games: 0, timeMs: 0 };
+      }
+      return dayEntry.games[gameKey];
+    }
+
+    function updateTracking(gameKey, { betAmount = 0, netAmount = 0, gamesPlayed = 0, timeMs = 0 } = {}){
+      if(!currentUser || !gameKey) return;
+      ensureTrackingFields(currentUser);
+      const dateKey = getDateKey();
+      const dayEntry = getTrackingDayEntry(currentUser, dateKey);
+      const gameEntry = getTrackingGameEntry(dayEntry, gameKey);
+      gameEntry.bets += betAmount;
+      gameEntry.net += netAmount;
+      gameEntry.games += gamesPlayed;
+      gameEntry.timeMs += timeMs;
+      if(netAmount !== 0){
+        dayEntry.totalCreditsNet += netAmount;
+      }
+    }
+
+    function startTrackingSession(gameKey){
+      if(!currentUser || !gameKey) return;
+      if(trackingSessions[gameKey]) return;
+      trackingSessions[gameKey] = Date.now();
+    }
+
+    function endTrackingSession(gameKey){
+      if(!currentUser || !gameKey) return;
+      const startedAt = trackingSessions[gameKey];
+      if(!startedAt) return;
+      const duration = Date.now() - startedAt;
+      delete trackingSessions[gameKey];
+      if(duration > 0){
+        updateTracking(gameKey, { timeMs: duration });
+        saveCurrentUser();
+      }
+    }
+
+    function endAllTrackingSessions(){
+      Object.keys(trackingSessions).forEach((gameKey) => {
+        endTrackingSession(gameKey);
+      });
+    }
+
+    function formatCredits(value){
+      return Math.round(value).toLocaleString('nl-NL');
+    }
+
+    function formatPercent(value){
+      if(!Number.isFinite(value)) return '0%';
+      return `${value.toFixed(1)}%`;
+    }
+
+    function formatDuration(ms){
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${hours.toString().padStart(2,'0')}:${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+    }
+
+    async function loadTrackingUsersFromDb(){
+      const snap = await db.ref('users').once('value');
+      const data = snap.val() || {};
+      return Object.entries(data).map(([key, user]) => {
+        const withKey = { ...user, key, name: user.name || key };
+        ensureTrackingFields(withKey);
+        return withKey;
+      });
+    }
+
+    function sumGameStatForUser(user, gameKey, dates, field){
+      return dates.reduce((total, dateKey) => {
+        const day = user.tracking?.days?.[dateKey];
+        const value = day?.games?.[gameKey]?.[field] || 0;
+        return total + value;
+      }, 0);
+    }
+
+    function sumDailyCreditsNet(user, dates){
+      return dates.reduce((total, dateKey) => {
+        const day = user.tracking?.days?.[dateKey];
+        return total + (day?.totalCreditsNet || 0);
+      }, 0);
+    }
+
+    function buildTrackingTable(title, headers, rows){
+      return `
+        <div class="tracking-table-block">
+          <h4>${title}</h4>
+          <table class="tracking-table">
+            <thead>
+              <tr>${headers.map(cell => `<th>${cell}</th>`).join('')}</tr>
+            </thead>
+            <tbody>
+              ${rows.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderTrackingTablesForGame(gameKey){
+      if(!trackingTables || !trackingDatesCache.length) return;
+      const dates = trackingDatesCache;
+      const users = trackingUsersCache || [];
+      const dayLabels = dates.map((_, index) => `day ${index + 1}`);
+      const headers = ['Speler', ...dayLabels, 'total'];
+
+      const totalBetsByDay = dates.map((dateKey) => (
+        users.reduce((sum, user) => sum + (user.tracking?.days?.[dateKey]?.games?.[gameKey]?.bets || 0), 0)
+      ));
+      const totalNetByDay = dates.map((dateKey) => (
+        users.reduce((sum, user) => sum + (user.tracking?.days?.[dateKey]?.games?.[gameKey]?.net || 0), 0)
+      ));
+      const totalPlayersByDay = dates.map((dateKey) => (
+        users.filter(user => (user.tracking?.days?.[dateKey]?.games?.[gameKey]?.games || 0) > 0).length
+      ));
+
+      const totalBetsAll = totalBetsByDay.reduce((sum, value) => sum + value, 0);
+      const totalNetAll = totalNetByDay.reduce((sum, value) => sum + value, 0);
+      const totalPlayersAll = users.filter(user => sumGameStatForUser(user, gameKey, dates, 'games') > 0).length;
+
+      const sortedUsers = [...users].sort((a, b) => (
+        sumGameStatForUser(b, gameKey, dates, 'net') - sumGameStatForUser(a, gameKey, dates, 'net')
+      ));
+
+      const playersTableRows = [
+        ['Total spelers', ...totalPlayersByDay.map(value => formatCredits(value)), formatCredits(totalPlayersAll)]
+      ];
+
+      const betRows = sortedUsers.map((user) => {
+        const totals = dates.map((dateKey, index) => {
+          const bet = user.tracking?.days?.[dateKey]?.games?.[gameKey]?.bets || 0;
+          const percent = totalBetsByDay[index] ? (bet / totalBetsByDay[index]) * 100 : 0;
+          return `${formatCredits(bet)} (${formatPercent(percent)})`;
+        });
+        const totalBet = sumGameStatForUser(user, gameKey, dates, 'bets');
+        const totalPercent = totalBetsAll ? (totalBet / totalBetsAll) * 100 : 0;
+        return [user.name, ...totals, `${formatCredits(totalBet)} (${formatPercent(totalPercent)})`];
+      });
+
+      const betTotalsRow = [
+        'Totaal',
+        ...totalBetsByDay.map(value => formatCredits(value)),
+        `${formatCredits(totalBetsAll)} (${formatPercent(totalBetsAll ? 100 : 0)})`
+      ];
+
+      const casinoWinRows = [
+        ['Casino win', ...totalNetByDay.map(value => formatCredits(-value)), formatCredits(-totalNetAll)]
+      ];
+
+      const netRows = sortedUsers.map((user) => {
+        const dayValues = dates.map((dateKey) => formatCredits(user.tracking?.days?.[dateKey]?.games?.[gameKey]?.net || 0));
+        const totalNet = sumGameStatForUser(user, gameKey, dates, 'net');
+        return [user.name, ...dayValues, formatCredits(totalNet)];
+      });
+
+      const avgRows = sortedUsers.map((user) => {
+        const dayValues = dates.map((dateKey) => {
+          const entry = user.tracking?.days?.[dateKey]?.games?.[gameKey];
+          const net = entry?.net || 0;
+          const games = entry?.games || 0;
+          const avg = games ? net / games : 0;
+          return formatCredits(avg);
+        });
+        const totalNet = sumGameStatForUser(user, gameKey, dates, 'net');
+        const totalGames = sumGameStatForUser(user, gameKey, dates, 'games');
+        const totalAvg = totalGames ? totalNet / totalGames : 0;
+        return [user.name, ...dayValues, formatCredits(totalAvg)];
+      });
+
+      const creditsNetRows = sortedUsers.map((user) => {
+        const dayValues = dates.map((dateKey) => formatCredits(user.tracking?.days?.[dateKey]?.totalCreditsNet || 0));
+        const totalCreditsNet = sumDailyCreditsNet(user, dates);
+        return [user.name, ...dayValues, formatCredits(totalCreditsNet)];
+      });
+
+      const timeRows = sortedUsers.map((user) => {
+        const dayValues = dates.map((dateKey) => formatDuration(user.tracking?.days?.[dateKey]?.games?.[gameKey]?.timeMs || 0));
+        const totalTime = sumGameStatForUser(user, gameKey, dates, 'timeMs');
+        return [user.name, ...dayValues, formatDuration(totalTime)];
+      });
+
+      trackingTables.innerHTML = [
+        buildTrackingTable('Total individuele spelers', headers, playersTableRows),
+        buildTrackingTable('Total credits bet (+ % van totaal)', headers, [...betRows, betTotalsRow]),
+        buildTrackingTable('Casino win (credits)', headers, casinoWinRows),
+        buildTrackingTable('Netto gain/loss per speler', headers, netRows),
+        buildTrackingTable('Gemiddelde gain/loss per game', headers, avgRows),
+        buildTrackingTable('Gain/loss totale credits', headers, creditsNetRows),
+        buildTrackingTable('Tijd gespeeld', headers, timeRows)
+      ].join('');
+    }
+
+    async function refreshTrackingData(){
+      trackingUsersCache = await loadTrackingUsersFromDb();
+      trackingDatesCache = getTrackingDates();
+    }
+
+    async function openTrackingPanel(){
+      if(!playerTrackingPanel) return;
+      await refreshTrackingData();
+      trackingGameIndex = 0;
+      const gameKey = Object.keys(gameLabels)[trackingGameIndex];
+      if(trackingGameLabel) trackingGameLabel.textContent = gameLabels[gameKey];
+      renderTrackingTablesForGame(gameKey);
+      playerTrackingPanel.style.display = 'flex';
+      playerTrackingPanel.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideTrackingPanel(){
+      if(!playerTrackingPanel) return;
+      playerTrackingPanel.style.display = 'none';
+      playerTrackingPanel.setAttribute('aria-hidden', 'true');
+    }
+
     function renderDashboard(){
       if(!currentUser) return;
       ensureLuckyFields(currentUser);
@@ -4764,6 +5175,7 @@
     }
 
     function showDashboard(shouldShake = false){
+      endAllTrackingSessions();
       dashboard.style.display = 'block';
       hideGameResultOverlay();
       renderDashboard();
@@ -4777,7 +5189,9 @@
     }
 
     logoutBtn.onclick = () => {
+      endAllTrackingSessions();
       currentUser = null;
+      hideTrackingPanel();
       closeLeaderboardPopup();
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
@@ -4796,6 +5210,8 @@
 
     let developerClicks = 0;
     let developerClickTimer = null;
+    let trackingTapCount = 0;
+    let trackingTapTimer = null;
 
     function openDeveloperPortal(){
       if(!developerPortal) return;
@@ -4854,6 +5270,30 @@
       });
     }
 
+    if(closeTrackingPanel){
+      closeTrackingPanel.addEventListener('click', hideTrackingPanel);
+    }
+
+    if(trackingPrevGame){
+      trackingPrevGame.addEventListener('click', () => {
+        const keys = Object.keys(gameLabels);
+        trackingGameIndex = (trackingGameIndex - 1 + keys.length) % keys.length;
+        const gameKey = keys[trackingGameIndex];
+        if(trackingGameLabel) trackingGameLabel.textContent = gameLabels[gameKey];
+        renderTrackingTablesForGame(gameKey);
+      });
+    }
+
+    if(trackingNextGame){
+      trackingNextGame.addEventListener('click', () => {
+        const keys = Object.keys(gameLabels);
+        trackingGameIndex = (trackingGameIndex + 1) % keys.length;
+        const gameKey = keys[trackingGameIndex];
+        if(trackingGameLabel) trackingGameLabel.textContent = gameLabels[gameKey];
+        renderTrackingTablesForGame(gameKey);
+      });
+    }
+
     claimDailyBtn.onclick = async ()=>{
       if(!currentUser) return;
       const t = new Date().toDateString();
@@ -4881,6 +5321,7 @@
       lootBoxSection.style.display='none';
       skinsSection.style.display='none';
       applyGameSkin('blackjack');
+      startTrackingSession('blackjack');
       blackjackSection.style.display='block';
       setHelpContext('blackjack');
     };
@@ -4898,6 +5339,7 @@
       lootBoxSection.style.display='none';
       skinsSection.style.display='none';
       applyGameSkin('poker');
+      startTrackingSession('poker');
       pokerSection.style.display='block';
       setHelpContext('poker');
     };
@@ -4915,6 +5357,7 @@
       lootBoxSection.style.display='none';
       skinsSection.style.display='none';
       applyGameSkin('craps');
+      startTrackingSession('craps');
       crapsSection.style.display='block';
       setHelpContext('craps');
     };
@@ -4932,6 +5375,7 @@
       lootBoxSection.style.display='none';
       skinsSection.style.display='none';
       applyGameSkin('baccarat');
+      startTrackingSession('baccarat');
       baccaratSection.style.display='block';
       setHelpContext('baccarat');
     };
@@ -4949,6 +5393,7 @@
       lootBoxSection.style.display='none';
       skinsSection.style.display='none';
       applyGameSkin('roulette');
+      startTrackingSession('roulette');
       rouletteSection.style.display='block';
       setHelpContext('roulette');
     };
@@ -4966,6 +5411,7 @@
       lootBoxSection.style.display='none';
       skinsSection.style.display='none';
       applyGameSkin('slots');
+      startTrackingSession('slots');
       slotsSection.style.display='block';
       setHelpContext('slots');
     };
@@ -4983,6 +5429,7 @@
       lootBoxSection.style.display='none';
       skinsSection.style.display='none';
       applyGameSkin('plinko');
+      startTrackingSession('plinko');
       plinkoSection.style.display='block';
       layoutPlinkoPegs();
       setHelpContext('plinko');
@@ -4991,6 +5438,22 @@
     if(skinsBtn){
       skinsBtn.onclick = ()=>{
         if(!currentUser) return alert('Je moet eerst inloggen!');
+        trackingTapCount += 1;
+        if(trackingTapTimer){
+          clearTimeout(trackingTapTimer);
+        }
+        trackingTapTimer = setTimeout(() => {
+          trackingTapCount = 0;
+        }, 800);
+        if(trackingTapCount === 3){
+          trackingTapCount = 0;
+          const password = prompt('Developer code:');
+          if(password === 'pepjes'){
+            openTrackingPanel();
+          } else if(password !== null){
+            showSiteMessage('Onjuist wachtwoord.');
+          }
+        }
         closeLeaderboardPopup();
         dashboard.style.display = 'none';
         blackjackSection.style.display = 'none';
@@ -5133,19 +5596,11 @@ const playHorseRaceBtn = document.getElementById("playHorseRaceBtn");
 
 playHorseRaceBtn.onclick = () => {
     closeLeaderboardPopup();
-    dashboard.style.display = "none";
-    lootBoxMenuSection.style.display = "none";
-    lootBoxSection.style.display = "none";
-    crapsSection.style.display = "none";
-    baccaratSection.style.display = "none";
-    rouletteSection.style.display = "none";
-    slotsSection.style.display = "none";
-    plinkoSection.style.display = "none";
-    horseRaceSection.style.display = "block";
-    setHelpContext('horse');
+    showHorseRace();
 };
 
     backToMenuBtn.onclick = ()=>{
+      endTrackingSession('blackjack');
       resetBlackjackSession();
       blackjackSection.style.display='none';
       pokerSection.style.display='none';
@@ -5166,26 +5621,31 @@ playHorseRaceBtn.onclick = () => {
     };
 
     backFromCrapsBtn.onclick = ()=>{
+      endTrackingSession('craps');
       crapsSection.style.display = 'none';
       showDashboard(true);
     };
 
     backFromBaccaratBtn.onclick = ()=>{
+      endTrackingSession('baccarat');
       baccaratSection.style.display = 'none';
       showDashboard(true);
     };
 
     backFromRouletteBtn.onclick = ()=>{
+      endTrackingSession('roulette');
       rouletteSection.style.display = 'none';
       showDashboard(true);
     };
 
     backFromSlotsBtn.onclick = ()=>{
+      endTrackingSession('slots');
       slotsSection.style.display = 'none';
       showDashboard(true);
     };
 
     backFromPlinkoBtn.onclick = ()=>{
+      endTrackingSession('plinko');
       plinkoSection.style.display = 'none';
       showDashboard(true);
     };
@@ -5224,6 +5684,7 @@ playHorseRaceBtn.onclick = () => {
         if(currentUser.credits < bet) return showSiteMessage('Je hebt niet genoeg credits!');
         crapsBet = bet;
         currentUser.credits -= bet;
+        updateTracking('craps', { betAmount: bet, gamesPlayed: 1 });
         await saveCurrentUser();
         renderDashboard();
       }
@@ -5249,6 +5710,7 @@ playHorseRaceBtn.onclick = () => {
           currentUser.credits += winAmount;
           applyLuckyCoinProgress(winAmount);
           recordGameResult('craps', 'win', winAmount);
+          updateTracking('craps', { netAmount: winAmount - crapsBet });
           crapsStatusEl.textContent = `Come-out ${total}! Je wint ${winAmount} credits.`;
           crapsPointEl.textContent = 'Punt: -';
           showGameResultOverlay({
@@ -5261,6 +5723,7 @@ playHorseRaceBtn.onclick = () => {
           crapsBet = 0;
         } else if([2,3,12].includes(total)){
           recordGameResult('craps', 'lose');
+          updateTracking('craps', { netAmount: -crapsBet });
           crapsStatusEl.textContent = `Come-out ${total}. Je verliest je inzet.`;
           crapsPointEl.textContent = 'Punt: -';
           showGameResultOverlay({
@@ -5282,6 +5745,7 @@ playHorseRaceBtn.onclick = () => {
           currentUser.credits += winAmount;
           applyLuckyCoinProgress(winAmount);
           recordGameResult('craps', 'win', winAmount);
+          updateTracking('craps', { netAmount: winAmount - crapsBet });
           crapsStatusEl.textContent = `Je rolt ${total} en maakt je punt! +${winAmount} credits.`;
           showGameResultOverlay({
             outcome: 'win',
@@ -5295,6 +5759,7 @@ playHorseRaceBtn.onclick = () => {
           crapsPointEl.textContent = 'Punt: -';
         } else if(total === 7){
           recordGameResult('craps', 'lose');
+          updateTracking('craps', { netAmount: -crapsBet });
           crapsStatusEl.textContent = '7-out! Je verliest je inzet.';
           showGameResultOverlay({
             outcome: 'lose',
@@ -5357,6 +5822,7 @@ playHorseRaceBtn.onclick = () => {
       await sleep(450);
 
       currentUser.credits -= bet;
+      updateTracking('baccarat', { betAmount: bet, gamesPlayed: 1 });
       await saveCurrentUser();
       renderDashboard();
 
@@ -5397,6 +5863,7 @@ playHorseRaceBtn.onclick = () => {
         currentUser.credits += winAmount;
         applyLuckyCoinProgress(winAmount);
         recordGameResult('baccarat', 'win', winAmount);
+        updateTracking('baccarat', { netAmount: winAmount - bet });
         baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}! Je wint ${winAmount} credits.`;
         showGameResultOverlay({
           outcome: 'win',
@@ -5405,6 +5872,7 @@ playHorseRaceBtn.onclick = () => {
         });
       } else {
         recordGameResult('baccarat', 'lose');
+        updateTracking('baccarat', { netAmount: -bet });
         baccaratStatusEl.textContent = `Winner: ${winner.toUpperCase()}. Je verliest je inzet.`;
         showGameResultOverlay({
           outcome: 'lose',
@@ -5536,6 +6004,7 @@ playHorseRaceBtn.onclick = () => {
       await sleep(spinDuration + dropDuration);
 
       currentUser.credits -= bet;
+      updateTracking('roulette', { betAmount: bet, gamesPlayed: 1 });
       await saveCurrentUser();
       renderDashboard();
 
@@ -5558,6 +6027,7 @@ playHorseRaceBtn.onclick = () => {
         currentUser.credits += winAmount;
         applyLuckyCoinProgress(winAmount);
         recordGameResult('roulette', 'win', winAmount);
+        updateTracking('roulette', { netAmount: winAmount - bet });
         rouletteStatus.textContent = `Je wint ${winAmount} credits!`;
         showGameResultOverlay({
           outcome: 'win',
@@ -5566,6 +6036,7 @@ playHorseRaceBtn.onclick = () => {
         });
       } else {
         recordGameResult('roulette', 'lose');
+        updateTracking('roulette', { netAmount: -bet });
         rouletteStatus.textContent = 'Helaas, geen winst deze draai.';
         showGameResultOverlay({
           outcome: 'lose',
@@ -5636,6 +6107,7 @@ playHorseRaceBtn.onclick = () => {
       if(currentUser.credits < bet) return showSiteMessage('Je hebt niet genoeg credits!');
 
       currentUser.credits -= bet;
+      updateTracking('slots', { betAmount: bet, gamesPlayed: 1 });
       await saveCurrentUser();
       renderDashboard();
 
@@ -5670,6 +6142,7 @@ playHorseRaceBtn.onclick = () => {
         currentUser.credits += winAmount;
         applyLuckyCoinProgress(winAmount);
         recordGameResult('slots', 'win', winAmount);
+        updateTracking('slots', { netAmount: winAmount - bet });
         slotsStatus.textContent = `Winst! Je ontvangt ${winAmount} credits.`;
         slotsStatus.classList.add('slots-win');
         showGameResultOverlay({
@@ -5679,6 +6152,7 @@ playHorseRaceBtn.onclick = () => {
         });
       } else {
         recordGameResult('slots', 'lose');
+        updateTracking('slots', { netAmount: -bet });
         slotsStatus.textContent = 'Geen match deze spin. Probeer opnieuw.';
         showGameResultOverlay({
           outcome: 'lose',
@@ -5847,6 +6321,7 @@ playHorseRaceBtn.onclick = () => {
       const net = totalWin - plinkoActiveBatch.totalBet;
       const outcome = totalWin >= plinkoActiveBatch.totalBet ? 'win' : 'lose';
       recordGameResult('plinko', outcome, totalWin);
+      updateTracking('plinko', { netAmount: net });
       plinkoStatus.textContent = `Alle ${plinkoBallCount} ballen klaar. Totale winst: ${totalWin} credits (netto ${net}).`;
       showGameResultOverlay({
         outcome,
@@ -5954,6 +6429,7 @@ playHorseRaceBtn.onclick = () => {
       if(currentUser.credits < totalBet) return showSiteMessage('Je hebt niet genoeg credits!');
 
       currentUser.credits -= totalBet;
+      updateTracking('plinko', { betAmount: totalBet, gamesPlayed: 1 });
       await saveCurrentUser();
       renderDashboard();
 
@@ -6254,11 +6730,11 @@ playHorseRaceBtn.onclick = () => {
           outcome = 'push';
         }
 
-        if(index === 0 && currentUser){
-          let delta = 0;
-          if(outcome === 'win') delta = Math.floor(bjBet * 1.5);
-          if(outcome === 'push') delta = bjBet;
-          currentUser.credits += delta;
+      if(index === 0 && currentUser){
+        let delta = 0;
+        if(outcome === 'win') delta = Math.floor(bjBet * 1.5);
+        if(outcome === 'push') delta = bjBet;
+        currentUser.credits += delta;
           if(outcome === 'win'){
             applyLuckyCoinProgress(delta);
           }
@@ -6270,11 +6746,12 @@ playHorseRaceBtn.onclick = () => {
           } else if(outcome === 'lose'){
             currentUser.losses = (currentUser.losses || 0) + 1;
             currentUser.bjLosses = (currentUser.bjLosses || 0) + 1;
-          }
-          currentUser.bjGames = (currentUser.bjGames || 0) + 1;
-          userOutcome = outcome;
-          userDelta = delta;
         }
+        currentUser.bjGames = (currentUser.bjGames || 0) + 1;
+        userOutcome = outcome;
+        userDelta = delta;
+        updateTracking('blackjack', { netAmount: delta - bjBet });
+      }
 
         const text = outcome === 'win'
           ? `${player.name} wint`
@@ -6317,6 +6794,7 @@ playHorseRaceBtn.onclick = () => {
       }
       bjBet = requestedBet;
       currentUser.credits -= bjBet;
+      updateTracking('blackjack', { betAmount: bjBet, gamesPlayed: 1 });
       saveCurrentUser().then(renderDashboard);
 
       bjDealerReveal = false;
@@ -6597,6 +7075,9 @@ playHorseRaceBtn.onclick = () => {
       player.committed += blind;
       pokerPot += blind;
       if(player.stack === 0) player.allIn = true;
+      if(currentUser && player.key === currentUser.key){
+        updateTracking('poker', { betAmount: blind });
+      }
       return blind;
     }
 
@@ -6717,6 +7198,7 @@ playHorseRaceBtn.onclick = () => {
         applyLuckyCoinProgress(winAmount);
       }
       recordGameResult('pk', userWon ? 'win' : 'lose', winAmount);
+      updateTracking('poker', { netAmount: netDelta });
       saveCurrentUser().then(renderDashboard);
       const detail = handName === 'folds' ? 'fold' : handName;
       const winnerSummary = potInfo
@@ -6923,6 +7405,9 @@ playHorseRaceBtn.onclick = () => {
         p.allIn = false;
         p.actedThisRound = false;
       });
+      if(pokerUserIndex() !== -1){
+        updateTracking('poker', { gamesPlayed: 1 });
+      }
 
       pokerSmallBlindIndex = pokerNextActiveIndex(pokerDealerIndex, {includeAllIn:true});
       pokerBigBlindIndex = pokerNextActiveIndex(pokerSmallBlindIndex, {includeAllIn:true});
@@ -7068,6 +7553,7 @@ playHorseRaceBtn.onclick = () => {
     };
 
     backFromPokerBtn.onclick = ()=>{
+      endTrackingSession('poker');
       pokerSection.style.display = 'none';
       blackjackSection.style.display = 'none';
       setPokerControlsEnabled(false);
@@ -7087,6 +7573,9 @@ playHorseRaceBtn.onclick = () => {
       player.committed += callAmount;
       pokerPot += callAmount;
       if(player.stack === 0) player.allIn = true;
+      if(callAmount > 0 && currentUser && player.key === currentUser.key){
+        updateTracking('poker', { betAmount: callAmount });
+      }
       player.actedThisRound = true;
       pokerStatusEl.textContent = toCall === 0 ? 'Check.' : `Call ${callAmount}.`;
       pkRender();
@@ -7125,6 +7614,9 @@ playHorseRaceBtn.onclick = () => {
       pokerPot += betNeeded;
       pokerCurrentBet = raiseTo;
       pokerMinRaise = raiseTo - previousBet;
+      if(currentUser && player.key === currentUser.key){
+        updateTracking('poker', { betAmount: betNeeded });
+      }
       player.actedThisRound = true;
       pokerPlayers.forEach(p=>{ if(p!==player) p.actedThisRound = p.folded || p.allIn; });
       pokerStatusEl.textContent = `Raise naar ${raiseTo}.`;
@@ -7181,11 +7673,13 @@ function showHorseRace(){
     lootBoxSection.style.display = "none";
     skinsSection.style.display = "none";
     applyGameSkin('horse');
+    startTrackingSession('horse');
     horseRaceSection.style.display = "block";
     setHelpContext('horse');
 }
 
 backToMenuRace.onclick = () => {
+    endTrackingSession('horse');
     horseRaceSection.style.display = "none";
     showDashboard(true);
 };
@@ -7201,9 +7695,8 @@ startRaceBtn.onclick = async () => {
 
     // credits afschrijven
     currentUser.credits -= bet;
-    await db.ref("users/" + currentUser.key).update({
-        credits: currentUser.credits
-    });
+    updateTracking('horse', { betAmount: bet, gamesPlayed: 1 });
+    await saveCurrentUser();
     renderDashboard();
 
     // reset horse positions
@@ -7265,11 +7758,13 @@ startRaceBtn.onclick = async () => {
             currentUser.credits += winAmount;
             applyLuckyCoinProgress(winAmount);
             recordGameResult('horse', 'win', winAmount);
+            updateTracking('horse', { netAmount: winAmount - bet });
             await saveCurrentUser();
             renderDashboard();
             showSiteMessage("🎉 Je paard heeft gewonnen! +" + winAmount + " credits");
         } else {
             recordGameResult('horse', 'lose');
+            updateTracking('horse', { netAmount: -bet });
             await saveCurrentUser();
             renderDashboard();
             showSiteMessage("❌ Paard " + winner + " won. Je hebt verloren.");
