@@ -10,7 +10,7 @@
         position: fixed;
         right: 20px;
         bottom: 20px;
-        background: linear-gradient(120deg, var(--maria-blue), var(--maria-blue-bright));
+        background: var(--theme-leaderboard-tab-bg);
         padding: 10px 18px;
         border-radius: 14px;
         cursor: pointer;
@@ -40,7 +40,7 @@
         right: 0;
         width: 360px;
         height: 460px;
-        background: linear-gradient(160deg, rgba(7, 20, 45, 0.98), rgba(4, 10, 22, 0.98));
+        background: var(--theme-leaderboard-popup-bg);
         border-radius: 20px 0 0 0;
         display: none;
         z-index: 99999;
@@ -97,15 +97,15 @@
         align-items: center;
         gap: 10px;
         padding: 8px 12px;
-        background: rgba(15, 40, 86, 0.6);
+        background: var(--theme-leaderboard-entry-bg);
         border-radius: 12px;
-        border: 1px solid rgba(140, 200, 255, 0.2);
+        border: 1px solid var(--theme-leaderboard-border);
         box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
     }
 
     .lb-entry.you{
-        background: rgba(25, 79, 164, 0.75);
-        border-color: rgba(255, 221, 128, 0.6);
+        background: var(--theme-leaderboard-entry-you-bg);
+        border-color: var(--theme-leaderboard-border-you);
     }
 
     .lb-rank{
@@ -679,6 +679,20 @@
       --casino-cream: #f6e9c4;
       --menu-surface: rgba(10, 22, 36, 0.88);
       --menu-surface-light: rgba(18, 44, 70, 0.82);
+      --theme-menu-surface: linear-gradient(140deg, rgba(11, 79, 123, 0.65), rgba(15, 111, 178, 0.55));
+      --theme-menu-surface-light: linear-gradient(140deg, rgba(11, 79, 123, 0.55), rgba(15, 111, 178, 0.45));
+      --theme-login-shell-bg: linear-gradient(130deg, rgba(11, 79, 123, 0.7), rgba(6, 35, 57, 0.9));
+      --theme-login-card-bg: linear-gradient(160deg, rgba(11, 79, 123, 0.6), rgba(7, 24, 42, 0.9));
+      --theme-login-pill-bg: linear-gradient(140deg, rgba(11, 79, 123, 0.4), rgba(15, 111, 178, 0.3));
+      --theme-login-pill-border: rgba(140, 200, 255, 0.35);
+      --theme-login-input-bg: rgba(11, 79, 123, 0.35);
+      --theme-login-input-border: rgba(140, 200, 255, 0.25);
+      --theme-leaderboard-tab-bg: linear-gradient(120deg, rgba(11, 79, 123, 0.95), rgba(15, 111, 178, 0.95));
+      --theme-leaderboard-popup-bg: linear-gradient(160deg, rgba(7, 20, 45, 0.98), rgba(4, 10, 22, 0.98));
+      --theme-leaderboard-entry-bg: rgba(15, 40, 86, 0.6);
+      --theme-leaderboard-entry-you-bg: rgba(25, 79, 164, 0.75);
+      --theme-leaderboard-border: rgba(140, 200, 255, 0.2);
+      --theme-leaderboard-border-you: rgba(255, 221, 128, 0.6);
     }
 
     body {
@@ -736,7 +750,7 @@
       gap: 32px;
       padding: 34px;
       border-radius: 26px;
-      background: linear-gradient(130deg, rgba(7, 22, 40, 0.9), rgba(6, 16, 32, 0.95));
+      background: var(--theme-login-shell-bg);
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: 0 30px 60px rgba(0,0,0,0.45);
     }
@@ -786,8 +800,8 @@
       gap: 8px;
       padding: 10px 14px;
       border-radius: 999px;
-      background: rgba(12, 34, 56, 0.7);
-      border: 1px solid rgba(140,200,255,0.25);
+      background: var(--theme-login-pill-bg);
+      border: 1px solid var(--theme-login-pill-border);
       color: #eaf3ff;
       font-size: 14px;
       letter-spacing: 0.2px;
@@ -799,7 +813,7 @@
     }
 
     .login-card{
-      background: linear-gradient(160deg, rgba(10, 28, 48, 0.95), rgba(7, 18, 34, 0.92));
+      background: var(--theme-login-card-bg);
       border-radius: 22px;
       padding: 26px;
       border: 1px solid rgba(255,255,255,0.08);
@@ -833,8 +847,8 @@
       width: 100%;
       padding: 10px 12px;
       border-radius: 10px;
-      border: 1px solid rgba(140,200,255,0.2);
-      background: rgba(8, 18, 32, 0.9);
+      border: 1px solid var(--theme-login-input-border);
+      background: var(--theme-login-input-bg);
       color: #fff;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
     }
@@ -1076,7 +1090,7 @@
     .menu-hero{
       padding: 24px;
       border-radius: 20px;
-      background: radial-gradient(circle at top left, rgba(15,111,178,0.35), transparent 45%), var(--menu-surface);
+      background: var(--theme-menu-surface);
       border: 1px solid rgba(255,255,255,0.08);
       display:flex;
       align-items:center;
@@ -1500,7 +1514,7 @@
     }
 
     .menu-card{
-      background: var(--menu-surface-light);
+      background: var(--theme-menu-surface-light);
       border-radius: 18px;
       padding: 18px 18px 64px;
       border: 1px solid rgba(255,255,255,0.08);
@@ -4883,6 +4897,44 @@
       section.style.setProperty('--layout-border', palette.layoutBorder);
     }
 
+    function hexToRgb(hex){
+      if(!hex) return null;
+      const cleaned = hex.replace('#', '');
+      if(cleaned.length !== 6) return null;
+      const num = parseInt(cleaned, 16);
+      if(Number.isNaN(num)) return null;
+      return {
+        r: (num >> 16) & 255,
+        g: (num >> 8) & 255,
+        b: num & 255
+      };
+    }
+
+    function rgbaFromHex(hex, alpha){
+      const rgb = hexToRgb(hex);
+      if(!rgb) return `rgba(0,0,0,${alpha})`;
+      return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+    }
+
+    function buildSurfacePalette(palette){
+      return {
+        menuSurface: `linear-gradient(140deg, ${rgbaFromHex(palette.primary, 0.78)}, ${rgbaFromHex(palette.secondary, 0.6)})`,
+        menuSurfaceLight: `linear-gradient(140deg, ${rgbaFromHex(palette.primary, 0.6)}, ${rgbaFromHex(palette.secondary, 0.5)})`,
+        loginShellBg: `linear-gradient(140deg, ${rgbaFromHex(palette.primary, 0.72)}, ${rgbaFromHex(palette.secondary, 0.55)})`,
+        loginCardBg: `linear-gradient(160deg, ${rgbaFromHex(palette.primary, 0.62)}, ${rgbaFromHex(palette.secondary, 0.48)})`,
+        loginPillBg: `linear-gradient(140deg, ${rgbaFromHex(palette.primary, 0.45)}, ${rgbaFromHex(palette.secondary, 0.35)})`,
+        loginPillBorder: rgbaFromHex(palette.secondary, 0.45),
+        loginInputBg: rgbaFromHex(palette.primary, 0.38),
+        loginInputBorder: rgbaFromHex(palette.secondary, 0.35),
+        leaderboardTabBg: `linear-gradient(120deg, ${rgbaFromHex(palette.primary, 0.95)}, ${rgbaFromHex(palette.secondary, 0.95)})`,
+        leaderboardPopupBg: `linear-gradient(160deg, ${rgbaFromHex(palette.primary, 0.95)}, ${rgbaFromHex(palette.secondary, 0.88)})`,
+        leaderboardEntryBg: `linear-gradient(135deg, ${rgbaFromHex(palette.primary, 0.55)}, ${rgbaFromHex(palette.secondary, 0.4)})`,
+        leaderboardEntryYouBg: `linear-gradient(135deg, ${rgbaFromHex(palette.secondary, 0.75)}, ${rgbaFromHex(palette.primary, 0.65)})`,
+        leaderboardBorder: rgbaFromHex(palette.secondary, 0.4),
+        leaderboardBorderYou: rgbaFromHex(palette.accent, 0.7)
+      };
+    }
+
     function getThemeById(id){
       return themeLookup[id] || themeCatalog[0];
     }
@@ -5069,6 +5121,7 @@
 
     function applyThemeVariables(palette){
       const root = document.documentElement;
+      const surfaces = buildSurfacePalette(palette);
       root.style.setProperty('--theme-body-bg', palette.bodyBg);
       root.style.setProperty('--theme-primary', palette.primary);
       root.style.setProperty('--theme-secondary', palette.secondary);
@@ -5078,6 +5131,12 @@
       root.style.setProperty('--theme-layout-seat', palette.layoutSeat);
       root.style.setProperty('--theme-layout-panel', palette.layoutPanel);
       root.style.setProperty('--theme-layout-border', palette.layoutBorder);
+      root.style.setProperty('--theme-leaderboard-tab-bg', surfaces.leaderboardTabBg);
+      root.style.setProperty('--theme-leaderboard-popup-bg', surfaces.leaderboardPopupBg);
+      root.style.setProperty('--theme-leaderboard-entry-bg', surfaces.leaderboardEntryBg);
+      root.style.setProperty('--theme-leaderboard-entry-you-bg', surfaces.leaderboardEntryYouBg);
+      root.style.setProperty('--theme-leaderboard-border', surfaces.leaderboardBorder);
+      root.style.setProperty('--theme-leaderboard-border-you', surfaces.leaderboardBorderYou);
     }
 
     function applyShopSelections(){
@@ -5093,6 +5152,8 @@
       const cardPalette = getThemeById(selection.cards);
       const dicePalette = getThemeById(selection.dice);
       const ballPalette = getThemeById(selection.balls);
+      const loginSurfaces = buildSurfacePalette(loginPalette);
+      const menuSurfaces = buildSurfacePalette(menuPalette);
 
       const root = document.documentElement;
       root.style.setProperty('--theme-login-bg', loginPalette.loginBg);
@@ -5103,6 +5164,14 @@
       root.style.setProperty('--theme-dice-bg', dicePalette.diceBg);
       root.style.setProperty('--theme-dice-color', dicePalette.diceColor);
       root.style.setProperty('--theme-ball-bg', ballPalette.ballBg);
+      root.style.setProperty('--theme-login-shell-bg', loginSurfaces.loginShellBg);
+      root.style.setProperty('--theme-login-card-bg', loginSurfaces.loginCardBg);
+      root.style.setProperty('--theme-login-pill-bg', loginSurfaces.loginPillBg);
+      root.style.setProperty('--theme-login-pill-border', loginSurfaces.loginPillBorder);
+      root.style.setProperty('--theme-login-input-bg', loginSurfaces.loginInputBg);
+      root.style.setProperty('--theme-login-input-border', loginSurfaces.loginInputBorder);
+      root.style.setProperty('--theme-menu-surface', menuSurfaces.menuSurface);
+      root.style.setProperty('--theme-menu-surface-light', menuSurfaces.menuSurfaceLight);
 
       Object.keys(gameLabels).forEach((gameKey) => applyGameSkin(gameKey));
     }
