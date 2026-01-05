@@ -7,30 +7,12 @@
   <style>
     /* ============================ LEADERBOARD TAB STYLE ============================ */
     #lb-tab{
-        position: fixed;
-        right: 20px;
-        bottom: 20px;
         background: var(--theme-leaderboard-tab-bg);
-        padding: 10px 18px;
-        border-radius: 14px;
-        cursor: pointer;
-        font-weight: 700;
         color: #f8fbff;
         border: 1px solid rgba(255, 255, 255, 0.18);
         box-shadow: 0 12px 24px rgba(6, 18, 40, 0.45);
-        z-index: 9999;
         letter-spacing: 0.3px;
         text-transform: uppercase;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-    }
-
-    #lb-tab:hover{
-        transform: translateY(-2px);
-        box-shadow: 0 16px 28px rgba(6, 18, 40, 0.55);
-        filter: brightness(1.08);
     }
 
     /* ============================ POPUP WINDOW ============================ */
@@ -1031,18 +1013,10 @@
     }
 
     .lucky-drop-btn{
-      position: absolute;
-      left: 16px;
-      top: 16px;
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
+      position: relative;
       border: 1px solid rgba(255, 221, 128, 0.6);
       background: linear-gradient(140deg, rgba(255, 215, 128, 0.85), rgba(168, 118, 18, 0.85));
       box-shadow: 0 10px 18px rgba(0,0,0,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       padding: 0;
       margin: 0;
     }
@@ -1136,6 +1110,24 @@
       gap: 14px;
     }
 
+    .menu-hero-quick{
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    }
+
+    .menu-hero-quick:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(6, 18, 40, 0.55);
+      filter: brightness(1.08);
+    }
+
     .menu-hero-shop{
       width: 52px;
       height: 52px;
@@ -1167,6 +1159,13 @@
 
     .menu-hero-skins:hover{
       box-shadow: 0 18px 32px rgba(0,0,0,0.45), 0 0 22px rgba(114, 179, 255, 0.6);
+    }
+
+    .menu-hero-leaderboard{
+      background: var(--theme-leaderboard-tab-bg);
+      color: #f8fbff;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 0 12px 24px rgba(6, 18, 40, 0.45);
     }
 
     /* ============================ Skins menu ============================ */
@@ -4080,10 +4079,6 @@
   <section id="dashboard">
     <div class="menu-wrapper">
       <header class="menu-header">
-        <button id="luckyDropBtn" class="lucky-drop-btn" aria-label="Open Lucky Drops" title="Lucky Drops">
-          <span class="lucky-drop-icon">🍀</span>
-          <span class="lucky-drop-badge" aria-hidden="true">!</span>
-        </button>
         <div class="menu-brand">
           <div class="menu-logo">♠</div>
           <div>
@@ -4103,6 +4098,11 @@
           <p>Pak je voordeel: snelle games, speciale acties en een luxe sfeer om meteen te spelen.</p>
         </div>
         <div class="menu-hero-actions">
+          <button id="luckyDropBtn" class="lucky-drop-btn menu-hero-quick" aria-label="Open Lucky Boxes" title="Lucky Boxes">
+            <span class="lucky-drop-icon">🍀</span>
+            <span class="lucky-drop-badge" aria-hidden="true">!</span>
+          </button>
+          <button id="lb-tab" class="menu-hero-quick menu-hero-leaderboard" aria-label="Open leaderboard" title="Leaderboard">🏆</button>
           <button class="menu-hero-shop" id="shopBtn" aria-label="Open shop" title="Shop">🛒</button>
           <button class="menu-hero-shop menu-hero-skins" id="skinsBtn" aria-label="Open skins" title="Skins">👕</button>
           <div class="menu-hero-highlight">
@@ -4155,7 +4155,6 @@
           <button id="playPlinkoBtn" class="cta-button">Speel Plinko</button>
         </div>
       </div>
-      <div id="lb-tab">🏆 Leaderboard</div>
     </div>
   </section>
 
