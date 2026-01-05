@@ -397,6 +397,76 @@
       100%{ filter: hue-rotate(360deg); }
     }
 
+    /* ============================ SITE MESSAGE ============================ */
+    .site-message{
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 8, 18, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 99998;
+    }
+
+    .site-message.is-visible{
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .site-message-card{
+      width: min(420px, 92vw);
+      padding: 22px 24px 18px;
+      border-radius: 18px;
+      background: linear-gradient(160deg, rgba(15, 35, 75, 0.97), rgba(8, 16, 36, 0.97));
+      border: 2px solid rgba(140, 200, 255, 0.2);
+      color: #f5f8ff;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+      position: relative;
+    }
+
+    .site-message[data-type="success"] .site-message-card{
+      border-color: rgba(120, 220, 160, 0.6);
+      box-shadow: 0 25px 50px rgba(120, 220, 160, 0.2);
+    }
+
+    .site-message[data-type="error"] .site-message-card{
+      border-color: rgba(255, 120, 120, 0.6);
+      box-shadow: 0 25px 50px rgba(255, 120, 120, 0.22);
+    }
+
+    .site-message[data-type="warning"] .site-message-card{
+      border-color: rgba(255, 210, 120, 0.6);
+      box-shadow: 0 25px 50px rgba(255, 210, 120, 0.22);
+    }
+
+    .site-message-title{
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.4px;
+      margin-bottom: 8px;
+    }
+
+    .site-message-text{
+      font-size: 15px;
+      line-height: 1.5;
+      color: #dfe9ff;
+      margin-bottom: 14px;
+    }
+
+    .site-message-close{
+      padding: 8px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 221, 128, 0.7);
+      background: linear-gradient(135deg, #ffd986, #c9971d);
+      color: #2b1a00;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     /* ============================ Loot box styles ============================ */
     #lootBoxMenuSection{
       background: radial-gradient(circle at top, #2a1b4a 0, #050515 60%, #020208 100%);
@@ -3582,6 +3652,15 @@
     </div>
   </div>
 
+  <!-- Site message overlay -->
+  <div id="siteMessage" class="site-message" aria-live="polite" aria-hidden="true" data-type="info">
+    <div class="site-message-card">
+      <div class="site-message-title" id="siteMessageTitle">Melding</div>
+      <div class="site-message-text" id="siteMessageText"></div>
+      <button class="site-message-close" id="siteMessageClose">Sluiten</button>
+    </div>
+  </div>
+
   <!-- Firebase v8 (online accounts & leaderboards) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
@@ -3847,6 +3926,10 @@
     const gameResultActions = document.getElementById('gameResultActions');
     const gameResultPlayAgain = document.getElementById('gameResultPlayAgain');
     const gameResultMainMenu = document.getElementById('gameResultMainMenu');
+    const siteMessage = document.getElementById('siteMessage');
+    const siteMessageTitle = document.getElementById('siteMessageTitle');
+    const siteMessageText = document.getElementById('siteMessageText');
+    const siteMessageClose = document.getElementById('siteMessageClose');
 
     function closeLeaderboardPopup(){
       if(lbPopup){
@@ -3998,6 +4081,7 @@
     let gameResultAutoClose = null;
     let gameResultPlayAgainHandler = null;
     let gameResultMainMenuHandler = null;
+    let siteMessageAutoClose = null;
 
     function hideGameResultOverlay(){
       if(!gameResultOverlay) return;
@@ -4053,6 +4137,38 @@
       });
     }
 
+    function hideSiteMessage(){
+      if(!siteMessage) return;
+      siteMessage.classList.remove('is-visible');
+      siteMessage.setAttribute('aria-hidden', 'true');
+      if(siteMessageAutoClose){
+        clearTimeout(siteMessageAutoClose);
+        siteMessageAutoClose = null;
+      }
+    }
+
+    function showSiteMessage(message, { title = 'Melding', type = 'info', autoCloseMs = 2200 } = {}){
+      if(!siteMessage || !siteMessageText || !siteMessageTitle) return;
+      if(siteMessageAutoClose){
+        clearTimeout(siteMessageAutoClose);
+        siteMessageAutoClose = null;
+      }
+      siteMessage.dataset.type = type;
+      siteMessageTitle.textContent = title;
+      siteMessageText.textContent = message;
+      siteMessage.classList.add('is-visible');
+      siteMessage.setAttribute('aria-hidden', 'false');
+      if(autoCloseMs){
+        siteMessageAutoClose = setTimeout(() => {
+          hideSiteMessage();
+        }, autoCloseMs);
+      }
+    }
+
+    if(siteMessageClose){
+      siteMessageClose.addEventListener('click', hideSiteMessage);
+    }
+
     const sleep = (ms)=>new Promise(resolve=>setTimeout(resolve, ms));
 
     /* ---------------------------
@@ -4063,12 +4179,12 @@
     loginBtn.onclick = async ()=>{
       const rawName = usernameInput.value.trim();
       const passwd = passwordInput.value.trim();
-      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+      if(!rawName || !passwd) return showSiteMessage('Vul gebruikersnaam en wachtwoord in.');
 
       const key = keyForName(rawName);
       const existing = await loadUser(key);
-      if(!existing) return alert('Account bestaat niet.');
-      if(existing.password !== passwd) return alert('Wachtwoord onjuist.');
+      if(!existing) return showSiteMessage('Account bestaat niet.');
+      if(existing.password !== passwd) return showSiteMessage('Wachtwoord onjuist.');
 
       const needsLuckyInit = typeof existing.luckyCoins !== 'number' || typeof existing.luckyCoinProgress !== 'number';
       currentUser = existing;
@@ -4084,12 +4200,12 @@
     createAccountBtn.onclick = async ()=>{
       const rawName = usernameInput.value.trim();
       const passwd = passwordInput.value.trim();
-      if(!rawName || !passwd) return alert('Vul gebruikersnaam en wachtwoord in.');
+      if(!rawName || !passwd) return showSiteMessage('Vul gebruikersnaam en wachtwoord in.');
 
       const key = keyForName(rawName);
       const existing = await loadUser(key);
       if(existing){
-        alert('Account bestaat al.');
+        showSiteMessage('Account bestaat al.');
         return;
       }
 
@@ -4247,7 +4363,7 @@
           if(password === 'pepjes'){
             openDeveloperPortal();
           } else if(password !== null){
-            alert('Onjuist wachtwoord.');
+            showSiteMessage('Onjuist wachtwoord.');
           }
         }
       });
@@ -4263,7 +4379,7 @@
         currentUser.credits = 999999999;
         await saveCurrentUser();
         renderDashboard();
-        alert('Oneindige credits geactiveerd.');
+        showSiteMessage('Oneindige credits geactiveerd.');
       });
     }
 
@@ -4275,7 +4391,7 @@
         currentUser.luckyCoinProgress = 0;
         await saveCurrentUser();
         renderDashboard();
-        alert('Oneindige lucky coins geactiveerd.');
+        showSiteMessage('Oneindige lucky coins geactiveerd.');
       });
     }
 
@@ -4283,13 +4399,13 @@
       if(!currentUser) return;
       const t = new Date().toDateString();
       if(currentUser.lastDaily !== t){
-        currentUser.credits += 100;
+        currentUser.credits += 250;
         currentUser.lastDaily = t;
         await saveCurrentUser();
         renderDashboard();
-        alert('Dagelijkse bonus geclaimd: +100 credits');
+        showSiteMessage('Dagelijkse bonus geclaimd: +250 credits', { type: 'success' });
       } else {
-        alert('Je hebt vandaag al je bonus geclaimd.');
+        showSiteMessage('Je hebt vandaag al je bonus geclaimd.', { type: 'warning' });
       }
     };
 
@@ -4401,7 +4517,7 @@
 
     if(luckyDropBtn){
       luckyDropBtn.onclick = ()=>{
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       closeLeaderboardPopup();
       dashboard.style.display = 'none';
         blackjackSection.style.display = 'none';
@@ -4462,12 +4578,12 @@
     }
 
     function openLootBox(type){
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       closeLeaderboardPopup();
       const config = lootBoxConfigs[type];
       ensureLuckyFields(currentUser);
       if(currentUser.luckyCoins < config.cost){
-        alert(`Je hebt ${config.cost} Lucky Coins nodig voor ${config.name}.`);
+        showSiteMessage(`Je hebt ${config.cost} Lucky Coins nodig voor ${config.name}.`);
         return;
       }
       currentUser.luckyCoins -= config.cost;
@@ -4596,12 +4712,12 @@ playHorseRaceBtn.onclick = () => {
     }
 
     rollCrapsBtn.onclick = async ()=>{
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       if(crapsRolling) return;
       if(crapsPoint === null){
         const bet = parseInt(crapsBetInput.value) || 0;
-        if(bet < 10) return alert('Minimum inzet is 10 credits.');
-        if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+        if(bet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
+        if(currentUser.credits < bet) return showSiteMessage('Je hebt niet genoeg credits!');
         crapsBet = bet;
         currentUser.credits -= bet;
         await saveCurrentUser();
@@ -4724,11 +4840,11 @@ playHorseRaceBtn.onclick = () => {
     }
 
     dealBaccaratBtn.onclick = async ()=>{
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       if(dealBaccaratBtn.disabled) return;
       const bet = parseInt(baccaratBetInput.value) || 0;
-      if(bet < 10) return alert('Minimum inzet is 10 credits.');
-      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+      if(bet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return showSiteMessage('Je hebt niet genoeg credits!');
 
       dealBaccaratBtn.disabled = true;
       baccaratBetInput.disabled = true;
@@ -4849,11 +4965,11 @@ playHorseRaceBtn.onclick = () => {
 
     let rouletteSpinning = false;
     spinRouletteBtn.onclick = async ()=>{
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       if(rouletteSpinning) return;
       const bet = parseInt(rouletteBetInput.value) || 0;
-      if(bet < 10) return alert('Minimum inzet is 10 credits.');
-      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+      if(bet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return showSiteMessage('Je hebt niet genoeg credits!');
 
       rouletteSpinning = true;
       spinRouletteBtn.disabled = true;
@@ -5010,10 +5126,10 @@ playHorseRaceBtn.onclick = () => {
 
     async function spinSlots(){
       if(slotsSpinning) return;
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       const bet = parseInt(slotsBetInput.value) || 0;
-      if(bet < 10) return alert('Minimum inzet is 10 credits.');
-      if(currentUser.credits < bet) return alert('Je hebt niet genoeg credits!');
+      if(bet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
+      if(currentUser.credits < bet) return showSiteMessage('Je hebt niet genoeg credits!');
 
       currentUser.credits -= bet;
       await saveCurrentUser();
@@ -5326,12 +5442,12 @@ playHorseRaceBtn.onclick = () => {
 
     async function dropPlinkoBall(){
       if(plinkoDropping) return;
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       const bet = parseInt(plinkoBetInput.value, 10) || 0;
-      if(bet < 10) return alert('Minimum inzet is 10 credits.');
+      if(bet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
       syncPlinkoBallCount();
       const totalBet = bet * plinkoBallCount;
-      if(currentUser.credits < totalBet) return alert('Je hebt niet genoeg credits!');
+      if(currentUser.credits < totalBet) return showSiteMessage('Je hebt niet genoeg credits!');
 
       currentUser.credits -= totalBet;
       await saveCurrentUser();
@@ -5687,7 +5803,7 @@ playHorseRaceBtn.onclick = () => {
       hideGameResultOverlay();
       const requestedBet = parseInt(betAmountInput.value, 10) || 100;
       if(currentUser.credits < requestedBet){
-        alert('Je hebt niet genoeg credits voor deze inzet.');
+        showSiteMessage('Je hebt niet genoeg credits voor deze inzet.');
         return;
       }
       bjBet = requestedBet;
@@ -5724,7 +5840,7 @@ playHorseRaceBtn.onclick = () => {
     }
 
     startGameBtn.onclick = ()=>{
-      if(!currentUser) return alert('Je moet eerst inloggen!');
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       const botCount = parseInt(botSelect.value, 10);
       bjPlayers = [{ name: currentUser.name, bot: false, hand: [], busted: false, standing: false }];
       for(let i = 1; i <= botCount; i += 1){
@@ -6328,16 +6444,16 @@ playHorseRaceBtn.onclick = () => {
     }
 
     joinPokerBtn.onclick = ()=>{
-      if(!currentUser) return alert('Je moet inloggen.');
+      if(!currentUser) return showSiteMessage('Je moet inloggen.');
       const min = parseInt(pokerTableSelect.value)||500;
       if(currentUser.credits < min){
-        alert('Je hebt niet genoeg credits voor deze tafel.');
+        showSiteMessage('Je hebt niet genoeg credits voor deze tafel.');
         return;
       }
       pokerTableMin = min;
 
       if(pokerPlayers.some(p=>p.key===currentUser.key)){
-        alert('Je zit al aan de tafel.');
+        showSiteMessage('Je zit al aan de tafel.');
         return;
       }
 
@@ -6372,7 +6488,7 @@ playHorseRaceBtn.onclick = () => {
       const idx = pokerPlayers.findIndex(p=>p.key===currentUser.key);
       if(idx===-1){
         if(!silent){
-          alert('Je zit niet aan de tafel.');
+          showSiteMessage('Je zit niet aan de tafel.');
         }
         return;
       }
@@ -6389,7 +6505,7 @@ playHorseRaceBtn.onclick = () => {
       saveCurrentUser().then(()=>{
         renderDashboard();
         if(!silent){
-          alert('Tafel verlaten. Je hebt nu weer '+currentUser.credits+' credits.');
+          showSiteMessage('Tafel verlaten. Je hebt nu weer '+currentUser.credits+' credits.');
         }
         if(goToMenu){
           pokerSection.style.display = 'none';
@@ -6530,8 +6646,8 @@ startRaceBtn.onclick = async () => {
     const bet = parseInt(horseBetInput.value);
     const chosenHorse = parseInt(horseSelect.value);
 
-    if (bet < 10) return alert("Minimum inzet is 10 credits.");
-    if (currentUser.credits < bet) return alert("Je hebt niet genoeg credits!");
+    if (bet < 10) return showSiteMessage("Minimum inzet is 10 credits.");
+    if (currentUser.credits < bet) return showSiteMessage("Je hebt niet genoeg credits!");
 
     // credits afschrijven
     currentUser.credits -= bet;
@@ -6601,12 +6717,12 @@ startRaceBtn.onclick = async () => {
             recordGameResult('horse', 'win', winAmount);
             await saveCurrentUser();
             renderDashboard();
-            alert("🎉 Je paard heeft gewonnen! +" + winAmount + " credits");
+            showSiteMessage("🎉 Je paard heeft gewonnen! +" + winAmount + " credits");
         } else {
             recordGameResult('horse', 'lose');
             await saveCurrentUser();
             renderDashboard();
-            alert("❌ Paard " + winner + " won. Je hebt verloren.");
+            showSiteMessage("❌ Paard " + winner + " won. Je hebt verloren.");
         }
 
         raceInProgress = false;
