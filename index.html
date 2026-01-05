@@ -617,7 +617,7 @@
       background:#050515;
       color:#fff;
     }
-    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection { display: none; padding: 20px; text-align:center; }
+    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection, #skinsSection { display: none; padding: 20px; text-align:center; }
     #login {
       position: relative;
       background:
@@ -1053,6 +1053,170 @@
       filter: brightness(1.08);
     }
 
+    .menu-hero-skins{
+      border-color: rgba(114, 179, 255, 0.8);
+      background: linear-gradient(145deg, #9ed0ff, #2f78b4);
+      color: #061427;
+      box-shadow: 0 14px 26px rgba(0,0,0,0.35), 0 0 18px rgba(114, 179, 255, 0.45);
+    }
+
+    .menu-hero-skins:hover{
+      box-shadow: 0 18px 32px rgba(0,0,0,0.45), 0 0 22px rgba(114, 179, 255, 0.6);
+    }
+
+    /* ============================ Skins menu ============================ */
+    #skinsSection{
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(30, 60, 120, 0.4), transparent 60%),
+        linear-gradient(150deg, #061325 0, #0a1e38 50%, #03070e 100%);
+      color: #f6fbff;
+      padding: 28px 18px 40px;
+    }
+
+    .skins-shell{
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .skins-header{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      background: rgba(6, 18, 35, 0.75);
+      border: 1px solid rgba(140, 200, 255, 0.2);
+      padding: 18px 20px;
+      border-radius: 20px;
+      box-shadow: 0 18px 32px rgba(0,0,0,0.45);
+      text-align: left;
+    }
+
+    .skins-header h2{
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0.4px;
+    }
+
+    .skins-header p{
+      margin: 6px 0 0;
+      color: rgba(214, 229, 255, 0.75);
+      font-size: 14px;
+    }
+
+    .skins-controls{
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(10, 28, 52, 0.75);
+      border: 1px solid rgba(114, 179, 255, 0.18);
+      box-shadow: inset 0 0 26px rgba(0,0,0,0.35);
+    }
+
+    .skins-controls label{
+      font-size: 13px;
+      color: rgba(214, 229, 255, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .skins-controls select{
+      max-width: 260px;
+    }
+
+    .skin-game-tabs{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skin-game-tab{
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(8, 20, 38, 0.65);
+      color: rgba(236, 244, 255, 0.85);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .skin-game-tab.is-active{
+      border-color: rgba(255, 221, 128, 0.7);
+      color: #fff2cc;
+      box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+      transform: translateY(-1px);
+    }
+
+    .skins-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .skin-card{
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(8, 18, 34, 0.78);
+      cursor: pointer;
+      text-align: left;
+      color: inherit;
+      box-shadow: 0 16px 28px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .skin-card:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 20px 34px rgba(0,0,0,0.5);
+    }
+
+    .skin-card.is-selected{
+      border-color: rgba(255, 221, 128, 0.7);
+      box-shadow: 0 18px 34px rgba(255, 221, 128, 0.22);
+    }
+
+    .skin-card-preview{
+      height: 86px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.45);
+    }
+
+    .skin-card-title{
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .skin-card-desc{
+      font-size: 12.5px;
+      color: rgba(214, 229, 255, 0.78);
+      line-height: 1.4;
+    }
+
+    .skin-card-tag{
+      align-self: flex-start;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      background: rgba(255, 221, 128, 0.2);
+      color: #ffe6a6;
+      border: 1px solid rgba(255, 221, 128, 0.4);
+      text-transform: uppercase;
+    }
+
     .menu-grid{
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1200,6 +1364,20 @@
         radial-gradient(circle at 80% 100%, rgba(255,255,255,0.06), transparent 55%),
         linear-gradient(135deg, #082420 0%, #0e4c3b 45%, #031614 100%);
       padding-bottom: 40px;
+    }
+
+    #blackjackSection.skin-aurora{
+      background:
+        radial-gradient(circle at 10% 10%, rgba(120, 190, 255, 0.25), transparent 55%),
+        radial-gradient(circle at 90% 80%, rgba(174, 120, 255, 0.2), transparent 60%),
+        linear-gradient(140deg, #041728 0%, #0b3a5a 45%, #03101f 100%);
+    }
+
+    #blackjackSection.skin-velvet{
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 221, 128, 0.2), transparent 55%),
+        radial-gradient(circle at 90% 85%, rgba(160, 60, 90, 0.25), transparent 60%),
+        linear-gradient(140deg, #3b0c20 0%, #651c3a 45%, #17050d 100%);
     }
 
     .bj-shell{
@@ -1496,6 +1674,14 @@
       padding-bottom: 40px;
     }
 
+    #pokerSection.skin-aurora{
+      background: radial-gradient(circle at top, #122a4a 0, #081225 65%, #03070f 100%);
+    }
+
+    #pokerSection.skin-velvet{
+      background: radial-gradient(circle at top, #402032 0, #1c0e16 65%, #070306 100%);
+    }
+
     .poker-lobby {
       display: flex;
       flex-wrap: wrap;
@@ -1715,6 +1901,18 @@
       padding: 24px;
       background: radial-gradient(circle at top, #1c2235 0, #0c101c 60%, #06070c 100%);
       text-align: center;
+    }
+
+    #crapsSection.skin-aurora,
+    #baccaratSection.skin-aurora,
+    #rouletteSection.skin-aurora{
+      background: radial-gradient(circle at top, #1b2f5d 0, #0a1224 65%, #04070f 100%);
+    }
+
+    #crapsSection.skin-velvet,
+    #baccaratSection.skin-velvet,
+    #rouletteSection.skin-velvet{
+      background: radial-gradient(circle at top, #3a1f32 0, #160b12 65%, #070306 100%);
     }
 
     .table-game-panel{
@@ -2210,6 +2408,14 @@
       text-align: center;
     }
 
+    #slotsSection.skin-aurora{
+      background: radial-gradient(circle at top, #20365d 0, #0b1427 55%, #04070f 100%);
+    }
+
+    #slotsSection.skin-velvet{
+      background: radial-gradient(circle at top, #4a1f33 0, #1a0b16 55%, #070309 100%);
+    }
+
     .slots-machine{
       --slot-symbol-size: 72px;
       max-width: 720px;
@@ -2440,6 +2646,14 @@
       background: radial-gradient(circle at top, #1a1430 0, #0a0716 60%, #05030d 100%);
     }
 
+    #plinkoSection.skin-aurora{
+      background: radial-gradient(circle at top, #1f3562 0, #0a1326 60%, #03070f 100%);
+    }
+
+    #plinkoSection.skin-velvet{
+      background: radial-gradient(circle at top, #3d1c31 0, #170a15 60%, #060308 100%);
+    }
+
     .plinko-panel{
       max-width: 980px;
       margin: 0 auto;
@@ -2648,6 +2862,14 @@
 #horseRaceSection{
     background: radial-gradient(circle at top, rgba(18, 36, 20, 0.95) 0, rgba(8, 14, 10, 0.98) 60%, #050507 100%);
     min-height: 100vh;
+}
+
+#horseRaceSection.skin-aurora{
+    background: radial-gradient(circle at top, rgba(22, 44, 78, 0.95) 0, rgba(8, 14, 26, 0.98) 60%, #04060d 100%);
+}
+
+#horseRaceSection.skin-velvet{
+    background: radial-gradient(circle at top, rgba(66, 28, 44, 0.95) 0, rgba(22, 10, 16, 0.98) 60%, #050207 100%);
 }
 
 .race-shell{
@@ -3074,6 +3296,7 @@
         </div>
         <div class="menu-hero-actions">
           <button class="menu-hero-shop" id="shopBtn" aria-label="Open shop" title="Shop">🛒</button>
+          <button class="menu-hero-shop menu-hero-skins" id="skinsBtn" aria-label="Open skins" title="Skins">👕</button>
           <div class="menu-hero-highlight">
             <div>Dagelijkse boost</div>
             <strong>+250 credits</strong>
@@ -3179,6 +3402,29 @@
       <div id="lootBoxReward"></div>
     </div>
     <button id="backToMenuFromLoot">Terug naar menu</button>
+  </section>
+
+  <!-- Skins -->
+  <section id="skinsSection" style="display:none;">
+    <div class="skins-shell">
+      <header class="skins-header">
+        <div>
+          <h2>Skins</h2>
+          <p>Kies een achtergrond per game. Nieuwe skins komen straks in de shop en Lucky Boxes.</p>
+        </div>
+        <button id="backFromSkinsBtn">Terug naar menu</button>
+      </header>
+
+      <div class="skins-controls">
+        <div>
+          <label for="skinGameSelect">Kies een game</label><br>
+          <select id="skinGameSelect"></select>
+        </div>
+        <div id="skinGameTabs" class="skin-game-tabs" role="tablist" aria-label="Game selectie"></div>
+      </div>
+
+      <div id="skinsGrid" class="skins-grid"></div>
+    </div>
   </section>
 
   <!-- Blackjack -->
@@ -3630,8 +3876,10 @@
     const rouletteSection = document.getElementById('rouletteSection');
     const slotsSection = document.getElementById('slotsSection');
     const plinkoSection = document.getElementById('plinkoSection');
+    const horseRaceSection = document.getElementById('horseRaceSection');
     const lootBoxMenuSection = document.getElementById('lootBoxMenuSection');
     const lootBoxSection = document.getElementById('lootBoxSection');
+    const skinsSection = document.getElementById('skinsSection');
     const backFromPokerBtn = document.getElementById('backFromPokerBtn');
 
     const usernameInput = document.getElementById('usernameInput');
@@ -3657,6 +3905,11 @@
     const playPlinkoBtn = document.getElementById('playPlinkoBtn');
     const luckyDropBtn = document.getElementById('luckyDropBtn');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
+    const skinsBtn = document.getElementById('skinsBtn');
+    const backFromSkinsBtn = document.getElementById('backFromSkinsBtn');
+    const skinGameSelect = document.getElementById('skinGameSelect');
+    const skinGameTabs = document.getElementById('skinGameTabs');
+    const skinsGrid = document.getElementById('skinsGrid');
     const luckyCoinsEl = document.getElementById('luckyCoins');
     const luckyCoinProgressEl = document.getElementById('luckyCoinProgress');
 
@@ -3738,6 +3991,170 @@
     const backToMenuFromLuckyBoxes = document.getElementById('backToMenuFromLuckyBoxes');
 
     setupMenuCardArt();
+
+    const gameLabels = {
+      blackjack: 'Blackjack',
+      poker: 'Poker',
+      craps: 'Craps',
+      baccarat: 'Baccarat',
+      roulette: 'Roulette',
+      slots: 'Slots',
+      horse: 'Paardenrace',
+      plinko: 'Plinko'
+    };
+
+    const baseSkins = [
+      {
+        id: 'classic',
+        name: 'Classic',
+        description: 'Standaard casino sfeer.',
+        preview: 'linear-gradient(135deg, #0b3a33, #0a1a18)'
+      },
+      {
+        id: 'aurora',
+        name: 'Aurora',
+        description: 'Koele neon gloed voor late-night sessions.',
+        preview: 'linear-gradient(135deg, #1e5aa4, #051128)'
+      },
+      {
+        id: 'velvet',
+        name: 'Velvet',
+        description: 'Bordeaux & goud, luxe lounge vibes.',
+        preview: 'linear-gradient(135deg, #6b2039, #1b0914)'
+      }
+    ];
+
+    const skinCatalog = Object.fromEntries(
+      Object.keys(gameLabels).map((gameKey) => [gameKey, baseSkins])
+    );
+
+    const skinClasses = baseSkins
+      .filter((skin) => skin.id !== 'classic')
+      .map((skin) => `skin-${skin.id}`);
+
+    const gameSections = {
+      blackjack: blackjackSection,
+      poker: pokerSection,
+      craps: crapsSection,
+      baccarat: baccaratSection,
+      roulette: rouletteSection,
+      slots: slotsSection,
+      horse: horseRaceSection,
+      plinko: plinkoSection
+    };
+
+    function ensureSkinFields(user){
+      if(!user) return;
+      if(!user.gameSkins || typeof user.gameSkins !== 'object'){
+        user.gameSkins = {};
+      }
+      Object.keys(gameLabels).forEach((gameKey) => {
+        if(!user.gameSkins[gameKey]){
+          user.gameSkins[gameKey] = 'classic';
+        }
+      });
+    }
+
+    function applyGameSkin(gameKey){
+      if(!currentUser || !gameKey) return;
+      const section = gameSections[gameKey];
+      if(!section) return;
+      const skinId = currentUser.gameSkins?.[gameKey] || 'classic';
+      section.classList.remove(...skinClasses);
+      if(skinId !== 'classic'){
+        section.classList.add(`skin-${skinId}`);
+      }
+    }
+
+    function applyAllSkins(){
+      if(!currentUser) return;
+      Object.keys(gameLabels).forEach((gameKey) => applyGameSkin(gameKey));
+    }
+
+    let activeSkinGame = 'blackjack';
+
+    function renderSkinTabs(){
+      if(!skinGameTabs || !skinGameSelect) return;
+      skinGameTabs.innerHTML = '';
+      skinGameSelect.innerHTML = '';
+      Object.entries(gameLabels).forEach(([key, label]) => {
+        const option = document.createElement('option');
+        option.value = key;
+        option.textContent = label;
+        skinGameSelect.appendChild(option);
+
+        const tab = document.createElement('button');
+        tab.type = 'button';
+        tab.className = 'skin-game-tab';
+        tab.textContent = label;
+        tab.dataset.gameKey = key;
+        tab.setAttribute('role', 'tab');
+        skinGameTabs.appendChild(tab);
+      });
+    }
+
+    function setActiveSkinGame(gameKey){
+      if(!gameKey || !gameLabels[gameKey]) return;
+      activeSkinGame = gameKey;
+      if(skinGameSelect){
+        skinGameSelect.value = gameKey;
+      }
+      if(skinGameTabs){
+        skinGameTabs.querySelectorAll('.skin-game-tab').forEach((tab) => {
+          tab.classList.toggle('is-active', tab.dataset.gameKey === gameKey);
+          tab.setAttribute('aria-selected', tab.dataset.gameKey === gameKey ? 'true' : 'false');
+        });
+      }
+      renderSkinGrid(gameKey);
+    }
+
+    function renderSkinGrid(gameKey){
+      if(!skinsGrid) return;
+      const skins = skinCatalog[gameKey] || [];
+      const selected = currentUser?.gameSkins?.[gameKey] || 'classic';
+      skinsGrid.innerHTML = skins.map((skin) => `
+        <button class="skin-card ${skin.id === selected ? 'is-selected' : ''}" type="button" data-skin-id="${skin.id}">
+          <span class="skin-card-preview" style="background: ${skin.preview};"></span>
+          <span class="skin-card-title">${skin.name}</span>
+          <span class="skin-card-desc">${skin.description}</span>
+          <span class="skin-card-tag">${skin.id === selected ? 'Geselecteerd' : 'Selecteer'}</span>
+        </button>
+      `).join('');
+    }
+
+    function updateSkinSelection(gameKey, skinId){
+      if(!currentUser) return;
+      ensureSkinFields(currentUser);
+      currentUser.gameSkins[gameKey] = skinId;
+      applyGameSkin(gameKey);
+      renderSkinGrid(gameKey);
+      saveCurrentUser();
+    }
+
+    renderSkinTabs();
+    setActiveSkinGame(activeSkinGame);
+
+    if(skinGameSelect){
+      skinGameSelect.addEventListener('change', (event) => {
+        setActiveSkinGame(event.target.value);
+      });
+    }
+
+    if(skinGameTabs){
+      skinGameTabs.addEventListener('click', (event) => {
+        const tab = event.target.closest('.skin-game-tab');
+        if(!tab) return;
+        setActiveSkinGame(tab.dataset.gameKey);
+      });
+    }
+
+    if(skinsGrid){
+      skinsGrid.addEventListener('click', (event) => {
+        const card = event.target.closest('.skin-card');
+        if(!card) return;
+        updateSkinSelection(activeSkinGame, card.dataset.skinId);
+      });
+    }
 
     /* Blackjack refs */
     const startGameBtn = document.getElementById('startGame');
@@ -4071,12 +4488,15 @@
       if(existing.password !== passwd) return alert('Wachtwoord onjuist.');
 
       const needsLuckyInit = typeof existing.luckyCoins !== 'number' || typeof existing.luckyCoinProgress !== 'number';
+      const needsSkinInit = !existing.gameSkins;
       currentUser = existing;
       currentUser.key = key;
       ensureLuckyFields(currentUser);
+      ensureSkinFields(currentUser);
       loginSection.style.display='none';
       showDashboard(true);
-      if(needsLuckyInit){
+      applyAllSkins();
+      if(needsLuckyInit || needsSkinInit){
         saveCurrentUser();
       }
     };
@@ -4112,9 +4532,11 @@
         pkLosses: 0,
         pkGames: 0
       };
+      ensureSkinFields(currentUser);
       await saveCurrentUser();
       loginSection.style.display='none';
       showDashboard(true);
+      applyAllSkins();
     };
 
     function ensureLuckyFields(user){
@@ -4183,9 +4605,11 @@
     function renderDashboard(){
       if(!currentUser) return;
       ensureLuckyFields(currentUser);
+      ensureSkinFields(currentUser);
       displayName.textContent = currentUser.name;
       creditsEl.textContent = currentUser.credits;
       updateLuckyCoinDisplay();
+      applyAllSkins();
       if(currencyDisplay){
         currencyDisplay.style.display = 'flex';
       }
@@ -4196,6 +4620,9 @@
       hideGameResultOverlay();
       renderDashboard();
       setHelpContext(null);
+      if(skinsSection){
+        skinsSection.style.display = 'none';
+      }
       if(shouldShake){
         triggerLuckyDropShake();
       }
@@ -4304,6 +4731,8 @@
       plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
+      skinsSection.style.display='none';
+      applyGameSkin('blackjack');
       blackjackSection.style.display='block';
       setHelpContext('blackjack');
     };
@@ -4319,6 +4748,8 @@
       plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
+      skinsSection.style.display='none';
+      applyGameSkin('poker');
       pokerSection.style.display='block';
       setHelpContext('poker');
     };
@@ -4334,6 +4765,8 @@
       plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
+      skinsSection.style.display='none';
+      applyGameSkin('craps');
       crapsSection.style.display='block';
       setHelpContext('craps');
     };
@@ -4349,6 +4782,8 @@
       plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
+      skinsSection.style.display='none';
+      applyGameSkin('baccarat');
       baccaratSection.style.display='block';
       setHelpContext('baccarat');
     };
@@ -4364,6 +4799,8 @@
       plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
+      skinsSection.style.display='none';
+      applyGameSkin('roulette');
       rouletteSection.style.display='block';
       setHelpContext('roulette');
     };
@@ -4379,6 +4816,8 @@
       plinkoSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
+      skinsSection.style.display='none';
+      applyGameSkin('slots');
       slotsSection.style.display='block';
       setHelpContext('slots');
     };
@@ -4394,10 +4833,34 @@
       slotsSection.style.display='none';
       lootBoxMenuSection.style.display='none';
       lootBoxSection.style.display='none';
+      skinsSection.style.display='none';
+      applyGameSkin('plinko');
       plinkoSection.style.display='block';
       layoutPlinkoPegs();
       setHelpContext('plinko');
     };
+
+    if(skinsBtn){
+      skinsBtn.onclick = ()=>{
+        if(!currentUser) return alert('Je moet eerst inloggen!');
+        closeLeaderboardPopup();
+        dashboard.style.display = 'none';
+        blackjackSection.style.display = 'none';
+        pokerSection.style.display = 'none';
+        crapsSection.style.display = 'none';
+        baccaratSection.style.display = 'none';
+        rouletteSection.style.display = 'none';
+        slotsSection.style.display = 'none';
+        plinkoSection.style.display = 'none';
+        lootBoxMenuSection.style.display = 'none';
+        lootBoxSection.style.display = 'none';
+        skinsSection.style.display = 'block';
+        setHelpContext(null);
+        ensureSkinFields(currentUser);
+        renderSkinTabs();
+        setActiveSkinGame(activeSkinGame);
+      };
+    }
 
     if(luckyDropBtn){
       luckyDropBtn.onclick = ()=>{
@@ -4412,8 +4875,16 @@
         slotsSection.style.display = 'none';
       plinkoSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
+      skinsSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'block';
       setHelpContext('lootbox-menu');
+      };
+    }
+
+    if(backFromSkinsBtn){
+      backFromSkinsBtn.onclick = () => {
+        skinsSection.style.display = 'none';
+        showDashboard(true);
       };
     }
 
@@ -6483,7 +6954,6 @@ playHorseRaceBtn.onclick = () => {
     };
 // ==================== PAARDENRACE LOGICA (GEFIXT) ====================
 
-const horseRaceSection = document.getElementById("horseRaceSection");
 const startRaceBtn = document.getElementById("startRaceBtn");
 const backToMenuRace = document.getElementById("backToMenuRace");
 const horseBetInput = document.getElementById("horseBet");
@@ -6515,6 +6985,8 @@ function showHorseRace(){
     plinkoSection.style.display = "none";
     lootBoxMenuSection.style.display = "none";
     lootBoxSection.style.display = "none";
+    skinsSection.style.display = "none";
+    applyGameSkin('horse');
     horseRaceSection.style.display = "block";
     setHelpContext('horse');
 }
