@@ -701,7 +701,7 @@
       -moz-user-select: none;
       -webkit-touch-callout: none;
     }
-    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection, #skinsSection { display: none; padding: 20px; text-align:center; }
+    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection, #skinsSection, #shopSection { display: none; padding: 20px; text-align:center; }
     #login {
       position: relative;
       background:
@@ -1243,6 +1243,197 @@
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
     }
+
+    /* ============================ SHOP ============================ */
+    #shopSection{
+      background: radial-gradient(circle at top, rgba(12, 32, 62, 0.7), transparent 55%),
+        linear-gradient(150deg, #060c18 0, #0b182a 45%, #05070f 100%);
+      min-height: 100vh;
+    }
+
+    .shop-shell{
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      text-align: left;
+    }
+
+    .shop-header{
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 22px;
+      border-radius: 18px;
+      background: linear-gradient(120deg, rgba(8, 26, 46, 0.95), rgba(12, 40, 64, 0.85));
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    }
+
+    .shop-header h2{
+      margin: 0 0 6px;
+      font-size: 24px;
+      letter-spacing: 0.4px;
+    }
+
+    .shop-header p{
+      margin: 0;
+      color: rgba(214, 229, 255, 0.8);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .shop-tabs{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 8px 4px 4px;
+    }
+
+    .shop-tab{
+      border-radius: 999px;
+      padding: 8px 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(10, 26, 48, 0.75);
+      color: rgba(238, 245, 255, 0.85);
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      transition: transform 0.15s ease, box-shadow 0.2s ease;
+    }
+
+    .shop-tab.is-active{
+      background: linear-gradient(135deg, rgba(255, 226, 146, 0.95), rgba(196, 150, 38, 0.95));
+      color: #2b1a00;
+      box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+      transform: translateY(-1px);
+    }
+
+    .shop-game-tabs{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .shop-game-tab{
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 6px 12px;
+      background: rgba(6, 20, 36, 0.8);
+      color: rgba(230, 240, 255, 0.8);
+      cursor: pointer;
+      font-size: 13px;
+      letter-spacing: 0.2px;
+    }
+
+    .shop-game-tab.is-active{
+      background: rgba(255, 221, 128, 0.18);
+      color: #ffe08a;
+      border-color: rgba(255, 221, 128, 0.45);
+    }
+
+    .shop-grid{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      padding-bottom: 40px;
+    }
+
+    .shop-card{
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(6, 18, 34, 0.8);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 16px 30px rgba(0,0,0,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shop-card.is-owned{
+      border-color: rgba(120, 220, 160, 0.6);
+    }
+
+    .shop-card.is-selected{
+      border-color: rgba(255, 221, 128, 0.7);
+      box-shadow: 0 18px 34px rgba(255, 221, 128, 0.25);
+    }
+
+    .shop-item-image{
+      height: 120px;
+      border-radius: 14px;
+      background: linear-gradient(140deg, #1d4f80, #0a1b30);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      color: rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    }
+
+    .shop-card h4{
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .shop-card p{
+      margin: 0;
+      font-size: 13px;
+      color: rgba(214, 229, 255, 0.78);
+      line-height: 1.4;
+    }
+
+    .shop-card-footer{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .price-tag{
+      font-weight: 700;
+      color: #ffe8a6;
+      font-size: 14px;
+    }
+
+    .shop-action{
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.85);
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .shop-action.buy{
+      background: linear-gradient(135deg, #ffd986, #c9971d);
+      border-color: rgba(255, 221, 128, 0.8);
+      color: #2b1a00;
+    }
+
+    .shop-action.selected{
+      background: rgba(120, 220, 160, 0.15);
+      border-color: rgba(120, 220, 160, 0.5);
+      color: rgba(190, 255, 220, 0.9);
+      cursor: default;
+    }
+
+    .shop-subtitle{
+      font-size: 13px;
+      color: rgba(214, 229, 255, 0.75);
+      margin-top: -8px;
+      margin-bottom: 6px;
+    }
+
 
     .skin-card{
       position: relative;
@@ -3452,6 +3643,104 @@
       .bj-table{ min-height: 360px; }
       .card-pk{ width:56px; height:84px; }
     }
+    /* ============================ THEME OVERRIDES ============================ */
+    :root{
+      --theme-body-bg: #050515;
+      --theme-login-bg: radial-gradient(circle at top, rgba(15,111,178,0.28), transparent 52%),
+        radial-gradient(circle at 15% 30%, rgba(212,175,55,0.2), transparent 45%),
+        linear-gradient(150deg, #02070f 0, #040f1e 45%, #020408 100%);
+      --theme-dashboard-bg: radial-gradient(circle at top, rgba(15,111,178,0.25), transparent 40%),
+        radial-gradient(circle at 20% 20%, rgba(212,175,55,0.18), transparent 55%),
+        linear-gradient(140deg, #030b14 0, #051729 35%, #071f33 60%, #030b14 100%);
+      --theme-menu-header-bg: linear-gradient(120deg, rgba(7,30,49,0.95), rgba(8,40,60,0.8));
+      --theme-primary: #0b4f7b;
+      --theme-secondary: #0f6fb2;
+      --theme-accent: #d4af37;
+      --theme-cream: #f6e9c4;
+      --theme-card-back: radial-gradient(circle at 30% 20%, #fff3c1 0, #cda23b 40%, #7a5a16 100%);
+      --theme-card-border: rgba(212, 175, 55, 0.8);
+      --theme-dice-bg: linear-gradient(160deg, #f9f5ef, #e8ded0);
+      --theme-dice-color: #1b2233;
+      --theme-ball-bg: radial-gradient(circle at 30% 30%, #f6f0ff 0, #d2c8ff 40%, #8b7df0 100%);
+      --theme-layout-bg: linear-gradient(160deg, rgba(12,66,50,0.95), rgba(6,25,20,0.95));
+      --theme-layout-seat: rgba(8, 28, 24, 0.65);
+      --theme-layout-panel: rgba(6, 22, 20, 0.7);
+      --theme-layout-border: rgba(255,255,255,0.1);
+    }
+
+    body{
+      background: var(--theme-body-bg);
+    }
+
+    #login{
+      background: var(--theme-login-bg);
+    }
+
+    #dashboard{
+      background: var(--theme-dashboard-bg);
+    }
+
+    .menu-header{
+      background: var(--theme-menu-header-bg);
+    }
+
+    .menu-logo{
+      background: linear-gradient(140deg, var(--theme-primary), var(--theme-secondary));
+      color: var(--theme-cream);
+    }
+
+    button{
+      background: linear-gradient(135deg, #ffd986, var(--theme-accent));
+      border-color: rgba(255, 221, 128, 0.75);
+    }
+
+    .bj-table{
+      background: var(--layout-bg, var(--theme-layout-bg));
+      border-color: var(--layout-border, var(--theme-layout-border));
+    }
+
+    .bj-seat{
+      background: var(--layout-seat, var(--theme-layout-seat));
+    }
+
+    .bj-actions{
+      background: var(--layout-panel, var(--theme-layout-panel));
+      border-color: var(--layout-border, var(--theme-layout-border));
+    }
+
+    .poker-table{
+      background: var(--layout-bg, var(--theme-layout-bg));
+    }
+
+    .craps-field,
+    .roulette-layout{
+      background: var(--layout-bg, var(--theme-layout-bg));
+      border-color: var(--layout-border, var(--theme-layout-border));
+    }
+
+    .table-game-panel{
+      background: var(--layout-panel, var(--theme-layout-panel));
+      border-color: var(--layout-border, var(--theme-layout-border));
+    }
+
+    .bj-card.is-back,
+    .card-pk.back,
+    .bj-fly-card{
+      background: var(--theme-card-back);
+      border-color: var(--theme-card-border);
+    }
+
+    .craps-die{
+      background: var(--theme-dice-bg);
+      color: var(--theme-dice-color);
+      border-color: var(--theme-card-border);
+    }
+
+    .roulette-ball,
+    .plinko-ball{
+      background: var(--theme-ball-bg);
+    }
+
   </style>
 </head>
 <body>
@@ -3696,6 +3985,24 @@
       </div>
 
       <div id="skinsGrid" class="skins-grid"></div>
+    </div>
+  </section>
+
+  <!-- Shop -->
+  <section id="shopSection" style="display:none;">
+    <div class="shop-shell">
+      <header class="shop-header">
+        <div>
+          <h2>Shop</h2>
+          <p>Koop bundles, layouts en accessoires. Elke bundel bevat een thema met bijpassende kaarten, dobbelstenen, ballen en game layouts.</p>
+        </div>
+        <button id="backFromShopBtn">Terug naar menu</button>
+      </header>
+
+      <div id="shopTabs" class="shop-tabs" role="tablist" aria-label="Shop categorieën"></div>
+      <div id="shopGameTabs" class="shop-game-tabs" role="tablist" aria-label="Game layout selectie" style="display:none;"></div>
+      <div id="shopSubtitle" class="shop-subtitle"></div>
+      <div id="shopGrid" class="shop-grid"></div>
     </div>
   </section>
 
@@ -4160,6 +4467,12 @@
     const lootBoxMenuSection = document.getElementById('lootBoxMenuSection');
     const lootBoxSection = document.getElementById('lootBoxSection');
     const skinsSection = document.getElementById('skinsSection');
+    const shopSection = document.getElementById('shopSection');
+    const shopTabs = document.getElementById('shopTabs');
+    const shopGrid = document.getElementById('shopGrid');
+    const shopGameTabs = document.getElementById('shopGameTabs');
+    const shopSubtitle = document.getElementById('shopSubtitle');
+    const backFromShopBtn = document.getElementById('backFromShopBtn');
     const backFromPokerBtn = document.getElementById('backFromPokerBtn');
 
     const usernameInput = document.getElementById('usernameInput');
@@ -4192,6 +4505,7 @@
     const luckyDropBtn = document.getElementById('luckyDropBtn');
     const openLeaderboardsBtn = document.getElementById('openLeaderboardsBtn');
     const skinsBtn = document.getElementById('skinsBtn');
+    const shopBtn = document.getElementById('shopBtn');
     const backFromSkinsBtn = document.getElementById('backFromSkinsBtn');
     const skinGameSelect = document.getElementById('skinGameSelect');
     const skinGameTabs = document.getElementById('skinGameTabs');
@@ -4289,34 +4603,251 @@
       plinko: 'Plinko'
     };
 
-    const baseSkins = [
+    const themeCatalog = [
       {
         id: 'classic',
         name: 'Classic',
         description: 'Standaard casino sfeer.',
-        preview: 'linear-gradient(135deg, #0b3a33, #0a1a18)'
+        preview: 'linear-gradient(135deg, #0b4f7b, #0f6fb2)',
+        primary: '#0b4f7b',
+        secondary: '#0f6fb2',
+        accent: '#d4af37',
+        cream: '#f6e9c4',
+        bodyBg: '#050515',
+        loginBg: 'radial-gradient(circle at top, rgba(15,111,178,0.28), transparent 52%), radial-gradient(circle at 15% 30%, rgba(212,175,55,0.2), transparent 45%), linear-gradient(150deg, #02070f 0, #040f1e 45%, #020408 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(15,111,178,0.25), transparent 40%), radial-gradient(circle at 20% 20%, rgba(212,175,55,0.18), transparent 55%), linear-gradient(140deg, #030b14 0, #051729 35%, #071f33 60%, #030b14 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(7,30,49,0.95), rgba(8,40,60,0.8))',
+        layoutBg: 'linear-gradient(160deg, rgba(12,66,50,0.95), rgba(6,25,20,0.95))',
+        layoutSeat: 'rgba(8, 28, 24, 0.65)',
+        layoutPanel: 'rgba(6, 22, 20, 0.7)',
+        layoutBorder: 'rgba(255,255,255,0.1)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #fff3c1 0, #cda23b 40%, #7a5a16 100%)',
+        cardBorder: 'rgba(212, 175, 55, 0.8)',
+        diceBg: 'linear-gradient(160deg, #f9f5ef, #e8ded0)',
+        diceColor: '#1b2233',
+        ballBg: 'radial-gradient(circle at 30% 30%, #f6f0ff 0, #d2c8ff 40%, #8b7df0 100%)'
       },
       {
         id: 'aurora',
         name: 'Aurora',
         description: 'Koele neon gloed voor late-night sessions.',
-        preview: 'linear-gradient(135deg, #1e5aa4, #051128)'
+        preview: 'linear-gradient(135deg, #1e5aa4, #3dd6ff)',
+        primary: '#1e5aa4',
+        secondary: '#3dd6ff',
+        accent: '#7de3ff',
+        cream: '#dff6ff',
+        bodyBg: '#050916',
+        loginBg: 'radial-gradient(circle at top, rgba(61,214,255,0.22), transparent 55%), radial-gradient(circle at 15% 35%, rgba(30,90,164,0.25), transparent 45%), linear-gradient(150deg, #030813 0, #07162b 45%, #02060f 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(61,214,255,0.25), transparent 45%), radial-gradient(circle at 18% 22%, rgba(126,215,255,0.2), transparent 55%), linear-gradient(140deg, #051126 0, #071b33 40%, #040912 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(10,30,60,0.95), rgba(12,45,80,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(10,50,80,0.95), rgba(4,18,32,0.95))',
+        layoutSeat: 'rgba(6, 24, 38, 0.7)',
+        layoutPanel: 'rgba(8, 20, 36, 0.7)',
+        layoutBorder: 'rgba(90, 180, 255, 0.4)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #c8f1ff 0, #6bb8ff 40%, #1d4e99 100%)',
+        cardBorder: 'rgba(125, 227, 255, 0.8)',
+        diceBg: 'linear-gradient(160deg, #e6fbff, #b7e7ff)',
+        diceColor: '#0f1d33',
+        ballBg: 'radial-gradient(circle at 30% 30%, #f0feff 0, #7edcff 45%, #2c6ac4 100%)'
       },
       {
         id: 'velvet',
         name: 'Velvet',
         description: 'Bordeaux & goud, luxe lounge vibes.',
-        preview: 'linear-gradient(135deg, #6b2039, #1b0914)'
+        preview: 'linear-gradient(135deg, #6b2039, #c0396b)',
+        primary: '#6b2039',
+        secondary: '#c0396b',
+        accent: '#d2a75f',
+        cream: '#f7e3c6',
+        bodyBg: '#0b0510',
+        loginBg: 'radial-gradient(circle at top, rgba(192,57,107,0.22), transparent 55%), radial-gradient(circle at 15% 35%, rgba(107,32,57,0.28), transparent 45%), linear-gradient(150deg, #13040a 0, #2a0f1d 45%, #090206 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(192,57,107,0.25), transparent 45%), radial-gradient(circle at 18% 22%, rgba(210,167,95,0.18), transparent 55%), linear-gradient(140deg, #14060f 0, #2c1221 40%, #0a0307 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(40,12,24,0.95), rgba(60,18,32,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(78,24,44,0.95), rgba(30,8,16,0.95))',
+        layoutSeat: 'rgba(40, 12, 24, 0.65)',
+        layoutPanel: 'rgba(28, 8, 18, 0.7)',
+        layoutBorder: 'rgba(210, 167, 95, 0.35)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #f1d4ad 0, #c08c49 40%, #5e2b12 100%)',
+        cardBorder: 'rgba(210, 167, 95, 0.8)',
+        diceBg: 'linear-gradient(160deg, #f2e6dd, #d9bfa6)',
+        diceColor: '#361a26',
+        ballBg: 'radial-gradient(circle at 30% 30%, #f8e4f0 0, #d77fb3 45%, #6b2039 100%)'
+      },
+      {
+        id: 'ember',
+        name: 'Ember',
+        description: 'Warme vlamkleur met koperaccenten.',
+        preview: 'linear-gradient(135deg, #7a2b16, #f05a28)',
+        primary: '#7a2b16',
+        secondary: '#f05a28',
+        accent: '#f6c05c',
+        cream: '#fff0d6',
+        bodyBg: '#100706',
+        loginBg: 'radial-gradient(circle at top, rgba(240,90,40,0.28), transparent 52%), radial-gradient(circle at 15% 30%, rgba(246,192,92,0.22), transparent 45%), linear-gradient(150deg, #120606 0, #2b120b 45%, #0a0302 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(240,90,40,0.25), transparent 40%), radial-gradient(circle at 20% 20%, rgba(246,192,92,0.2), transparent 55%), linear-gradient(140deg, #140807 0, #2b130c 35%, #0f0403 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(50,18,12,0.95), rgba(82,28,14,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(96,38,20,0.95), rgba(34,12,8,0.95))',
+        layoutSeat: 'rgba(45, 18, 10, 0.7)',
+        layoutPanel: 'rgba(36, 14, 8, 0.7)',
+        layoutBorder: 'rgba(246, 192, 92, 0.4)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #ffe0b0 0, #f29b52 40%, #7a2b16 100%)',
+        cardBorder: 'rgba(246, 192, 92, 0.8)',
+        diceBg: 'linear-gradient(160deg, #fff0de, #f1c8a2)',
+        diceColor: '#4a2315',
+        ballBg: 'radial-gradient(circle at 30% 30%, #fff1db 0, #f7a35a 45%, #7a2b16 100%)'
+      },
+      {
+        id: 'lagoon',
+        name: 'Lagoon',
+        description: 'Koele oceaantinten met frisse highlights.',
+        preview: 'linear-gradient(135deg, #0f6c5f, #20c5b5)',
+        primary: '#0f6c5f',
+        secondary: '#20c5b5',
+        accent: '#9df6e7',
+        cream: '#e9fff8',
+        bodyBg: '#030b0f',
+        loginBg: 'radial-gradient(circle at top, rgba(32,197,181,0.25), transparent 55%), radial-gradient(circle at 15% 35%, rgba(15,108,95,0.25), transparent 45%), linear-gradient(150deg, #041015 0, #0a2226 45%, #02080b 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(32,197,181,0.25), transparent 45%), radial-gradient(circle at 18% 22%, rgba(157,246,231,0.2), transparent 55%), linear-gradient(140deg, #041216 0, #0a2629 40%, #020809 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(8,35,36,0.95), rgba(10,52,54,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(12,68,62,0.95), rgba(5,32,28,0.95))',
+        layoutSeat: 'rgba(10, 38, 34, 0.7)',
+        layoutPanel: 'rgba(8, 30, 28, 0.7)',
+        layoutBorder: 'rgba(157, 246, 231, 0.45)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #d9fff6 0, #6edccf 40%, #1c6a60 100%)',
+        cardBorder: 'rgba(157, 246, 231, 0.85)',
+        diceBg: 'linear-gradient(160deg, #f2fffb, #b7efe3)',
+        diceColor: '#0b2b29',
+        ballBg: 'radial-gradient(circle at 30% 30%, #e8fff9 0, #6edccf 45%, #0f6c5f 100%)'
+      },
+      {
+        id: 'neon',
+        name: 'Neon',
+        description: 'Harde clublichten met paars en pink.',
+        preview: 'linear-gradient(135deg, #40209f, #7f4bff)',
+        primary: '#40209f',
+        secondary: '#7f4bff',
+        accent: '#ff4bd8',
+        cream: '#fbe9ff',
+        bodyBg: '#080510',
+        loginBg: 'radial-gradient(circle at top, rgba(127,75,255,0.28), transparent 55%), radial-gradient(circle at 18% 30%, rgba(255,75,216,0.2), transparent 45%), linear-gradient(150deg, #0a0614 0, #1a1030 45%, #05020b 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(127,75,255,0.28), transparent 45%), radial-gradient(circle at 18% 22%, rgba(255,75,216,0.2), transparent 55%), linear-gradient(140deg, #0b0716 0, #1d1136 40%, #05020c 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(24,12,54,0.95), rgba(36,16,72,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(46,20,90,0.95), rgba(12,6,28,0.95))',
+        layoutSeat: 'rgba(24, 12, 46, 0.7)',
+        layoutPanel: 'rgba(20, 10, 40, 0.7)',
+        layoutBorder: 'rgba(255, 75, 216, 0.45)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #ffd7f3 0, #b87bff 40%, #40209f 100%)',
+        cardBorder: 'rgba(255, 75, 216, 0.8)',
+        diceBg: 'linear-gradient(160deg, #f7ecff, #d1b6ff)',
+        diceColor: '#2a174d',
+        ballBg: 'radial-gradient(circle at 30% 30%, #ffe6fa 0, #b87bff 45%, #40209f 100%)'
+      },
+      {
+        id: 'rose',
+        name: 'Rose',
+        description: 'Zachte rosé tinten met warme glans.',
+        preview: 'linear-gradient(135deg, #8b2f5b, #ff7bb3)',
+        primary: '#8b2f5b',
+        secondary: '#ff7bb3',
+        accent: '#ffd1e8',
+        cream: '#fff0f7',
+        bodyBg: '#12070e',
+        loginBg: 'radial-gradient(circle at top, rgba(255,123,179,0.25), transparent 55%), radial-gradient(circle at 18% 30%, rgba(139,47,91,0.25), transparent 45%), linear-gradient(150deg, #14070d 0, #2d1420 45%, #0a0306 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(255,123,179,0.25), transparent 45%), radial-gradient(circle at 18% 22%, rgba(255,209,232,0.22), transparent 55%), linear-gradient(140deg, #14070f 0, #2f1522 40%, #0a0407 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(45,16,28,0.95), rgba(64,20,38,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(92,26,52,0.95), rgba(28,10,18,0.95))',
+        layoutSeat: 'rgba(44, 16, 30, 0.7)',
+        layoutPanel: 'rgba(36, 14, 26, 0.7)',
+        layoutBorder: 'rgba(255, 209, 232, 0.4)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #ffe4f2 0, #ffa0c9 40%, #8b2f5b 100%)',
+        cardBorder: 'rgba(255, 209, 232, 0.8)',
+        diceBg: 'linear-gradient(160deg, #fff0f7, #f3bfd9)',
+        diceColor: '#4a1f35',
+        ballBg: 'radial-gradient(circle at 30% 30%, #ffeaf4 0, #ffa0c9 45%, #8b2f5b 100%)'
+      },
+      {
+        id: 'jade',
+        name: 'Jade',
+        description: 'Diep groen met frisse jade accenten.',
+        preview: 'linear-gradient(135deg, #1b5e3f, #33b17a)',
+        primary: '#1b5e3f',
+        secondary: '#33b17a',
+        accent: '#b7ffcc',
+        cream: '#effff5',
+        bodyBg: '#040b08',
+        loginBg: 'radial-gradient(circle at top, rgba(51,177,122,0.25), transparent 55%), radial-gradient(circle at 18% 30%, rgba(27,94,63,0.25), transparent 45%), linear-gradient(150deg, #050f0a 0, #0f2318 45%, #030807 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(51,177,122,0.25), transparent 45%), radial-gradient(circle at 18% 22%, rgba(183,255,204,0.2), transparent 55%), linear-gradient(140deg, #05100c 0, #10281b 40%, #030706 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(12,40,28,0.95), rgba(16,60,40,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(24,86,58,0.95), rgba(10,30,20,0.95))',
+        layoutSeat: 'rgba(12, 40, 28, 0.7)',
+        layoutPanel: 'rgba(10, 32, 24, 0.7)',
+        layoutBorder: 'rgba(183, 255, 204, 0.45)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #e1ffe9 0, #7de1aa 40%, #1b5e3f 100%)',
+        cardBorder: 'rgba(183, 255, 204, 0.85)',
+        diceBg: 'linear-gradient(160deg, #effff5, #bfead2)',
+        diceColor: '#1c3a2a',
+        ballBg: 'radial-gradient(circle at 30% 30%, #e8fff0 0, #7de1aa 45%, #1b5e3f 100%)'
+      },
+      {
+        id: 'solar',
+        name: 'Solar',
+        description: 'Helder goud en zonlicht.',
+        preview: 'linear-gradient(135deg, #b9770f, #f5c542)',
+        primary: '#b9770f',
+        secondary: '#f5c542',
+        accent: '#ffe89a',
+        cream: '#fff6dd',
+        bodyBg: '#0f0b05',
+        loginBg: 'radial-gradient(circle at top, rgba(245,197,66,0.28), transparent 55%), radial-gradient(circle at 18% 30%, rgba(185,119,15,0.25), transparent 45%), linear-gradient(150deg, #120b04 0, #2a1d08 45%, #080503 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(245,197,66,0.28), transparent 45%), radial-gradient(circle at 18% 22%, rgba(255,232,154,0.22), transparent 55%), linear-gradient(140deg, #140c05 0, #2c1f08 40%, #080503 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(50,32,10,0.95), rgba(80,48,12,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(96,66,12,0.95), rgba(32,18,6,0.95))',
+        layoutSeat: 'rgba(44, 28, 10, 0.7)',
+        layoutPanel: 'rgba(36, 22, 8, 0.7)',
+        layoutBorder: 'rgba(255, 232, 154, 0.45)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #fff2c7 0, #f5c542 40%, #b9770f 100%)',
+        cardBorder: 'rgba(255, 232, 154, 0.85)',
+        diceBg: 'linear-gradient(160deg, #fff7de, #f0d08b)',
+        diceColor: '#4a300a',
+        ballBg: 'radial-gradient(circle at 30% 30%, #fff7de 0, #f5c542 45%, #b9770f 100%)'
+      },
+      {
+        id: 'obsidian',
+        name: 'Obsidian',
+        description: 'Diepe nachttinten met koel staal.',
+        preview: 'linear-gradient(135deg, #1a1c27, #444b5d)',
+        primary: '#1a1c27',
+        secondary: '#444b5d',
+        accent: '#9aa5c4',
+        cream: '#e9edf6',
+        bodyBg: '#05060a',
+        loginBg: 'radial-gradient(circle at top, rgba(68,75,93,0.25), transparent 55%), radial-gradient(circle at 18% 30%, rgba(154,165,196,0.18), transparent 45%), linear-gradient(150deg, #06070c 0, #141822 45%, #030408 100%)',
+        dashboardBg: 'radial-gradient(circle at top, rgba(68,75,93,0.25), transparent 45%), radial-gradient(circle at 18% 22%, rgba(154,165,196,0.2), transparent 55%), linear-gradient(140deg, #07080d 0, #171b27 40%, #030408 100%)',
+        menuHeaderBg: 'linear-gradient(120deg, rgba(24,26,36,0.95), rgba(34,38,50,0.85))',
+        layoutBg: 'linear-gradient(160deg, rgba(32,36,46,0.95), rgba(12,14,20,0.95))',
+        layoutSeat: 'rgba(22, 24, 34, 0.7)',
+        layoutPanel: 'rgba(18, 20, 30, 0.7)',
+        layoutBorder: 'rgba(154, 165, 196, 0.4)',
+        cardBack: 'radial-gradient(circle at 30% 20%, #e3e7f3 0, #7c879c 40%, #1a1c27 100%)',
+        cardBorder: 'rgba(154, 165, 196, 0.85)',
+        diceBg: 'linear-gradient(160deg, #f0f2f8, #c7ccd8)',
+        diceColor: '#1b1f2c',
+        ballBg: 'radial-gradient(circle at 30% 30%, #f0f2f8 0, #9aa5c4 45%, #1a1c27 100%)'
       }
     ];
+
+    const themeLookup = Object.fromEntries(themeCatalog.map((theme) => [theme.id, theme]));
+
+    const baseSkins = themeCatalog.map((theme) => ({
+      id: theme.id,
+      name: theme.name,
+      description: theme.description,
+      preview: theme.preview
+    }));
 
     const skinCatalog = Object.fromEntries(
       Object.keys(gameLabels).map((gameKey) => [gameKey, baseSkins])
     );
-
-    const skinClasses = baseSkins
-      .filter((skin) => skin.id !== 'classic')
-      .map((skin) => `skin-${skin.id}`);
 
     const gameSections = {
       blackjack: blackjackSection,
@@ -4338,18 +4869,37 @@
         if(!user.gameSkins[gameKey]){
           user.gameSkins[gameKey] = 'classic';
         }
+        if(user.shopSelection?.layouts?.[gameKey]){
+          user.gameSkins[gameKey] = user.shopSelection.layouts[gameKey];
+        }
       });
+    }
+
+    function applyLayoutPalette(section, palette){
+      if(!section || !palette) return;
+      section.style.setProperty('--layout-bg', palette.layoutBg);
+      section.style.setProperty('--layout-seat', palette.layoutSeat);
+      section.style.setProperty('--layout-panel', palette.layoutPanel);
+      section.style.setProperty('--layout-border', palette.layoutBorder);
+    }
+
+    function getThemeById(id){
+      return themeLookup[id] || themeCatalog[0];
+    }
+
+    function getSelectedLayoutId(gameKey){
+      return currentUser?.shopSelection?.layouts?.[gameKey]
+        || currentUser?.gameSkins?.[gameKey]
+        || 'classic';
     }
 
     function applyGameSkin(gameKey){
       if(!currentUser || !gameKey) return;
       const section = gameSections[gameKey];
       if(!section) return;
-      const skinId = currentUser.gameSkins?.[gameKey] || 'classic';
-      section.classList.remove(...skinClasses);
-      if(skinId !== 'classic'){
-        section.classList.add(`skin-${skinId}`);
-      }
+      const skinId = getSelectedLayoutId(gameKey);
+      const palette = getThemeById(skinId);
+      applyLayoutPalette(section, palette);
     }
 
     function applyAllSkins(){
@@ -4397,7 +4947,7 @@
     function renderSkinGrid(gameKey){
       if(!skinsGrid) return;
       const skins = skinCatalog[gameKey] || [];
-      const selected = currentUser?.gameSkins?.[gameKey] || 'classic';
+      const selected = getSelectedLayoutId(gameKey);
       skinsGrid.innerHTML = skins.map((skin) => `
         <button class="skin-card ${skin.id === selected ? 'is-selected' : ''}" type="button" data-skin-id="${skin.id}">
           <span class="skin-card-preview" style="background: ${skin.preview};"></span>
@@ -4411,7 +4961,9 @@
     function updateSkinSelection(gameKey, skinId){
       if(!currentUser) return;
       ensureSkinFields(currentUser);
+      ensureShopFields(currentUser);
       currentUser.gameSkins[gameKey] = skinId;
+      currentUser.shopSelection.layouts[gameKey] = skinId;
       applyGameSkin(gameKey);
       renderSkinGrid(gameKey);
       saveCurrentUser();
@@ -4446,6 +4998,464 @@
         }
         updateSkinSelection(activeSkinGame, card.dataset.skinId);
       });
+    }
+
+    const shopTabsConfig = [
+      { key: 'bundles', label: 'Bundels', price: 1000, subtitle: 'Thema bundles met kaarten, dobbelstenen, ballen en layouts.' },
+      { key: 'login', label: 'Log in screen', price: 100, subtitle: 'Login achtergrondvariaties.' },
+      { key: 'menu', label: 'Main menu', price: 200, subtitle: 'Nieuwe looks voor het hoofdmenu.' },
+      { key: 'layout', label: 'Game layout', price: 200, subtitle: 'Kies een game en selecteer een layout.' },
+      { key: 'cards', label: 'Playing cards', price: 100, subtitle: 'Kaartdesigns voor tafelgames.' },
+      { key: 'dice', label: 'Dice', price: 75, subtitle: 'Deluxe dobbelstenen skins.' },
+      { key: 'balls', label: 'Balls', price: 50, subtitle: 'Ballen voor plinko en roulette.' }
+    ];
+
+    let activeShopTab = 'bundles';
+    let activeShopGame = 'blackjack';
+
+    function ensureShopFields(user){
+      if(!user) return;
+      if(!user.shopInventory || typeof user.shopInventory !== 'object'){
+        user.shopInventory = {};
+      }
+      if(!user.shopSelection || typeof user.shopSelection !== 'object'){
+        user.shopSelection = {};
+      }
+
+      const inventory = user.shopInventory;
+      const selection = user.shopSelection;
+
+      const ensureList = (key) => {
+        if(!Array.isArray(inventory[key])){
+          inventory[key] = ['classic'];
+        }
+        if(!inventory[key].includes('classic')){
+          inventory[key].unshift('classic');
+        }
+      };
+
+      ensureList('themes');
+      ensureList('loginSkins');
+      ensureList('menuSkins');
+      ensureList('cardSkins');
+      ensureList('diceSkins');
+      ensureList('ballSkins');
+
+      if(!inventory.layouts || typeof inventory.layouts !== 'object'){
+        inventory.layouts = {};
+      }
+      if(!selection.layouts || typeof selection.layouts !== 'object'){
+        selection.layouts = {};
+      }
+      Object.keys(gameLabels).forEach((gameKey) => {
+        if(!Array.isArray(inventory.layouts[gameKey])){
+          inventory.layouts[gameKey] = ['classic'];
+        }
+        if(!inventory.layouts[gameKey].includes('classic')){
+          inventory.layouts[gameKey].unshift('classic');
+        }
+        if(!selection.layouts[gameKey]){
+          selection.layouts[gameKey] = 'classic';
+        }
+      });
+
+      selection.theme = selection.theme || 'classic';
+      selection.login = selection.login || 'classic';
+      selection.menu = selection.menu || 'classic';
+      selection.cards = selection.cards || 'classic';
+      selection.dice = selection.dice || 'classic';
+      selection.balls = selection.balls || 'classic';
+    }
+
+    function applyThemeVariables(palette){
+      const root = document.documentElement;
+      root.style.setProperty('--theme-body-bg', palette.bodyBg);
+      root.style.setProperty('--theme-primary', palette.primary);
+      root.style.setProperty('--theme-secondary', palette.secondary);
+      root.style.setProperty('--theme-accent', palette.accent);
+      root.style.setProperty('--theme-cream', palette.cream);
+      root.style.setProperty('--theme-layout-bg', palette.layoutBg);
+      root.style.setProperty('--theme-layout-seat', palette.layoutSeat);
+      root.style.setProperty('--theme-layout-panel', palette.layoutPanel);
+      root.style.setProperty('--theme-layout-border', palette.layoutBorder);
+    }
+
+    function applyShopSelections(){
+      if(!currentUser) return;
+      ensureShopFields(currentUser);
+      const selection = currentUser.shopSelection;
+
+      const themePalette = getThemeById(selection.theme);
+      applyThemeVariables(themePalette);
+
+      const loginPalette = getThemeById(selection.login);
+      const menuPalette = getThemeById(selection.menu);
+      const cardPalette = getThemeById(selection.cards);
+      const dicePalette = getThemeById(selection.dice);
+      const ballPalette = getThemeById(selection.balls);
+
+      const root = document.documentElement;
+      root.style.setProperty('--theme-login-bg', loginPalette.loginBg);
+      root.style.setProperty('--theme-dashboard-bg', menuPalette.dashboardBg);
+      root.style.setProperty('--theme-menu-header-bg', menuPalette.menuHeaderBg);
+      root.style.setProperty('--theme-card-back', cardPalette.cardBack);
+      root.style.setProperty('--theme-card-border', cardPalette.cardBorder);
+      root.style.setProperty('--theme-dice-bg', dicePalette.diceBg);
+      root.style.setProperty('--theme-dice-color', dicePalette.diceColor);
+      root.style.setProperty('--theme-ball-bg', ballPalette.ballBg);
+
+      Object.keys(gameLabels).forEach((gameKey) => applyGameSkin(gameKey));
+    }
+
+    function getShopItemsForTab(tabKey){
+      const config = shopTabsConfig.find((tab) => tab.key === tabKey);
+      if(!config) return [];
+      const price = config.price;
+      const gameLabel = gameLabels[activeShopGame];
+
+      switch(tabKey){
+        case 'bundles':
+          return themeCatalog.map((theme) => ({
+            id: theme.id,
+            name: `${theme.name} Bundle`,
+            description: 'Thema + login, menu, layouts, kaarten, dobbelstenen en ballen.',
+            preview: theme.preview,
+            price,
+            icon: '🎨'
+          }));
+        case 'login':
+          return themeCatalog.map((theme) => ({
+            id: theme.id,
+            name: `${theme.name} Login`,
+            description: 'Nieuwe vibe voor het inlogscherm.',
+            preview: theme.preview,
+            price,
+            icon: '🔐'
+          }));
+        case 'menu':
+          return themeCatalog.map((theme) => ({
+            id: theme.id,
+            name: `${theme.name} Main Menu`,
+            description: 'Stijl het hoofdmenu in thema-kleuren.',
+            preview: theme.preview,
+            price,
+            icon: '🏠'
+          }));
+        case 'layout':
+          return themeCatalog.map((theme) => ({
+            id: theme.id,
+            name: `${theme.name} Layout`,
+            description: `Layout voor ${gameLabel}.`,
+            preview: theme.preview,
+            price,
+            icon: '🧩'
+          }));
+        case 'cards':
+          return themeCatalog.map((theme) => ({
+            id: theme.id,
+            name: `${theme.name} Cards`,
+            description: 'Bijpassende kaartachterkanten.',
+            preview: theme.preview,
+            price,
+            icon: '🂠'
+          }));
+        case 'dice':
+          return themeCatalog.map((theme) => ({
+            id: theme.id,
+            name: `${theme.name} Dice`,
+            description: 'Deluxe dice skin met thema kleuren.',
+            preview: theme.preview,
+            price,
+            icon: '🎲'
+          }));
+        case 'balls':
+          return themeCatalog.map((theme) => ({
+            id: theme.id,
+            name: `${theme.name} Balls`,
+            description: 'Ball design voor roulette en plinko.',
+            preview: theme.preview,
+            price,
+            icon: '⚪'
+          }));
+        default:
+          return [];
+      }
+    }
+
+    function isItemOwned(tabKey, itemId){
+      if(!currentUser) return false;
+      const inventory = currentUser.shopInventory;
+      if(tabKey === 'layout'){
+        return inventory.layouts?.[activeShopGame]?.includes(itemId);
+      }
+      if(tabKey === 'bundles'){
+        return inventory.themes?.includes(itemId);
+      }
+      if(tabKey === 'login'){
+        return inventory.loginSkins?.includes(itemId);
+      }
+      if(tabKey === 'menu'){
+        return inventory.menuSkins?.includes(itemId);
+      }
+      if(tabKey === 'cards'){
+        return inventory.cardSkins?.includes(itemId);
+      }
+      if(tabKey === 'dice'){
+        return inventory.diceSkins?.includes(itemId);
+      }
+      if(tabKey === 'balls'){
+        return inventory.ballSkins?.includes(itemId);
+      }
+      return false;
+    }
+
+    function isItemSelected(tabKey, itemId){
+      if(!currentUser) return false;
+      const selection = currentUser.shopSelection;
+      if(tabKey === 'layout'){
+        return selection.layouts?.[activeShopGame] === itemId;
+      }
+      if(tabKey === 'bundles'){
+        return selection.theme === itemId;
+      }
+      if(tabKey === 'login'){
+        return selection.login === itemId;
+      }
+      if(tabKey === 'menu'){
+        return selection.menu === itemId;
+      }
+      if(tabKey === 'cards'){
+        return selection.cards === itemId;
+      }
+      if(tabKey === 'dice'){
+        return selection.dice === itemId;
+      }
+      if(tabKey === 'balls'){
+        return selection.balls === itemId;
+      }
+      return false;
+    }
+
+    function addInventoryItem(list, itemId){
+      if(!list.includes(itemId)){
+        list.push(itemId);
+      }
+    }
+
+    function selectBundleTheme(themeId){
+      ensureShopFields(currentUser);
+      ensureSkinFields(currentUser);
+      currentUser.shopSelection.theme = themeId;
+      currentUser.shopSelection.login = themeId;
+      currentUser.shopSelection.menu = themeId;
+      currentUser.shopSelection.cards = themeId;
+      currentUser.shopSelection.dice = themeId;
+      currentUser.shopSelection.balls = themeId;
+      Object.keys(gameLabels).forEach((gameKey) => {
+        currentUser.shopSelection.layouts[gameKey] = themeId;
+        currentUser.gameSkins[gameKey] = themeId;
+      });
+      applyShopSelections();
+    }
+
+    function selectItem(tabKey, itemId){
+      ensureShopFields(currentUser);
+      ensureSkinFields(currentUser);
+      if(tabKey === 'bundles'){
+        selectBundleTheme(itemId);
+        return;
+      }
+      if(tabKey === 'layout'){
+        currentUser.shopSelection.layouts[activeShopGame] = itemId;
+        currentUser.gameSkins[activeShopGame] = itemId;
+        applyGameSkin(activeShopGame);
+        return;
+      }
+      if(tabKey === 'login'){
+        currentUser.shopSelection.login = itemId;
+      }
+      if(tabKey === 'menu'){
+        currentUser.shopSelection.menu = itemId;
+      }
+      if(tabKey === 'cards'){
+        currentUser.shopSelection.cards = itemId;
+      }
+      if(tabKey === 'dice'){
+        currentUser.shopSelection.dice = itemId;
+      }
+      if(tabKey === 'balls'){
+        currentUser.shopSelection.balls = itemId;
+      }
+      applyShopSelections();
+    }
+
+    async function purchaseShopItem(tabKey, itemId){
+      if(!currentUser) return;
+      ensureShopFields(currentUser);
+      const config = shopTabsConfig.find((tab) => tab.key === tabKey);
+      if(!config) return;
+      const price = config.price;
+
+      if(currentUser.credits < price){
+        showSiteMessage('Je hebt niet genoeg credits.');
+        return;
+      }
+
+      currentUser.credits -= price;
+
+      if(tabKey === 'bundles'){
+        addInventoryItem(currentUser.shopInventory.themes, itemId);
+        addInventoryItem(currentUser.shopInventory.loginSkins, itemId);
+        addInventoryItem(currentUser.shopInventory.menuSkins, itemId);
+        addInventoryItem(currentUser.shopInventory.cardSkins, itemId);
+        addInventoryItem(currentUser.shopInventory.diceSkins, itemId);
+        addInventoryItem(currentUser.shopInventory.ballSkins, itemId);
+        Object.keys(gameLabels).forEach((gameKey) => {
+          addInventoryItem(currentUser.shopInventory.layouts[gameKey], itemId);
+        });
+        selectBundleTheme(itemId);
+      } else if(tabKey === 'layout'){
+        addInventoryItem(currentUser.shopInventory.layouts[activeShopGame], itemId);
+        selectItem(tabKey, itemId);
+      } else if(tabKey === 'login'){
+        addInventoryItem(currentUser.shopInventory.loginSkins, itemId);
+        selectItem(tabKey, itemId);
+      } else if(tabKey === 'menu'){
+        addInventoryItem(currentUser.shopInventory.menuSkins, itemId);
+        selectItem(tabKey, itemId);
+      } else if(tabKey === 'cards'){
+        addInventoryItem(currentUser.shopInventory.cardSkins, itemId);
+        selectItem(tabKey, itemId);
+      } else if(tabKey === 'dice'){
+        addInventoryItem(currentUser.shopInventory.diceSkins, itemId);
+        selectItem(tabKey, itemId);
+      } else if(tabKey === 'balls'){
+        addInventoryItem(currentUser.shopInventory.ballSkins, itemId);
+        selectItem(tabKey, itemId);
+      }
+
+      await saveCurrentUser();
+      renderDashboard();
+      renderShopGrid();
+      showSiteMessage('Aankoop succesvol!');
+    }
+
+    function renderShopTabs(){
+      if(!shopTabs) return;
+      shopTabs.innerHTML = shopTabsConfig.map((tab) => `
+        <button class="shop-tab ${tab.key === activeShopTab ? 'is-active' : ''}" type="button" data-shop-tab="${tab.key}">
+          ${tab.label}
+        </button>
+      `).join('');
+    }
+
+    function renderShopGameTabs(){
+      if(!shopGameTabs) return;
+      if(activeShopTab !== 'layout'){
+        shopGameTabs.style.display = 'none';
+        shopGameTabs.innerHTML = '';
+        return;
+      }
+      shopGameTabs.style.display = 'flex';
+      shopGameTabs.innerHTML = Object.entries(gameLabels).map(([key, label]) => `
+        <button class="shop-game-tab ${key === activeShopGame ? 'is-active' : ''}" type="button" data-shop-game="${key}">
+          ${label}
+        </button>
+      `).join('');
+    }
+
+    function renderShopGrid(){
+      if(!shopGrid || !shopSubtitle) return;
+      const config = shopTabsConfig.find((tab) => tab.key === activeShopTab);
+      const items = getShopItemsForTab(activeShopTab);
+      if(config){
+        shopSubtitle.textContent = activeShopTab === 'layout'
+          ? `${gameLabels[activeShopGame]} — ${items.length} variaties · ${config.price} credits`
+          : `${items.length} items · ${config.price} credits`;
+      }
+
+      shopGrid.innerHTML = items.map((item) => {
+        const owned = isItemOwned(activeShopTab, item.id);
+        const selected = isItemSelected(activeShopTab, item.id);
+        const actionLabel = selected ? 'Geselecteerd' : owned ? 'Selecteer' : `Koop ${item.price}`;
+        const actionClass = selected ? 'shop-action selected' : owned ? 'shop-action' : 'shop-action buy';
+        const actionType = selected ? 'selected' : owned ? 'select' : 'buy';
+
+        return `
+          <div class="shop-card ${owned ? 'is-owned' : ''} ${selected ? 'is-selected' : ''}">
+            <div class="shop-item-image" style="background: ${item.preview};">${item.icon}</div>
+            <h4>${item.name}</h4>
+            <p>${item.description}</p>
+            <div class="shop-card-footer">
+              <span class="price-tag">${item.price} credits</span>
+              <button class="${actionClass}" type="button" data-item-id="${item.id}" data-item-action="${actionType}">
+                ${actionLabel}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderShop(){
+      renderShopTabs();
+      renderShopGameTabs();
+      renderShopGrid();
+    }
+
+    if(shopTabs){
+      shopTabs.addEventListener('click', (event) => {
+        const tab = event.target.closest('[data-shop-tab]');
+        if(!tab) return;
+        activeShopTab = tab.dataset.shopTab;
+        renderShop();
+      });
+    }
+
+    if(shopGameTabs){
+      shopGameTabs.addEventListener('click', (event) => {
+        const tab = event.target.closest('[data-shop-game]');
+        if(!tab) return;
+        activeShopGame = tab.dataset.shopGame;
+        renderShop();
+      });
+    }
+
+    if(shopGrid){
+      shopGrid.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-item-id]');
+        if(!button) return;
+        const itemId = button.dataset.itemId;
+        const action = button.dataset.itemAction;
+        if(action === 'selected') return;
+        if(action === 'buy'){
+          void purchaseShopItem(activeShopTab, itemId);
+          return;
+        }
+        if(action === 'select'){
+          selectItem(activeShopTab, itemId);
+          saveCurrentUser();
+          renderShopGrid();
+          renderDashboard();
+        }
+      });
+    }
+
+    if(shopBtn){
+      shopBtn.onclick = () => {
+        if(!currentUser) return;
+        dashboard.style.display = 'none';
+        skinsSection.style.display = 'none';
+        shopSection.style.display = 'block';
+        renderShop();
+      };
+    }
+
+    if(backFromShopBtn){
+      backFromShopBtn.onclick = () => {
+        shopSection.style.display = 'none';
+        showDashboard(true);
+      };
     }
 
     /* Blackjack refs */
@@ -5192,11 +6202,12 @@
     function renderDashboard(){
       if(!currentUser) return;
       ensureLuckyFields(currentUser);
+      ensureShopFields(currentUser);
       ensureSkinFields(currentUser);
       displayName.textContent = currentUser.name;
       creditsEl.textContent = currentUser.credits;
       updateLuckyCoinDisplay();
-      applyAllSkins();
+      applyShopSelections();
       if(currencyDisplay){
         currencyDisplay.style.display = 'flex';
       }
@@ -5210,6 +6221,9 @@
       setHelpContext(null);
       if(skinsSection){
         skinsSection.style.display = 'none';
+      }
+      if(shopSection){
+        shopSection.style.display = 'none';
       }
       if(shouldShake){
         triggerLuckyDropShake();
@@ -5231,6 +6245,7 @@
       plinkoSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
+      shopSection.style.display = 'none';
       loginSection.style.display = 'flex';
       setHelpContext(null);
       if(currencyDisplay) currencyDisplay.style.display = 'none';
@@ -5493,8 +6508,10 @@
         plinkoSection.style.display = 'none';
         lootBoxMenuSection.style.display = 'none';
         lootBoxSection.style.display = 'none';
+        shopSection.style.display = 'none';
         skinsSection.style.display = 'block';
         setHelpContext(null);
+        ensureShopFields(currentUser);
         ensureSkinFields(currentUser);
         renderSkinTabs();
         setActiveSkinGame(activeSkinGame);
