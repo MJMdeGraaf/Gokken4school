@@ -8814,7 +8814,7 @@ playHorseRaceBtn.onclick = () => {
     }
 
     function pokerUpdateBlinds(){
-      const baseBlind = Math.max(50, Math.floor(pokerTableMin * 0.05));
+      const baseBlind = Math.max(1, Math.floor(pokerTableMin * 0.02));
       pokerSmallBlind = baseBlind;
       pokerBigBlind = baseBlind * 2;
       pokerBlindsEl.textContent = `${pokerSmallBlind} / ${pokerBigBlind}`;
