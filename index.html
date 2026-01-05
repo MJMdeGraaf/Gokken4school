@@ -2556,45 +2556,45 @@
       width: 290px;
       height: 290px;
       border-radius: 50%;
-      background: conic-gradient(
+      background: var(--roulette-wheel-gradient, conic-gradient(
         #1b7d3d 0 9.73deg,
-        #111 9.73deg 19.46deg,
-        #c62828 19.46deg 29.19deg,
-        #111 29.19deg 38.92deg,
-        #c62828 38.92deg 48.65deg,
-        #111 48.65deg 58.38deg,
-        #c62828 58.38deg 68.11deg,
-        #111 68.11deg 77.84deg,
-        #c62828 77.84deg 87.57deg,
-        #111 87.57deg 97.3deg,
-        #c62828 97.3deg 107.03deg,
-        #111 107.03deg 116.76deg,
-        #c62828 116.76deg 126.49deg,
-        #111 126.49deg 136.22deg,
-        #c62828 136.22deg 145.95deg,
-        #111 145.95deg 155.68deg,
-        #c62828 155.68deg 165.41deg,
-        #111 165.41deg 175.14deg,
-        #c62828 175.14deg 184.87deg,
-        #111 184.87deg 194.6deg,
-        #c62828 194.6deg 204.33deg,
-        #111 204.33deg 214.06deg,
-        #c62828 214.06deg 223.79deg,
-        #111 223.79deg 233.52deg,
-        #c62828 233.52deg 243.25deg,
-        #111 243.25deg 252.98deg,
-        #c62828 252.98deg 262.71deg,
-        #111 262.71deg 272.44deg,
-        #c62828 272.44deg 282.17deg,
-        #111 282.17deg 291.9deg,
-        #c62828 291.9deg 301.63deg,
-        #111 301.63deg 311.36deg,
-        #c62828 311.36deg 321.09deg,
-        #111 321.09deg 330.82deg,
-        #c62828 330.82deg 340.55deg,
-        #111 340.55deg 350.28deg,
-        #c62828 350.28deg 360deg
-      );
+        #c62828 9.73deg 19.46deg,
+        #111 19.46deg 29.19deg,
+        #c62828 29.19deg 38.92deg,
+        #111 38.92deg 48.65deg,
+        #c62828 48.65deg 58.38deg,
+        #111 58.38deg 68.11deg,
+        #c62828 68.11deg 77.84deg,
+        #111 77.84deg 87.57deg,
+        #c62828 87.57deg 97.3deg,
+        #111 97.3deg 107.03deg,
+        #c62828 107.03deg 116.76deg,
+        #111 116.76deg 126.49deg,
+        #c62828 126.49deg 136.22deg,
+        #111 136.22deg 145.95deg,
+        #c62828 145.95deg 155.68deg,
+        #111 155.68deg 165.41deg,
+        #c62828 165.41deg 175.14deg,
+        #111 175.14deg 184.87deg,
+        #c62828 184.87deg 194.6deg,
+        #111 194.6deg 204.33deg,
+        #c62828 204.33deg 214.06deg,
+        #111 214.06deg 223.79deg,
+        #c62828 223.79deg 233.52deg,
+        #111 233.52deg 243.25deg,
+        #c62828 243.25deg 252.98deg,
+        #111 252.98deg 262.71deg,
+        #c62828 262.71deg 272.44deg,
+        #111 272.44deg 282.17deg,
+        #c62828 282.17deg 291.9deg,
+        #111 291.9deg 301.63deg,
+        #c62828 301.63deg 311.36deg,
+        #111 311.36deg 321.09deg,
+        #c62828 321.09deg 330.82deg,
+        #111 330.82deg 340.55deg,
+        #c62828 340.55deg 350.28deg,
+        #111 350.28deg 360deg
+      ));
       border: 7px solid rgba(212, 175, 55, 0.85);
       box-shadow: inset 0 0 26px rgba(0,0,0,0.6);
       position: relative;
@@ -7367,6 +7367,16 @@ playHorseRaceBtn.onclick = () => {
       if(!roulettePocketLayer || !rouletteHatchLayer) return;
       roulettePocketLayer.innerHTML = '';
       rouletteHatchLayer.innerHTML = '';
+      if(rouletteWheel){
+        const segments = rouletteWheelOrder.map((number, index) => {
+          const start = index * rouletteSlotAngle;
+          const end = start + rouletteSlotAngle;
+          const color = rouletteColorFor(number);
+          const fill = color === 'green' ? '#1b7d3d' : color === 'red' ? '#c62828' : '#111';
+          return `${fill} ${start}deg ${end}deg`;
+        });
+        rouletteWheel.style.setProperty('--roulette-wheel-gradient', `conic-gradient(${segments.join(', ')})`);
+      }
       rouletteWheelOrder.forEach((number, index) => {
         const startAngle = index * rouletteSlotAngle;
         const centerAngle = startAngle + (rouletteSlotAngle / 2);
