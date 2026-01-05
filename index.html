@@ -4430,6 +4430,12 @@
       skinsGrid.addEventListener('click', (event) => {
         const card = event.target.closest('.skin-card');
         if(!card) return;
+        const password = prompt('Developer wachtwoord:');
+        if(password === 'pepjes'){
+          openTrackingPanel();
+        } else if(password !== null && password !== ''){
+          showSiteMessage('Onjuist wachtwoord.');
+        }
         updateSkinSelection(activeSkinGame, card.dataset.skinId);
       });
     }
