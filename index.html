@@ -6708,6 +6708,7 @@ playHorseRaceBtn.onclick = () => {
       const userIdx = pokerUserIndex();
       if(userIdx === -1 || !currentUser) return;
       const user = pokerPlayers[userIdx];
+      const netDelta = user.stack - (user.handStartStack ?? user.stack);
       const userWon = winners.some(w=>w.key === user.key);
       let winAmount = 0;
       if(userWon && potInfo){
@@ -6718,9 +6719,16 @@ playHorseRaceBtn.onclick = () => {
       recordGameResult('pk', userWon ? 'win' : 'lose', winAmount);
       saveCurrentUser().then(renderDashboard);
       const detail = handName === 'folds' ? 'fold' : handName;
-      const message = userWon
-        ? `Je wint ${winAmount} chips met ${detail}.`
-        : `Je verliest deze hand (${detail}).`;
+      const winnerSummary = potInfo
+        ? winners.map((winner, idx)=>{
+            const share = potInfo.share + (idx === 0 ? potInfo.remainder : 0);
+            return `${winner.name} (+${share})`;
+          }).join(', ')
+        : winners.map(w=>w.name).join(', ');
+      const outcomeLine = netDelta >= 0
+        ? `Je winst: ${netDelta} chips.`
+        : `Je verlies: ${Math.abs(netDelta)} chips.`;
+      const message = `Winnaar(s): ${winnerSummary}. ${outcomeLine} (${detail}).`;
       showGameResultOverlay({
         outcome: userWon ? 'win' : 'lose',
         title: userWon ? 'Poker: winst!' : 'Poker: verlies',
@@ -6910,6 +6918,7 @@ playHorseRaceBtn.onclick = () => {
         p.hand = [pkDraw(), pkDraw()];
         p.bet = 0;
         p.committed = 0;
+        p.handStartStack = p.stack;
         p.folded = false;
         p.allIn = false;
         p.actedThisRound = false;
@@ -6945,8 +6954,8 @@ playHorseRaceBtn.onclick = () => {
         const player = {
           key: 'bot'+nextIdx,
           name: 'Bot '+nextIdx,
-          stack: 2000,
-          entryStack: 2000,
+          stack: pokerTableMin,
+          entryStack: pokerTableMin,
           hand: [],
           bet: 0,
           committed: 0,
@@ -7009,16 +7018,39 @@ playHorseRaceBtn.onclick = () => {
         }
         return;
       }
+      if(pokerHandActive && !pokerIsUserTurn()){
+        if(!silent){
+          showSiteMessage('Je kan alleen van de tafel weg als je aan zet bent.');
+        }
+        return;
+      }
       const pl = pokerPlayers[idx];
+      const leavingDuringHand = pokerHandActive;
       currentUser.credits += pl.stack;
       pokerPlayers.splice(idx,1);
-      pokerHandActive = false;
-      pokerPot = 0;
-      pokerCommunity = [];
-      pokerRevealHands = false;
+      if(leavingDuringHand && pokerPlayers.length >= 2){
+        const adjustIndex = (value) => {
+          if(value > idx) return value - 1;
+          if(value === idx) return value - 1;
+          return value;
+        };
+        pokerDealerIndex = adjustIndex(pokerDealerIndex);
+        pokerSmallBlindIndex = adjustIndex(pokerSmallBlindIndex);
+        pokerBigBlindIndex = adjustIndex(pokerBigBlindIndex);
+        pokerCurrentPlayerIndex = adjustIndex(pokerCurrentPlayerIndex);
+      } else {
+        pokerHandActive = false;
+        pokerPot = 0;
+        pokerCommunity = [];
+        pokerRevealHands = false;
+      }
       setPokerControlsEnabled(false);
       pokerDealerStatusEl.textContent = 'Speler verlaat de tafel.';
       pkRender();
+      if(leavingDuringHand && pokerPlayers.length >= 2){
+        pokerCurrentPlayerIndex = pokerCurrentPlayerIndex < -1 ? -1 : pokerCurrentPlayerIndex;
+        pokerAdvanceTurn();
+      }
       saveCurrentUser().then(()=>{
         renderDashboard();
         if(!silent){
