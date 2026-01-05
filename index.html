@@ -5416,14 +5416,6 @@
       });
     }
 
-    function applyLayoutPalette(section, palette){
-      if(!section || !palette) return;
-      section.style.setProperty('--layout-bg', palette.layoutBg);
-      section.style.setProperty('--layout-seat', palette.layoutSeat);
-      section.style.setProperty('--layout-panel', palette.layoutPanel);
-      section.style.setProperty('--layout-border', palette.layoutBorder);
-    }
-
     function hexToRgb(hex){
       if(!hex) return null;
       const cleaned = hex.replace('#', '');
@@ -5465,6 +5457,49 @@
         leaderboardBorder: rgbaFromHex(palette.secondary, 0.4),
         leaderboardBorderYou: rgbaFromHex(palette.accent, 0.7)
       };
+    }
+
+    const gameLayoutProfiles = {
+      blackjack: { angle: 165, glow: '18% 18%', accent: 0.38, mid: 0.76, seat: 0.62, panel: 0.7 },
+      poker: { angle: 145, glow: '78% 16%', accent: 0.32, mid: 0.72, seat: 0.6, panel: 0.68 },
+      craps: { angle: 170, glow: '16% 78%', accent: 0.28, mid: 0.7, seat: 0.58, panel: 0.66 },
+      baccarat: { angle: 155, glow: '52% 12%', accent: 0.34, mid: 0.74, seat: 0.6, panel: 0.68 },
+      roulette: { angle: 150, glow: '82% 52%', accent: 0.4, mid: 0.78, seat: 0.62, panel: 0.7 },
+      slots: { angle: 135, glow: '26% 70%', accent: 0.42, mid: 0.8, seat: 0.64, panel: 0.72 },
+      horse: { angle: 168, glow: '70% 82%', accent: 0.3, mid: 0.72, seat: 0.58, panel: 0.66 },
+      plinko: { angle: 140, glow: '30% 28%', accent: 0.45, mid: 0.8, seat: 0.64, panel: 0.72 }
+    };
+
+    function clampAlpha(value){
+      return Math.min(Math.max(value, 0), 1);
+    }
+
+    function buildGameLayoutPalette(palette, gameKey){
+      const profile = gameLayoutProfiles[gameKey] || {};
+      const angle = profile.angle || 160;
+      const glowSpot = profile.glow || '20% 20%';
+      const accentAlpha = clampAlpha(profile.accent ?? 0.32);
+      const midAlpha = clampAlpha(profile.mid ?? 0.72);
+      const seatAlpha = clampAlpha(profile.seat ?? 0.6);
+      const panelAlpha = clampAlpha(profile.panel ?? 0.68);
+      const layoutBg = [
+        `radial-gradient(circle at ${glowSpot}, ${rgbaFromHex(palette.accent, accentAlpha)}, transparent 60%)`,
+        `linear-gradient(${angle}deg, ${rgbaFromHex(palette.primary, 0.96)} 0%, ${rgbaFromHex(palette.secondary, midAlpha)} 55%, ${rgbaFromHex(palette.primary, 0.98)} 100%)`
+      ].join(', ');
+      const layoutSeat = `linear-gradient(145deg, ${rgbaFromHex(palette.primary, seatAlpha)}, ${rgbaFromHex(palette.secondary, clampAlpha(seatAlpha - 0.12))})`;
+      const layoutPanel = `linear-gradient(160deg, ${rgbaFromHex(palette.primary, panelAlpha)}, ${rgbaFromHex(palette.secondary, clampAlpha(panelAlpha - 0.14))})`;
+      const layoutBorder = rgbaFromHex(palette.accent, clampAlpha(0.55 + accentAlpha * 0.35));
+
+      return { layoutBg, layoutSeat, layoutPanel, layoutBorder };
+    }
+
+    function applyLayoutPalette(section, palette, gameKey){
+      if(!section || !palette) return;
+      const layoutPalette = buildGameLayoutPalette(palette, gameKey);
+      section.style.setProperty('--layout-bg', layoutPalette.layoutBg);
+      section.style.setProperty('--layout-seat', layoutPalette.layoutSeat);
+      section.style.setProperty('--layout-panel', layoutPalette.layoutPanel);
+      section.style.setProperty('--layout-border', layoutPalette.layoutBorder);
     }
 
     function getThemeById(id){
@@ -5525,7 +5560,7 @@
       if(!section) return;
       const skinId = getSelectedLayoutId(gameKey);
       const palette = getThemeById(skinId);
-      applyLayoutPalette(section, palette);
+      applyLayoutPalette(section, palette, gameKey);
     }
 
     function applyAllSkins(){
