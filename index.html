@@ -1480,6 +1480,111 @@
       color: rgba(255,255,255,0.9);
       border: 1px solid rgba(255,214,140,0.18);
       box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .shop-preview{
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .shop-preview-group{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .shop-preview-icon{
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      font-size: 18px;
+      background: rgba(0,0,0,0.35);
+      color: #fff;
+      padding: 4px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      z-index: 2;
+    }
+
+    .shop-preview-card{
+      width: 58px;
+      height: 86px;
+      border-radius: 12px;
+      background: var(--preview-card-bg);
+      border: 1px solid var(--preview-card-border);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+    }
+
+    .shop-preview-die{
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      place-items: center;
+      background: var(--preview-dice-bg);
+      color: var(--preview-dice-color);
+      border: 1px solid rgba(255,255,255,0.45);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.35);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.45);
+    }
+
+    .shop-preview-die .craps-pip{
+      width: 12px;
+      height: 12px;
+      font-size: 10px;
+      filter: none;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+    }
+
+    .shop-preview-ball{
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--preview-ball-bg);
+      border: 1px solid rgba(255,255,255,0.45);
+      box-shadow: inset 0 0 8px rgba(255,255,255,0.3), 0 8px 16px rgba(0,0,0,0.35);
+    }
+
+    .shop-preview-screen{
+      width: 92px;
+      height: 70px;
+      border-radius: 14px;
+      background: var(--preview-screen-bg);
+      border: 1px solid rgba(255,255,255,0.4);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 18px rgba(0,0,0,0.35);
+    }
+
+    .shop-preview-screen::before{
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .shop-preview-screen::after{
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 12px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--preview-screen-accent);
     }
 
     .shop-card h4{
@@ -2601,9 +2706,9 @@
       align-items: center;
       justify-content: center;
       font-size: 16px;
-      color: #f6d676;
+      color: currentColor;
       text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-      filter: drop-shadow(0 0 4px rgba(255, 215, 128, 0.35));
+      filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.35));
     }
 
     .craps-pip.pos-0{ grid-area: 1 / 1; }
@@ -5826,6 +5931,7 @@
       root.style.setProperty('--theme-claim-daily-shadow', menuSurfaces.claimDailyShadow);
 
       Object.keys(gameLabels).forEach((gameKey) => applyGameSkin(gameKey));
+      refreshCrapsDicePips();
     }
 
     function getShopItemsForTab(tabKey){
@@ -5901,6 +6007,59 @@
         default:
           return [];
       }
+    }
+
+    function buildShopPreviewMarkup(tabKey, themeId){
+      const palette = getThemeById(themeId);
+      const pipSymbol = getDicePipSymbol(themeId);
+      const previewCard = `<div class="shop-preview-card" style="--preview-card-bg: ${palette.cardBack}; --preview-card-border: ${palette.cardBorder};"></div>`;
+      const previewDice = `
+        <div class="shop-preview-die" style="--preview-dice-bg: ${palette.diceBg}; --preview-dice-color: ${palette.diceColor};">
+          ${buildDicePipMarkup(5, pipSymbol)}
+        </div>
+      `;
+      const previewBall = `<div class="shop-preview-ball" style="--preview-ball-bg: ${palette.ballBg};"></div>`;
+      const previewScreen = (screenBg) => `
+        <div class="shop-preview-screen" style="--preview-screen-bg: ${screenBg}; --preview-screen-accent: ${rgbaFromHex(palette.accent, 0.65)};"></div>
+      `;
+
+      if(tabKey === 'bundles'){
+        return `
+          <div class="shop-preview">
+            <div class="shop-preview-group">
+              ${previewCard}
+              ${previewDice}
+              ${previewBall}
+            </div>
+          </div>
+        `;
+      }
+
+      if(tabKey === 'login'){
+        return `<div class="shop-preview">${previewScreen(palette.loginBg)}</div>`;
+      }
+
+      if(tabKey === 'menu'){
+        return `<div class="shop-preview">${previewScreen(palette.dashboardBg)}</div>`;
+      }
+
+      if(tabKey === 'layout'){
+        return `<div class="shop-preview">${previewScreen(palette.layoutBg)}</div>`;
+      }
+
+      if(tabKey === 'cards'){
+        return `<div class="shop-preview">${previewCard}</div>`;
+      }
+
+      if(tabKey === 'dice'){
+        return `<div class="shop-preview">${previewDice}</div>`;
+      }
+
+      if(tabKey === 'balls'){
+        return `<div class="shop-preview">${previewBall}</div>`;
+      }
+
+      return `<div class="shop-preview">${previewCard}</div>`;
     }
 
     function isItemOwned(tabKey, itemId){
@@ -6105,7 +6264,10 @@
 
         return `
           <div class="shop-card ${owned ? 'is-owned' : ''} ${selected ? 'is-selected' : ''}">
-            <div class="shop-item-image" style="background: ${item.preview};">${item.icon}</div>
+            <div class="shop-item-image" style="background: ${item.preview};">
+              ${buildShopPreviewMarkup(activeShopTab, item.id)}
+              <span class="shop-preview-icon">${item.icon}</span>
+            </div>
             <h4>${item.name}</h4>
             <p>${item.description}</p>
             <div class="shop-card-footer">
@@ -7427,6 +7589,28 @@ playHorseRaceBtn.onclick = () => {
       5: [0, 2, 4, 6, 8],
       6: [0, 2, 3, 5, 6, 8]
     };
+
+    const dicePipSymbols = {
+      classic: '●',
+      aurora: '✦',
+      velvet: '♦',
+      ember: '✸',
+      lagoon: '◈',
+      neon: '✧',
+      rose: '❀',
+      jade: '♣',
+      solar: '☀',
+      obsidian: '☾'
+    };
+
+    function getDicePipSymbol(themeId){
+      return dicePipSymbols[themeId] || dicePipSymbols.classic;
+    }
+
+    function buildDicePipMarkup(value, pipSymbol, className = 'craps-pip'){
+      const layout = crapsPipLayouts[value] || [];
+      return layout.map(pos => `<span class="${className} pos-${pos}">${pipSymbol}</span>`).join('');
+    }
     let crapsPoint = null;
     let crapsBet = 0;
     let crapsRolling = false;
@@ -7437,14 +7621,21 @@ playHorseRaceBtn.onclick = () => {
 
     function renderCrapsDie(dieEl, value){
       if(!dieEl) return;
-      const layout = crapsPipLayouts[value] || [];
+      const themeId = currentUser?.shopSelection?.dice || 'classic';
+      const pipSymbol = getDicePipSymbol(themeId);
       dieEl.dataset.value = value;
-      dieEl.innerHTML = layout.map(pos => `<span class="craps-pip pos-${pos}">💀</span>`).join('');
+      dieEl.innerHTML = buildDicePipMarkup(value, pipSymbol);
     }
 
     function updateCrapsDice(d1, d2){
       renderCrapsDie(crapsDieOne, d1);
       renderCrapsDie(crapsDieTwo, d2);
+    }
+
+    function refreshCrapsDicePips(){
+      const d1 = parseInt(crapsDieOne?.dataset?.value, 10) || 1;
+      const d2 = parseInt(crapsDieTwo?.dataset?.value, 10) || 1;
+      updateCrapsDice(d1, d2);
     }
 
     function resetCrapsRound(){
