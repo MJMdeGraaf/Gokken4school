@@ -5853,7 +5853,10 @@ playHorseRaceBtn.onclick = () => {
       row.appendChild(cardEl);
     }
 
-    async function dealBaccaratCard(hand, row, label, delay = 320){
+    const baccaratDealDelay = 640;
+    const baccaratInitialDelay = 400;
+
+    async function dealBaccaratCard(hand, row, label, delay = baccaratDealDelay){
       const card = baccaratCard();
       hand.push(card);
       appendBaccaratCard(row, card);
@@ -5883,7 +5886,7 @@ playHorseRaceBtn.onclick = () => {
       const bankerHand = [];
       initBaccaratRow(baccaratPlayerRow, 'Player');
       initBaccaratRow(baccaratBankerRow, 'Banker');
-      await sleep(200);
+      await sleep(baccaratInitialDelay);
       await dealBaccaratCard(playerHand, baccaratPlayerRow, 'Player');
       await dealBaccaratCard(bankerHand, baccaratBankerRow, 'Banker');
       await dealBaccaratCard(playerHand, baccaratPlayerRow, 'Player');
