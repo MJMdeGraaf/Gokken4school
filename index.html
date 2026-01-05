@@ -686,6 +686,20 @@
       font-family: "Segoe UI", system-ui, sans-serif;
       background:#050515;
       color:#fff;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    *,
+    *::before,
+    *::after{
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      -moz-user-select: none;
+      -webkit-touch-callout: none;
     }
     #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection, #skinsSection { display: none; padding: 20px; text-align:center; }
     #login {
@@ -7454,6 +7468,14 @@ startRaceBtn.onclick = async () => {
     lbClose.onclick = ()=>{ lbPopup.style.display='none'; };
     lbLeft.onclick = ()=>{ lbIndex=(lbIndex-1+leaderboardConfigs.length)%leaderboardConfigs.length; openLeaderboard(); };
     lbRight.onclick = ()=>{ lbIndex=(lbIndex+1)%leaderboardConfigs.length; openLeaderboard(); };
+
+    const blockCopyHandlers = (event)=>event.preventDefault();
+    ['copy', 'cut', 'paste', 'contextmenu', 'selectstart', 'dragstart'].forEach((eventName)=>{
+      document.addEventListener(eventName, blockCopyHandlers);
+    });
+    document.addEventListener('mousedown', (event)=>{
+      if(event.detail > 1) event.preventDefault();
+    });
 
   </script>
 </body>
