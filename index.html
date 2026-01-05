@@ -1029,12 +1029,13 @@
       display:grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap:18px;
+      perspective: 1200px;
     }
 
     .menu-card{
       background: var(--menu-surface-light);
       border-radius: 18px;
-      padding: 18px;
+      padding: 18px 18px 64px;
       border: 1px solid rgba(255,255,255,0.08);
       box-shadow: 0 14px 28px rgba(0,0,0,0.4);
       text-align:left;
@@ -1043,6 +1044,9 @@
       gap:12px;
       position: relative;
       overflow: hidden;
+      transform: rotate(var(--card-tilt, 0deg));
+      transform-origin: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
     }
 
     .menu-card::after{
@@ -1052,6 +1056,31 @@
       background: radial-gradient(circle at top right, rgba(15,111,178,0.35), transparent 55%);
       opacity:0.8;
       pointer-events:none;
+      z-index: 0;
+    }
+
+    .menu-card > *{
+      position: relative;
+      z-index: 1;
+    }
+
+    .menu-card:hover{
+      transform: translateY(-6px) rotate(0deg);
+      box-shadow: 0 20px 32px rgba(0,0,0,0.45);
+      filter: brightness(1.03);
+    }
+
+    .menu-card-art{
+      position: absolute;
+      right: 14px;
+      bottom: 12px;
+      width: 64px;
+      height: 64px;
+      opacity: 0.9;
+      z-index: 0;
+      transform: rotate(-8deg);
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.45));
+      pointer-events: none;
     }
 
     .menu-card h4{
@@ -1113,6 +1142,9 @@
       .menu-hero{
         flex-direction: column;
         align-items: flex-start;
+      }
+      .menu-card{
+        transform: none;
       }
     }
 
@@ -3005,42 +3037,42 @@
       </section>
 
       <div class="menu-grid">
-        <div class="menu-card menu-highlight">
+        <div class="menu-card menu-highlight" data-game="blackjack">
           <h4>Blackjack Lounge</h4>
           <p>Casino vibes met live feeling. Strategisch en snel uitbetalen.</p>
           <button id="playBlackjackBtn" class="cta-button">Play Blackjack</button>
         </div>
-        <div class="menu-card">
+        <div class="menu-card" data-game="poker">
           <h4>Poker Royale</h4>
           <p>Ga all-in of speel slim. Kies je tafel en domineer.</p>
           <button id="playPokerBtn" class="cta-button alt">Speel Poker</button>
         </div>
-        <div class="menu-card">
+        <div class="menu-card" data-game="craps">
           <h4>Craps Arena</h4>
           <p>Gooi de dobbelstenen en bouw je punt op.</p>
           <button id="playCrapsBtn" class="cta-button">Speel Craps</button>
         </div>
-        <div class="menu-card">
+        <div class="menu-card" data-game="baccarat">
           <h4>Baccarat Salon</h4>
           <p>Elegante snelle rondes voor high-roller vibes.</p>
           <button id="playBaccaratBtn" class="cta-button alt">Speel Baccarat</button>
         </div>
-        <div class="menu-card">
+        <div class="menu-card" data-game="roulette">
           <h4>Roulette Table</h4>
           <p>Voorspel kleur of nummer en laat het wiel draaien.</p>
           <button id="playRouletteBtn" class="cta-button">Speel Roulette</button>
         </div>
-        <div class="menu-card">
+        <div class="menu-card" data-game="slots">
           <h4>Slot Machines</h4>
           <p>Drie rollen, dikke payouts. Trek de hendel en voel de spanning.</p>
           <button id="playSlotsBtn" class="cta-button alt">Speel Slots</button>
         </div>
-        <div class="menu-card">
+        <div class="menu-card" data-game="horse">
           <h4>Paardenrace Club</h4>
           <p>Stap in de VIP-tribune en kies jouw winnaar.</p>
           <button id="playHorseRaceBtn" class="cta-button alt">Start race</button>
         </div>
-        <div class="menu-card">
+        <div class="menu-card" data-game="plinko">
           <h4>Plinko Drop</h4>
           <p>Laat de bal vallen en pak multipliers met een smooth landing.</p>
           <button id="playPlinkoBtn" class="cta-button">Speel Plinko</button>
@@ -3582,6 +3614,58 @@
     const luckyCoinsEl = document.getElementById('luckyCoins');
     const luckyCoinProgressEl = document.getElementById('luckyCoinProgress');
 
+    const menuCardArtMap = {
+      blackjack: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f0a1.png',
+        alt: 'Aas van schoppen kaart'
+      },
+      poker: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f0cf.png',
+        alt: 'Joker speelkaart'
+      },
+      craps: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f3b2.png',
+        alt: 'Dobbelsteen'
+      },
+      baccarat: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f0b1.png',
+        alt: 'Aas van harten kaart'
+      },
+      roulette: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f3af.png',
+        alt: 'Roulette doelwit'
+      },
+      slots: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f3b0.png',
+        alt: 'Fruitautomaat'
+      },
+      horse: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f3c7.png',
+        alt: 'Paardenrace'
+      },
+      plinko: {
+        src: 'https://twemoji.maxcdn.com/v/latest/72x72/1f3d0.png',
+        alt: 'Plinko bal'
+      }
+    };
+
+    function setupMenuCardArt(){
+      const menuCards = document.querySelectorAll('.menu-card[data-game]');
+      menuCards.forEach((card, index)=>{
+        if(card.querySelector('.menu-card-art')) return;
+        const art = menuCardArtMap[card.dataset.game];
+        if(!art) return;
+        const img = document.createElement('img');
+        img.className = 'menu-card-art';
+        img.src = art.src;
+        img.alt = art.alt;
+        img.loading = 'lazy';
+        card.appendChild(img);
+        const tilt = Number.parseFloat(card.dataset.tilt) || (index % 2 === 0 ? -1.6 : 1.6);
+        card.style.setProperty('--card-tilt', `${tilt}deg`);
+      });
+    }
+
     const lootBoxTitle = document.getElementById('lootBoxTitle');
     const lootBoxSubtitle = document.getElementById('lootBoxSubtitle');
     const lootBoxCard = document.getElementById('lootBoxCard');
@@ -3591,6 +3675,8 @@
     const lootBoxReward = document.getElementById('lootBoxReward');
     const backToMenuFromLoot = document.getElementById('backToMenuFromLoot');
     const backToMenuFromLuckyBoxes = document.getElementById('backToMenuFromLuckyBoxes');
+
+    setupMenuCardArt();
 
     /* Blackjack refs */
     const startGameBtn = document.getElementById('startGame');
