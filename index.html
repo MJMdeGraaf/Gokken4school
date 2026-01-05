@@ -7432,11 +7432,13 @@ playHorseRaceBtn.onclick = () => {
       const resultNumber = Math.floor(Math.random() * 37);
       const resultIndex = rouletteWheelOrder.indexOf(resultNumber);
       const targetAngle = (resultIndex * rouletteSlotAngle) + (rouletteSlotAngle / 2);
-      const finalRotation = (spinTurns * 360) + (360 - targetAngle);
+      const normalizedWheelRotation = ((rouletteWheelRotation % 360) + 360) % 360;
+      const alignmentOffset = (360 - ((normalizedWheelRotation + targetAngle) % 360)) % 360;
+      const finalRotation = (spinTurns * 360) + alignmentOffset;
       const spinDuration = 3000 + Math.random() * 800;
-      const orbitDuration = spinDuration * 0.78;
+      const orbitDuration = spinDuration;
       const dropDuration = 520;
-      const pocketInset = rouletteSlotAngle * 0.2;
+      const pocketInset = rouletteSlotAngle * 0.3;
       const pocketJitter = (Math.random() - 0.5) * (rouletteSlotAngle - pocketInset * 2);
       const ballTargetAngle = pocketJitter;
 
@@ -7467,7 +7469,7 @@ playHorseRaceBtn.onclick = () => {
       setTimeout(() => {
         rouletteStatus.textContent = 'De bal stuitert tussen de hatches...';
         rouletteBall?.classList.add('is-dropping');
-      }, orbitDuration);
+      }, Math.max(0, orbitDuration - dropDuration));
 
       await sleep(spinDuration + dropDuration);
 
