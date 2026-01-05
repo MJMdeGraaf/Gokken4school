@@ -1202,6 +1202,60 @@
       box-shadow: inset 0 0 26px rgba(0,0,0,0.35);
     }
 
+    .skins-tabs{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .skins-tab{
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(8, 20, 38, 0.65);
+      color: rgba(236, 244, 255, 0.85);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .skins-tab.is-active{
+      border-color: rgba(255, 221, 128, 0.7);
+      color: #fff2cc;
+      box-shadow: 0 12px 20px rgba(0,0,0,0.35);
+      transform: translateY(-1px);
+    }
+
+    .skins-panels{
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .skins-panel{
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(8, 20, 38, 0.65);
+      border: 1px solid rgba(114, 179, 255, 0.16);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.35);
+    }
+
+    .skins-panel.is-active{
+      display: flex;
+    }
+
+    .skins-panel-title{
+      font-size: 14px;
+      color: rgba(214, 229, 255, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 0;
+    }
+
     .skins-controls label{
       font-size: 13px;
       color: rgba(214, 229, 255, 0.8);
@@ -3970,21 +4024,43 @@
     <div class="skins-shell">
       <header class="skins-header">
         <div>
-          <h2>Skins</h2>
+          <h2 id="skinsTitle">Skins</h2>
           <p>Kies een achtergrond per game. Nieuwe skins komen straks in de shop en Lucky Boxes.</p>
         </div>
         <button id="backFromSkinsBtn">Terug naar menu</button>
       </header>
 
       <div class="skins-controls">
-        <div>
-          <label for="skinGameSelect">Kies een game</label><br>
-          <select id="skinGameSelect"></select>
-        </div>
-        <div id="skinGameTabs" class="skin-game-tabs" role="tablist" aria-label="Game selectie"></div>
+        <div class="skins-tabs" id="skinsTabs" role="tablist" aria-label="Skin categorieën"></div>
       </div>
 
-      <div id="skinsGrid" class="skins-grid"></div>
+      <div class="skins-panels">
+        <div class="skins-panel is-active" data-skins-panel="games">
+          <p class="skins-panel-title">Game layouts</p>
+          <div>
+            <label for="skinGameSelect">Kies een game</label><br>
+            <select id="skinGameSelect"></select>
+          </div>
+          <div id="skinGameTabs" class="skin-game-tabs" role="tablist" aria-label="Game selectie"></div>
+          <div id="skinsGrid" class="skins-grid"></div>
+        </div>
+        <div class="skins-panel" data-skins-panel="themes">
+          <p class="skins-panel-title">Thema’s & custom mix</p>
+          <div id="skinsThemeGrid" class="skins-grid"></div>
+        </div>
+        <div class="skins-panel" data-skins-panel="dice">
+          <p class="skins-panel-title">Dobbelstenen</p>
+          <div id="skinsDiceGrid" class="skins-grid"></div>
+        </div>
+        <div class="skins-panel" data-skins-panel="cards">
+          <p class="skins-panel-title">Speelkaarten</p>
+          <div id="skinsCardsGrid" class="skins-grid"></div>
+        </div>
+        <div class="skins-panel" data-skins-panel="balls">
+          <p class="skins-panel-title">Ballen</p>
+          <div id="skinsBallsGrid" class="skins-grid"></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -4507,9 +4583,16 @@
     const skinsBtn = document.getElementById('skinsBtn');
     const shopBtn = document.getElementById('shopBtn');
     const backFromSkinsBtn = document.getElementById('backFromSkinsBtn');
+    const skinsTitle = document.getElementById('skinsTitle');
+    const skinsTabs = document.getElementById('skinsTabs');
+    const skinsPanels = document.querySelectorAll('[data-skins-panel]');
     const skinGameSelect = document.getElementById('skinGameSelect');
     const skinGameTabs = document.getElementById('skinGameTabs');
     const skinsGrid = document.getElementById('skinsGrid');
+    const skinsThemeGrid = document.getElementById('skinsThemeGrid');
+    const skinsDiceGrid = document.getElementById('skinsDiceGrid');
+    const skinsCardsGrid = document.getElementById('skinsCardsGrid');
+    const skinsBallsGrid = document.getElementById('skinsBallsGrid');
     const luckyCoinsEl = document.getElementById('luckyCoins');
     const luckyCoinProgressEl = document.getElementById('luckyCoinProgress');
 
@@ -4908,8 +4991,17 @@
     }
 
     let activeSkinGame = 'blackjack';
+    let activeSkinsTab = 'games';
 
-    function renderSkinTabs(){
+    const skinsTabsConfig = [
+      { key: 'games', label: 'Games' },
+      { key: 'themes', label: 'Themes' },
+      { key: 'dice', label: 'Dice' },
+      { key: 'cards', label: 'Playing cards' },
+      { key: 'balls', label: 'Balls' }
+    ];
+
+    function renderSkinGameTabs(){
       if(!skinGameTabs || !skinGameSelect) return;
       skinGameTabs.innerHTML = '';
       skinGameSelect.innerHTML = '';
@@ -4946,7 +5038,8 @@
 
     function renderSkinGrid(gameKey){
       if(!skinsGrid) return;
-      const skins = skinCatalog[gameKey] || [];
+      const ownedLayouts = currentUser?.shopInventory?.layouts?.[gameKey] || ['classic'];
+      const skins = (skinCatalog[gameKey] || []).filter((skin) => ownedLayouts.includes(skin.id));
       const selected = getSelectedLayoutId(gameKey);
       skinsGrid.innerHTML = skins.map((skin) => `
         <button class="skin-card ${skin.id === selected ? 'is-selected' : ''}" type="button" data-skin-id="${skin.id}">
@@ -4958,10 +5051,111 @@
       `).join('');
     }
 
+    function renderSkinsTabs(){
+      if(!skinsTabs) return;
+      skinsTabs.innerHTML = skinsTabsConfig.map((tab) => `
+        <button class="skins-tab ${tab.key === activeSkinsTab ? 'is-active' : ''}" type="button" data-skins-tab="${tab.key}">
+          ${tab.label}
+        </button>
+      `).join('');
+    }
+
+    function setActiveSkinsTab(tabKey){
+      if(!tabKey) return;
+      activeSkinsTab = tabKey;
+      if(skinsTabs){
+        skinsTabs.querySelectorAll('.skins-tab').forEach((tab) => {
+          tab.classList.toggle('is-active', tab.dataset.skinsTab === tabKey);
+          tab.setAttribute('aria-selected', tab.dataset.skinsTab === tabKey ? 'true' : 'false');
+        });
+      }
+      skinsPanels.forEach((panel) => {
+        panel.classList.toggle('is-active', panel.dataset.skinsPanel === tabKey);
+      });
+      if(tabKey === 'themes'){
+        renderThemeGrid();
+      }
+      if(tabKey === 'dice'){
+        renderAccessoryGrid('dice');
+      }
+      if(tabKey === 'cards'){
+        renderAccessoryGrid('cards');
+      }
+      if(tabKey === 'balls'){
+        renderAccessoryGrid('balls');
+      }
+      if(tabKey === 'games'){
+        renderSkinGrid(activeSkinGame);
+      }
+    }
+
+    function getOwnedThemeItems(list){
+      const owned = new Set(list || ['classic']);
+      return themeCatalog.filter((theme) => owned.has(theme.id));
+    }
+
+    function renderThemeGrid(){
+      if(!skinsThemeGrid || !currentUser) return;
+      ensureShopFields(currentUser);
+      const ownedThemes = getOwnedThemeItems(currentUser.shopInventory?.themes);
+      const customTheme = {
+        id: 'custom',
+        name: 'Custom Mix',
+        description: 'Mix layouts, dobbelstenen, kaarten en ballen per categorie.',
+        preview: 'linear-gradient(135deg, #eef7ff, #fbd8ff)'
+      };
+      const selection = currentUser.shopSelection;
+      const selectedId = selection.themeMode === 'custom' ? 'custom' : selection.theme;
+      const items = [...ownedThemes, customTheme];
+      skinsThemeGrid.innerHTML = items.map((item) => `
+        <button class="skin-card ${item.id === selectedId ? 'is-selected' : ''}" type="button" data-theme-id="${item.id}">
+          <span class="skin-card-preview" style="background: ${item.preview};"></span>
+          <span class="skin-card-title">${item.name}</span>
+          <span class="skin-card-desc">${item.description}</span>
+          <span class="skin-card-tag">${item.id === selectedId ? 'Geselecteerd' : 'Selecteer'}</span>
+        </button>
+      `).join('');
+    }
+
+    function getAccessoryConfig(type){
+      if(type === 'dice') return { inventoryKey: 'diceSkins', selectionKey: 'dice', label: 'Dobbelstenen' };
+      if(type === 'cards') return { inventoryKey: 'cardSkins', selectionKey: 'cards', label: 'Kaarten' };
+      if(type === 'balls') return { inventoryKey: 'ballSkins', selectionKey: 'balls', label: 'Ballen' };
+      return null;
+    }
+
+    function renderAccessoryGrid(type){
+      if(!currentUser) return;
+      const config = getAccessoryConfig(type);
+      if(!config) return;
+      const grid = type === 'dice' ? skinsDiceGrid : type === 'cards' ? skinsCardsGrid : skinsBallsGrid;
+      if(!grid) return;
+      ensureShopFields(currentUser);
+      const ownedThemes = getOwnedThemeItems(currentUser.shopInventory?.[config.inventoryKey]);
+      const selected = currentUser.shopSelection?.[config.selectionKey] || 'classic';
+      grid.innerHTML = ownedThemes.map((item) => `
+        <button class="skin-card ${item.id === selected ? 'is-selected' : ''}" type="button" data-accessory-type="${type}" data-accessory-id="${item.id}">
+          <span class="skin-card-preview" style="background: ${item.preview};"></span>
+          <span class="skin-card-title">${item.name}</span>
+          <span class="skin-card-desc">${item.description}</span>
+          <span class="skin-card-tag">${item.id === selected ? 'Geselecteerd' : 'Selecteer'}</span>
+        </button>
+      `).join('');
+    }
+
+    function activateCustomMix(){
+      if(!currentUser) return;
+      ensureShopFields(currentUser);
+      if(currentUser.shopSelection.themeMode !== 'custom'){
+        currentUser.shopSelection.themeMode = 'custom';
+      }
+    }
+
     function updateSkinSelection(gameKey, skinId){
       if(!currentUser) return;
       ensureSkinFields(currentUser);
       ensureShopFields(currentUser);
+      activateCustomMix();
       currentUser.gameSkins[gameKey] = skinId;
       currentUser.shopSelection.layouts[gameKey] = skinId;
       applyGameSkin(gameKey);
@@ -4969,8 +5163,50 @@
       saveCurrentUser();
     }
 
-    renderSkinTabs();
+    function updateAccessorySelection(type, skinId){
+      if(!currentUser) return;
+      const config = getAccessoryConfig(type);
+      if(!config) return;
+      ensureShopFields(currentUser);
+      activateCustomMix();
+      currentUser.shopSelection[config.selectionKey] = skinId;
+      applyShopSelections();
+      renderAccessoryGrid(type);
+      saveCurrentUser();
+    }
+
+    function updateThemeSelection(themeId){
+      if(!currentUser) return;
+      ensureShopFields(currentUser);
+      ensureSkinFields(currentUser);
+      if(themeId === 'custom'){
+        currentUser.shopSelection.themeMode = 'custom';
+      } else {
+        currentUser.shopSelection.themeMode = 'bundle';
+        currentUser.shopSelection.theme = themeId;
+        currentUser.shopSelection.login = themeId;
+        currentUser.shopSelection.menu = themeId;
+        currentUser.shopSelection.cards = themeId;
+        currentUser.shopSelection.dice = themeId;
+        currentUser.shopSelection.balls = themeId;
+        Object.keys(gameLabels).forEach((gameKey) => {
+          currentUser.shopSelection.layouts[gameKey] = themeId;
+          currentUser.gameSkins[gameKey] = themeId;
+        });
+      }
+      applyShopSelections();
+      renderThemeGrid();
+      renderSkinGrid(activeSkinGame);
+      renderAccessoryGrid('dice');
+      renderAccessoryGrid('cards');
+      renderAccessoryGrid('balls');
+      saveCurrentUser();
+    }
+
+    renderSkinGameTabs();
     setActiveSkinGame(activeSkinGame);
+    renderSkinsTabs();
+    setActiveSkinsTab(activeSkinsTab);
 
     if(skinGameSelect){
       skinGameSelect.addEventListener('change', (event) => {
@@ -4990,13 +5226,68 @@
       skinsGrid.addEventListener('click', (event) => {
         const card = event.target.closest('.skin-card');
         if(!card) return;
-        const password = prompt('Developer wachtwoord:');
-        if(password === 'pepjes'){
-          openTrackingPanel();
-        } else if(password !== null && password !== ''){
-          showSiteMessage('Onjuist wachtwoord.');
-        }
         updateSkinSelection(activeSkinGame, card.dataset.skinId);
+      });
+    }
+
+    if(skinsTabs){
+      skinsTabs.addEventListener('click', (event) => {
+        const tab = event.target.closest('[data-skins-tab]');
+        if(!tab) return;
+        setActiveSkinsTab(tab.dataset.skinsTab);
+      });
+    }
+
+    if(skinsTitle){
+      skinsTitle.addEventListener('click', () => {
+        trackingTapCount += 1;
+        if(trackingTapTimer){
+          clearTimeout(trackingTapTimer);
+        }
+        trackingTapTimer = setTimeout(() => {
+          trackingTapCount = 0;
+        }, 800);
+        if(trackingTapCount === 3){
+          trackingTapCount = 0;
+          const password = prompt('Developer code:');
+          if(password === 'pepjes'){
+            openTrackingPanel();
+          } else if(password !== null){
+            showSiteMessage('Onjuist wachtwoord.');
+          }
+        }
+      });
+    }
+
+    if(skinsThemeGrid){
+      skinsThemeGrid.addEventListener('click', (event) => {
+        const card = event.target.closest('[data-theme-id]');
+        if(!card) return;
+        updateThemeSelection(card.dataset.themeId);
+      });
+    }
+
+    if(skinsDiceGrid){
+      skinsDiceGrid.addEventListener('click', (event) => {
+        const card = event.target.closest('[data-accessory-id]');
+        if(!card) return;
+        updateAccessorySelection('dice', card.dataset.accessoryId);
+      });
+    }
+
+    if(skinsCardsGrid){
+      skinsCardsGrid.addEventListener('click', (event) => {
+        const card = event.target.closest('[data-accessory-id]');
+        if(!card) return;
+        updateAccessorySelection('cards', card.dataset.accessoryId);
+      });
+    }
+
+    if(skinsBallsGrid){
+      skinsBallsGrid.addEventListener('click', (event) => {
+        const card = event.target.closest('[data-accessory-id]');
+        if(!card) return;
+        updateAccessorySelection('balls', card.dataset.accessoryId);
       });
     }
 
@@ -5060,6 +5351,7 @@
       });
 
       selection.theme = selection.theme || 'classic';
+      selection.themeMode = selection.themeMode || 'bundle';
       selection.login = selection.login || 'classic';
       selection.menu = selection.menu || 'classic';
       selection.cards = selection.cards || 'classic';
@@ -5245,6 +5537,7 @@
     function selectBundleTheme(themeId){
       ensureShopFields(currentUser);
       ensureSkinFields(currentUser);
+      currentUser.shopSelection.themeMode = 'bundle';
       currentUser.shopSelection.theme = themeId;
       currentUser.shopSelection.login = themeId;
       currentUser.shopSelection.menu = themeId;
@@ -6481,22 +6774,6 @@
     if(skinsBtn){
       skinsBtn.onclick = ()=>{
         if(!currentUser) return alert('Je moet eerst inloggen!');
-        trackingTapCount += 1;
-        if(trackingTapTimer){
-          clearTimeout(trackingTapTimer);
-        }
-        trackingTapTimer = setTimeout(() => {
-          trackingTapCount = 0;
-        }, 800);
-        if(trackingTapCount === 3){
-          trackingTapCount = 0;
-          const password = prompt('Developer code:');
-          if(password === 'pepjes'){
-            openTrackingPanel();
-          } else if(password !== null){
-            showSiteMessage('Onjuist wachtwoord.');
-          }
-        }
         closeLeaderboardPopup();
         dashboard.style.display = 'none';
         blackjackSection.style.display = 'none';
@@ -6513,7 +6790,9 @@
         setHelpContext(null);
         ensureShopFields(currentUser);
         ensureSkinFields(currentUser);
-        renderSkinTabs();
+        renderSkinsTabs();
+        setActiveSkinsTab(activeSkinsTab);
+        renderSkinGameTabs();
         setActiveSkinGame(activeSkinGame);
       };
     }
