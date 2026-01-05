@@ -3857,92 +3857,92 @@
     const helpContent = {
       blackjack: {
         title: 'Blackjack — spelregels',
-        subtitle: 'Kom zo dicht mogelijk bij 21 zonder erover te gaan.',
+        subtitle: 'Doel: zo dicht mogelijk bij 21 komen zonder eroverheen te gaan.',
         steps: [
-          { icon: '💶', title: 'Inzet & start', text: 'Kies je inzet en klik op “Start ronde”.' },
-          { icon: '🃏', title: 'Hit of Stand', text: 'Hit pakt een kaart, Stand stopt jouw hand.' },
-          { icon: '🏆', title: 'Dealer speelt uit', text: 'Dealer trekt tot 17. Hoogste score wint.' }
+          { icon: '💶', title: 'Inzet & start', text: 'Kies je inzet en klik op “Start ronde”. Jij en de dealer krijgen allebei 2 kaarten; één kaart van de dealer ligt open.' },
+          { icon: '🃏', title: 'Jouw keuzes', text: 'Hit = nog een kaart pakken. Stand = stoppen en passen. Kom je boven 21, dan ben je “bust” en verlies je direct.' },
+          { icon: '🏆', title: 'Dealer en volgende ronde', text: 'De dealer moet altijd kaarten pakken tot minimaal 17. Hoogste score wint. Gelijk = push (gelijkspel). Klik “Volgende ronde” om opnieuw te spelen.' }
         ]
       },
       poker: {
         title: 'Texas Hold’em Poker',
-        subtitle: 'Speel met blinds en maak de beste 5-kaarten hand.',
+        subtitle: 'Je krijgt 2 eigen kaarten en gebruikt tot 5 kaarten om de beste hand te maken.',
         steps: [
-          { icon: '🪙', title: 'Koop je in', text: 'Kies een tafel en betaal de buy‑in.' },
-          { icon: '🗣️', title: 'Acties', text: 'Check/Call, Bet/Raise of Fold als jij aan de beurt bent.' },
-          { icon: '🏅', title: 'Win de pot', text: 'Beste hand wint of iedereen foldt.' }
+          { icon: '🪙', title: 'Koop je in', text: 'Kies een tafel en betaal de buy‑in. Small en big blinds zijn verplichte inzetten om de pot te starten.' },
+          { icon: '🗣️', title: 'Mogelijke acties', text: 'Check = niets inzetten als er nog geen bet is. Call = meebetalen tot het huidige bedrag. Bet/Raise = (meer) inzetten; vul “Raise naar” in. Fold = je hand weggooien en je doet niet meer mee.' },
+          { icon: '🏅', title: 'Rondes & winst', text: 'Er komen 5 open kaarten op tafel: 3 (flop), 1 (turn), 1 (river). Maak de beste 5‑kaarten hand met jouw 2 kaarten + de open kaarten. Beste hand wint de pot of iedereen anders foldt.' }
         ]
       },
       craps: {
         title: 'Craps Royale',
-        subtitle: 'Come‑out roll bepaalt jouw punt.',
+        subtitle: 'Je gokt op de uitkomst van dobbelstenen. De eerste worp bepaalt het “punt”.',
         steps: [
-          { icon: '💶', title: 'Plaats inzet', text: 'Zet minimaal 10 credits in.' },
-          { icon: '🎲', title: 'Come‑out roll', text: '7/11 wint, 2/3/12 verliest; anders wordt het je punt.' },
-          { icon: '🎯', title: 'Punt halen', text: 'Gooi je punt opnieuw voor winst; 7 verliest.' }
+          { icon: '💶', title: 'Plaats inzet', text: 'Zet minimaal 10 credits in en klik op “Gooi”.' },
+          { icon: '🎲', title: 'Eerste worp', text: 'Rol je 7 of 11, dan win je meteen. Rol je 2, 3 of 12, dan verlies je meteen. Elk ander getal wordt je “punt”.' },
+          { icon: '🎯', title: 'Punt spelen & reset', text: 'Blijf rollen tot je je punt opnieuw gooit (winst) of een 7 rolt (verlies). Klik “Reset ronde” om een nieuwe ronde te starten.' }
         ]
       },
       baccarat: {
         title: 'Baccarat',
-        subtitle: 'Kies Player, Banker of Tie. Dichtst bij 9 wint.',
+        subtitle: 'Je kiest op wie je wedt: Player, Banker of Tie. Wie het dichtst bij 9 komt wint.',
         steps: [
-          { icon: '🪙', title: 'Kies inzet', text: 'Plaats je inzet op Player, Banker of Tie.' },
-          { icon: '🂡', title: 'Kaarten waardes', text: 'A=1, 10/figuren=0, totalen modulo 10.' },
-          { icon: '🏆', title: 'Winnaar', text: 'De hoogste score wint de ronde.' }
+          { icon: '🪙', title: 'Kies inzet', text: 'Plaats je inzet op Player, Banker of Tie en klik “Deel kaarten”. Dat is de enige actie die je kiest.' },
+          { icon: '🂡', title: 'Waarden uitleg', text: 'A=1, 2‑9 zijn hun waarde, 10/J/Q/K = 0. Tel de kaarten op en neem alleen het laatste cijfer.' },
+          { icon: '🏆', title: 'Wie wint', text: 'De hand die het dichtst bij 9 komt wint. Voorbeeld: Player heeft 7+6=13 → telt als 3. Banker heeft 9+0=9 → Banker wint.' }
         ]
       },
       roulette: {
         title: 'Roulette Royale',
-        subtitle: 'Kies kleur of nummer en laat het wiel draaien.',
+        subtitle: 'Je zet in op een kleur of een exact nummer en daarna draait het wiel.',
         steps: [
-          { icon: '🎯', title: 'Selecteer type', text: 'Kies kleur (rood/zwart/groen) of een nummer.' },
-          { icon: '🎡', title: 'Spin', text: 'Klik “Draaien” en volg de bal.' },
-          { icon: '💰', title: 'Uitbetaling', text: 'Kleur = 2x, groen = 14x, nummer = 36x.' }
+          { icon: '🎯', title: 'Kies je inzet', text: 'Selecteer kleur (rood/zwart/groen) of een exact nummer (0–36).' },
+          { icon: '🎡', title: 'Draai het wiel', text: 'Klik “Draaien” om te spinnen. Je kunt maar één inzet per spin kiezen.' },
+          { icon: '💰', title: 'Uitbetaling', text: 'Kleur betaalt 2x, groen 14x, exact nummer 36x. Voorbeeld: inzet 10 op nummer 12 → winst 360 bij raak.' }
         ]
       },
       slots: {
         title: 'Slot Machines',
-        subtitle: 'Drie rollen met snelle payouts.',
+        subtitle: 'Drie rollen draaien tegelijk. Je wint als symbolen gelijk zijn.',
         steps: [
-          { icon: '🎰', title: 'Spin', text: 'Plaats inzet en trek aan de hendel.' },
-          { icon: '✨', title: 'Matches', text: '3 dezelfde wint, 2 dezelfde = 2x inzet.' },
-          { icon: '💎', title: 'Bonus', text: '7️⃣ betaalt 20x, 💎 betaalt 15x, andere 3‑op‑rij 10x.' }
+          { icon: '🎰', title: 'Spin', text: 'Kies je inzet en trek aan de hendel om te spinnen. Dat is je enige actie.' },
+          { icon: '✨', title: 'Matches', text: '3 dezelfde symbolen = winst. 2 dezelfde = 2x je inzet.' },
+          { icon: '💎', title: 'Bonus', text: '7️⃣ betaalt 20x, 💎 betaalt 15x, andere 3‑op‑rij 10x. Voorbeeld: inzet 5 en 3x 🍒 → winst 50.' }
         ]
       },
       plinko: {
         title: 'Plinko Drop',
-        subtitle: 'Drop ballen en pak multipliers.',
+        subtitle: 'Laat ballen vallen en kijk waar ze landen voor een multiplier.',
         steps: [
-          { icon: '🪙', title: 'Inzet per bal', text: 'Kies inzet en aantal ballen.' },
-          { icon: '🔻', title: 'Drop', text: 'Laat de bal vallen en volg de route.' },
-          { icon: '📈', title: 'Multipliers', text: 'Vakken geven 0,6x tot 3x uitbetaling.' }
+          { icon: '🪙', title: 'Inzet per bal', text: 'Kies je inzet en hoeveel ballen je laat vallen.' },
+          { icon: '🔻', title: 'Drop', text: 'Klik “Drop bal” om één bal te laten vallen. Herhaal tot je aantal ballen op is.' },
+          { icon: '📈', title: 'Multipliers', text: 'Het vak bepaalt je winst: 0,6x tot 3x. Voorbeeld: inzet 10 en vak 2x → winst 20.' }
         ]
       },
       horse: {
         title: 'Paardenrace Royale',
-        subtitle: 'Kies je paard en volg de finish.',
+        subtitle: 'Je gokt op welk paard als eerste finisht.',
         steps: [
-          { icon: '🐎', title: 'Kies paard', text: 'Selecteer je favoriet en inzet.' },
-          { icon: '🏁', title: 'Start', text: 'Klik “Start race” en volg de sprint.' },
-          { icon: '💵', title: 'Payout', text: 'De winnaar betaalt 3x je inzet.' }
+          { icon: '🐎', title: 'Kies paard', text: 'Selecteer je paard en kies je inzet. De race is willekeurig.' },
+          { icon: '🏁', title: 'Start', text: 'Klik “Start race”. Dat is je enige actie tijdens de race.' },
+          { icon: '💵', title: 'Payout', text: 'Wint jouw paard, dan krijg je 3x je inzet. Voorbeeld: inzet 20 → winst 60.' }
         ]
       },
       'lootbox-menu': {
         title: 'Lucky Boxes',
-        subtitle: 'Ruil Lucky Coins voor rewards.',
+        subtitle: 'Ruil Lucky Coins voor beloningen en pak extra credits.',
         steps: [
-          { icon: '🪙', title: 'Kies box', text: 'Selecteer 1/5/10 Lucky Coins box.' },
-          { icon: '🎁', title: 'Open', text: 'Elke box geeft 3 upgrade‑kansen.' },
-          { icon: '💳', title: 'Beloning', text: 'Hoger level = hogere credits.' }
+          { icon: '🪙', title: 'Kies box', text: 'Selecteer een box van 1, 5 of 10 Lucky Coins.' },
+          { icon: '🎁', title: 'Open', text: 'Klik om te openen en je gaat naar het upgrade‑scherm.' },
+          { icon: '💳', title: 'Beloning', text: 'Hoe hoger het level, hoe meer credits je ontvangt.' }
         ]
       },
       'lootbox-open': {
         title: 'Lucky Box openen',
-        subtitle: 'Upgrade in drie klikken.',
+        subtitle: 'Je hebt drie klikken om je level te verhogen.',
         steps: [
-          { icon: '🎁', title: 'Klik om te upgraden', text: 'Elke klik heeft 12,5% kans op level‑up.' },
-          { icon: '⭐', title: 'Drie kansen', text: 'Je hebt precies 3 klikken.' },
-          { icon: '🏆', title: 'Beloning', text: 'Na afloop krijg je credits op basis van level.' }
+          { icon: '🎁', title: 'Klik om te upgraden', text: 'Elke klik heeft 12,5% kans om een level omhoog te gaan. Dat is je enige actie.' },
+          { icon: '⭐', title: 'Drie kansen', text: 'Je hebt precies 3 klikken; daarna stopt het.' },
+          { icon: '🏆', title: 'Beloning', text: 'Na de 3 klikken krijg je credits volgens je eindlevel. Voorbeeld: level 3 geeft meer dan level 1.' }
         ]
       }
     };
