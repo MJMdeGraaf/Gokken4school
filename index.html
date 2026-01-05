@@ -2462,6 +2462,45 @@
       margin: 14px 0;
     }
 
+    .baccarat-table{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .baccarat-shoe{
+      position: relative;
+      width: 90px;
+      height: 110px;
+      margin: 6px 0 2px;
+    }
+
+    .baccarat-shoe-stack{
+      position: absolute;
+      inset: 0;
+    }
+
+    .baccarat-shoe-card{
+      position: absolute;
+      width: 66px;
+      height: 96px;
+      border-radius: 12px;
+      border: 2px solid #d4af37;
+      background: radial-gradient(circle at 30% 20%, #fff3c1 0, #cda23b 42%, #7a5a16 100%);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.85);
+      left: 12px;
+      top: 8px;
+    }
+
+    .baccarat-shoe-card:nth-child(2){
+      transform: translate(6px, -4px);
+    }
+
+    .baccarat-shoe-card:nth-child(3){
+      transform: translate(12px, -8px);
+    }
+
     .baccarat-card{
       width: 70px;
       height: 100px;
@@ -2475,6 +2514,21 @@
       border:2px solid #d4af37;
       box-shadow: 0 6px 16px rgba(0,0,0,0.6);
       animation: dealCard 0.35s ease;
+    }
+
+    .baccarat-fly-card{
+      position: fixed;
+      width: 70px;
+      height: 100px;
+      border-radius: 12px;
+      border: 2px solid #d4af37;
+      background: radial-gradient(circle at 30% 20%, #fff3c1 0, #cda23b 40%, #7a5a16 100%);
+      box-shadow:
+        0 8px 18px rgba(0,0,0,0.65),
+        inset 0 0 0 1px rgba(255,255,255,0.85);
+      z-index: 9999;
+      pointer-events: none;
+      transition: transform 0.6s ease, opacity 0.5s ease;
     }
 
     .baccarat-label{
@@ -4264,8 +4318,17 @@
         <option value="banker">Banker</option>
         <option value="tie">Tie</option>
       </select>
-      <div class="baccarat-row" id="baccaratPlayerRow"></div>
-      <div class="baccarat-row" id="baccaratBankerRow"></div>
+      <div class="baccarat-table">
+        <div class="baccarat-shoe" aria-hidden="true">
+          <div class="baccarat-shoe-stack" id="baccaratShoe">
+            <div class="baccarat-shoe-card"></div>
+            <div class="baccarat-shoe-card"></div>
+            <div class="baccarat-shoe-card"></div>
+          </div>
+        </div>
+        <div class="baccarat-row" id="baccaratPlayerRow"></div>
+        <div class="baccarat-row" id="baccaratBankerRow"></div>
+      </div>
       <div id="baccaratStatus">Plaats je inzet en start een ronde.</div>
       <div style="margin-top:12px;">
         <button id="dealBaccaratBtn">Deel kaarten</button>
@@ -5883,6 +5946,7 @@
     const baccaratPlayerRow = document.getElementById('baccaratPlayerRow');
     const baccaratBankerRow = document.getElementById('baccaratBankerRow');
     const baccaratStatusEl = document.getElementById('baccaratStatus');
+    const baccaratShoe = document.getElementById('baccaratShoe');
     const dealBaccaratBtn = document.getElementById('dealBaccaratBtn');
     const backFromBaccaratBtn = document.getElementById('backFromBaccaratBtn');
 
@@ -7249,16 +7313,44 @@ playHorseRaceBtn.onclick = () => {
       cardEl.className = 'baccarat-card';
       cardEl.textContent = `${card.value}${card.suit}`;
       row.appendChild(cardEl);
+      return cardEl;
     }
 
-    const baccaratDealDelay = 640;
-    const baccaratInitialDelay = 400;
+    function animateBaccaratDealTo(targetEl){
+      if(!baccaratShoe || !targetEl) return Promise.resolve();
+      const stackRect = baccaratShoe.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
+      const flight = document.createElement('div');
+      flight.className = 'baccarat-fly-card';
+      flight.style.left = `${stackRect.left}px`;
+      flight.style.top = `${stackRect.top}px`;
+      document.body.appendChild(flight);
+      const deltaX = targetRect.left - stackRect.left;
+      const deltaY = targetRect.top - stackRect.top;
+
+      return new Promise(resolve=>{
+        requestAnimationFrame(()=>{
+          flight.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+          flight.style.opacity = '0';
+        });
+        const cleanup = ()=>{
+          flight.remove();
+          resolve();
+        };
+        flight.addEventListener('transitionend', cleanup, { once: true });
+        setTimeout(cleanup, 900);
+      });
+    }
+
+    const baccaratDealDelay = 900;
+    const baccaratInitialDelay = 600;
 
     async function dealBaccaratCard(hand, row, label, delay = baccaratDealDelay){
       const card = baccaratCard();
       hand.push(card);
-      appendBaccaratCard(row, card);
+      const cardEl = appendBaccaratCard(row, card);
       updateBaccaratLabel(row, hand, label);
+      await animateBaccaratDealTo(cardEl);
       await sleep(delay);
       return card;
     }
