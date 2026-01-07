@@ -5600,13 +5600,15 @@
     }
 
     let activeSkinGame = 'blackjack';
-    let activeSkinsTab = 'games';
+    let activeSkinsTab = 'layout';
 
     const skinsTabsConfig = [
-      { key: 'games', label: 'Games' },
-      { key: 'themes', label: 'Themes' },
-      { key: 'dice', label: 'Dice' },
+      { key: 'bundles', label: 'Bundels' },
+      { key: 'login', label: 'Log in screen' },
+      { key: 'menu', label: 'Main menu' },
+      { key: 'layout', label: 'Game layout' },
       { key: 'cards', label: 'Playing cards' },
+      { key: 'dice', label: 'Dice' },
       { key: 'balls', label: 'Balls' }
     ];
 
@@ -5661,7 +5663,7 @@
         return;
       }
       ensureShopFields(currentUser);
-      if(activeSkinsTab === 'games'){
+      if(activeSkinsTab === 'layout'){
         const ownedLayouts = currentUser?.shopInventory?.layouts?.[activeSkinGame] || ['classic'];
         const skins = (skinCatalog[activeSkinGame] || []).filter((skin) => ownedLayouts.includes(skin.id));
         const selected = getSelectedLayoutId(activeSkinGame);
@@ -5681,13 +5683,31 @@
       }
 
       const accessoryMap = {
-        themes: {
+        bundles: {
           items: getOwnedThemeItems(currentUser.shopInventory?.themes),
           selected: currentUser.shopSelection?.themeMode === 'custom' ? null : currentUser.shopSelection?.theme,
-          label: 'Thema’s',
+          label: 'Bundels',
           actionType: 'theme',
           icon: '🎨',
           previewKey: 'bundles'
+        },
+        login: {
+          items: getOwnedThemeItems(currentUser.shopInventory?.loginSkins),
+          selected: currentUser.shopSelection?.login || 'classic',
+          label: 'Log in screen',
+          actionType: 'accessory',
+          accessoryType: 'login',
+          icon: '🔐',
+          previewKey: 'login'
+        },
+        menu: {
+          items: getOwnedThemeItems(currentUser.shopInventory?.menuSkins),
+          selected: currentUser.shopSelection?.menu || 'classic',
+          label: 'Main menu',
+          actionType: 'accessory',
+          accessoryType: 'menu',
+          icon: '🧭',
+          previewKey: 'menu'
         },
         dice: {
           items: getOwnedThemeItems(currentUser.shopInventory?.diceSkins),
@@ -5758,7 +5778,7 @@
         });
       }
       if(skinsGameTabs){
-        skinsGameTabs.style.display = tabKey === 'games' ? 'flex' : 'none';
+        skinsGameTabs.style.display = tabKey === 'layout' ? 'flex' : 'none';
       }
       renderSkinsGrid();
     }
@@ -5769,6 +5789,8 @@
     }
 
     function getAccessoryConfig(type){
+      if(type === 'login') return { inventoryKey: 'loginSkins', selectionKey: 'login', label: 'Log in screen' };
+      if(type === 'menu') return { inventoryKey: 'menuSkins', selectionKey: 'menu', label: 'Main menu' };
       if(type === 'dice') return { inventoryKey: 'diceSkins', selectionKey: 'dice', label: 'Dobbelstenen' };
       if(type === 'cards') return { inventoryKey: 'cardSkins', selectionKey: 'cards', label: 'Kaarten' };
       if(type === 'balls') return { inventoryKey: 'ballSkins', selectionKey: 'balls', label: 'Ballen' };
