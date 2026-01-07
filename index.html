@@ -3543,7 +3543,8 @@
     #currencyDisplay{
       position: fixed;
       top: 12px;
-      right: 12px;
+      left: 12px;
+      right: auto;
       display: none;
       gap: 12px;
       z-index: 99999;
@@ -4665,7 +4666,6 @@
       </div>
       <div style="margin-top:12px;">
         <button id="rollCrapsBtn">Gooi</button>
-        <button id="resetCrapsBtn">Reset ronde</button>
         <button id="backFromCrapsBtn">Terug naar menu</button>
       </div>
     </div>
@@ -6565,7 +6565,7 @@
         steps: [
           { icon: '💶', title: 'Plaats inzet', text: 'Zet minimaal 10 credits in en klik op “Gooi”.' },
           { icon: '🎲', title: 'Eerste worp', text: 'Rol je 7 of 11, dan win je meteen. Rol je 2, 3 of 12, dan verlies je meteen. Elk ander getal wordt je “punt”.' },
-          { icon: '🎯', title: 'Punt spelen & reset', text: 'Blijf rollen tot je je punt opnieuw gooit (winst) of een 7 rolt (verlies). Klik “Reset ronde” om een nieuwe ronde te starten.' }
+          { icon: '🎯', title: 'Punt spelen', text: 'Blijf rollen tot je je punt opnieuw gooit (winst) of een 7 rolt (verlies). Daarna start je automatisch een nieuwe ronde.' }
         ]
       },
       baccarat: {
@@ -7739,7 +7739,9 @@ playHorseRaceBtn.onclick = () => {
 
       crapsRolling = true;
       rollCrapsBtn.disabled = true;
-      resetCrapsBtn.disabled = true;
+      if(resetCrapsBtn){
+        resetCrapsBtn.disabled = true;
+      }
       crapsDieOne.classList.add('dice-roll');
       crapsDieTwo.classList.add('dice-roll');
       crapsStatusEl.textContent = 'Dobbelstenen rollen...';
@@ -7826,12 +7828,16 @@ playHorseRaceBtn.onclick = () => {
 
       crapsRolling = false;
       rollCrapsBtn.disabled = false;
-      resetCrapsBtn.disabled = false;
+      if(resetCrapsBtn){
+        resetCrapsBtn.disabled = false;
+      }
     };
 
-    resetCrapsBtn.onclick = ()=>{
-      resetCrapsRound();
-    };
+    if(resetCrapsBtn){
+      resetCrapsBtn.onclick = ()=>{
+        resetCrapsRound();
+      };
+    }
 
     resetCrapsRound();
 
