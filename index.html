@@ -2438,12 +2438,20 @@
       min-width: 130px;
       max-width: 160px;
       font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .poker-player.bot .card-pk{
       width: 50px;
       height: 70px;
       font-size: 11px;
+    }
+
+    .poker-player.bot .hand{
+      order: -1;
+      margin: -8px 0 6px;
     }
 
     .poker-player.active {
@@ -9262,7 +9270,7 @@ playHorseRaceBtn.onclick = () => {
         .filter(({ player })=>!(currentUser && player.key === currentUser.key))
         .map(({ player, index })=>{
           const isActing = pokerHandActive && index === pokerCurrentPlayerIndex;
-          const showHand = pokerRevealHands;
+          const showHand = pokerRevealHands && !pokerHandActive;
           const badges = [];
           if(index===pokerDealerIndex) badges.push('D');
           if(index===pokerSmallBlindIndex) badges.push('SB');
