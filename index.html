@@ -1855,7 +1855,7 @@
       background:
         var(--theme-game-bg-glow),
         radial-gradient(circle at 85% 100%, rgba(255, 221, 128, 0.12), transparent 55%),
-        var(--theme-game-bg);
+        var(--layout-bg, var(--theme-game-bg));
       padding-bottom: 40px;
       overflow: hidden;
     }
@@ -2209,7 +2209,7 @@
       position: relative;
       background: var(--theme-game-bg-glow),
         radial-gradient(circle at 80% 20%, rgba(255, 221, 128, 0.12), transparent 50%),
-        var(--theme-game-bg);
+        var(--layout-bg, var(--theme-game-bg));
       min-height: 100vh;
       color: #f4f7ff;
       padding-bottom: 40px;
@@ -2463,6 +2463,24 @@
       justify-self: start;
     }
 
+    .poker-player.bot.bot-slot-4{
+      grid-column: 2;
+      grid-row: 2;
+      justify-self: end;
+    }
+
+    .poker-player.bot.bot-slot-5{
+      grid-column: 1;
+      grid-row: 3;
+      justify-self: start;
+    }
+
+    .poker-player.bot.bot-slot-6{
+      grid-column: 2;
+      grid-row: 3;
+      justify-self: end;
+    }
+
     .poker-player.bot .card-pk{
       width: 50px;
       height: 70px;
@@ -2568,7 +2586,7 @@
       padding: 24px;
       background: var(--theme-game-bg-glow),
         radial-gradient(circle at 80% 15%, rgba(255, 221, 128, 0.12), transparent 55%),
-        var(--theme-game-bg);
+        var(--layout-bg, var(--theme-game-bg));
       text-align: center;
       overflow: hidden;
     }
@@ -2580,7 +2598,7 @@
       padding: 24px;
       background: var(--theme-game-bg-glow),
         radial-gradient(circle at 80% 15%, rgba(255, 221, 128, 0.12), transparent 48%),
-        var(--theme-game-bg);
+        var(--layout-bg, var(--theme-game-bg));
       text-align: center;
       overflow: hidden;
     }
@@ -2592,7 +2610,7 @@
       padding: 24px;
       background: var(--theme-game-bg-glow),
         radial-gradient(circle at 50% 0%, rgba(255, 221, 128, 0.14), transparent 45%),
-        var(--theme-game-bg);
+        var(--layout-bg, var(--theme-game-bg));
       text-align: center;
       overflow: hidden;
     }
@@ -3189,7 +3207,7 @@
       padding: 24px;
       background: var(--theme-game-bg-glow),
         radial-gradient(circle at 80% 20%, rgba(255, 221, 128, 0.18), transparent 50%),
-        var(--theme-game-bg);
+        var(--layout-bg, var(--theme-game-bg));
       text-align: center;
     }
 
@@ -3430,7 +3448,7 @@
       text-align: center;
       background: radial-gradient(circle at 20% 12%, rgba(255, 231, 152, 0.25), transparent 45%),
         radial-gradient(circle at 80% 18%, rgba(120, 200, 255, 0.25), transparent 50%),
-        var(--theme-game-bg);
+        var(--layout-bg, var(--theme-game-bg));
     }
 
     #plinkoSection.skin-aurora{
@@ -3806,7 +3824,7 @@
 #horseRaceSection{
     background: var(--theme-game-bg-glow),
       radial-gradient(circle at 70% 15%, rgba(255, 221, 128, 0.16), transparent 50%),
-      var(--theme-game-bg);
+      var(--layout-bg, var(--theme-game-bg));
     min-height: 100vh;
 }
 
