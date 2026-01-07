@@ -4918,7 +4918,7 @@
         <label for="plinkoBet">Inzet:</label>
         <input type="number" id="plinkoBet" min="10" value="150">
         <label for="plinkoBallCount">Ballen:</label>
-        <input type="number" id="plinkoBallCount" min="1" max="15" value="10">
+        <input type="number" id="plinkoBallCount" min="1" max="10" value="10">
         <span class="plinko-note" id="plinkoPerBall">Per bal: 150 credits</span>
         <button id="dropPlinkoBtn">Drop bal</button>
         <button id="backFromPlinkoBtn">Terug naar menu</button>
@@ -8329,7 +8329,7 @@ playHorseRaceBtn.onclick = () => {
     const plinkoSlotMultipliers = [15, 12, 10, 4, 2.5, 0.9, 0.5, 0.9, 2.5, 4, 10, 12, 15];
     const plinkoPegRows = 9;
     const plinkoBallMin = 1;
-    const plinkoBallMax = 15;
+    const plinkoBallMax = 10;
     let plinkoBallCount = 10;
     const plinkoBallRadius = 9;
     const plinkoPegRadius = 6;
@@ -8401,6 +8401,17 @@ playHorseRaceBtn.onclick = () => {
           });
         }
       }
+      const centerPeg = document.createElement('div');
+      centerPeg.className = 'plinko-peg';
+      const centerX = pegAreaWidth / 2;
+      const centerY = pegAreaHeight * 0.08;
+      centerPeg.style.left = `${centerX}px`;
+      centerPeg.style.top = `${centerY}px`;
+      plinkoPegs.appendChild(centerPeg);
+      plinkoPegPoints.push({
+        x: centerX + (pegRect.left - boardRect.left),
+        y: centerY + (pegRect.top - boardRect.top)
+      });
       const slotHeight = plinkoSlots?.getBoundingClientRect().height || 96;
       plinkoBoardMetrics = {
         width: boardRect.width,
@@ -8435,7 +8446,7 @@ playHorseRaceBtn.onclick = () => {
 
     function spawnPlinkoBall(){
       if(!plinkoBoardMetrics) return;
-      const startSpread = plinkoBoardMetrics.width * 0.12;
+      const startSpread = plinkoBoardMetrics.width * 0.04;
       const startX = Math.min(
         plinkoBoardMetrics.width - plinkoBallRadius,
         Math.max(
