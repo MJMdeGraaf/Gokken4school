@@ -2411,14 +2411,14 @@
 
     .poker-seats {
       position: absolute;
-      inset: -18px;
+      inset: 8px 16px 12px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: repeat(3, min-content);
+      grid-template-rows: repeat(3, minmax(72px, 1fr));
       align-content: space-between;
-      gap: 10px 22px;
+      gap: 18px 28px;
       pointer-events: none;
-      padding: 10px;
+      padding: 12px 18px 14px;
     }
 
     .poker-player {
@@ -2553,6 +2553,18 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 10px;
+    }
+
+    .poker-action-row .poker-next-round{
+      min-width: 170px;
+    }
+
+    .poker-actions button:disabled{
+      opacity: 0.55;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+      filter: none;
     }
 
     .poker-status {
@@ -4611,6 +4623,7 @@
             <option value="3" selected>3 bots</option>
             <option value="4">4 bots</option>
             <option value="5">5 bots</option>
+            <option value="6">6 bots</option>
           </select>
         </div>
         <div style="margin-top:10px;">
@@ -4650,6 +4663,9 @@
           <div class="poker-action-row">
             <label for="pokerBetAmount">Raise naar:</label>
             <input type="number" id="pokerBetAmount" min="0" value="200" style="width:120px;">
+          </div>
+          <div class="poker-action-row">
+            <button id="pokerNextRoundBtn" class="poker-next-round">Next round</button>
           </div>
           <div class="poker-status">
             <strong>Status:</strong> <span id="pokerStatus">Sluit je aan om te spelen.</span>
@@ -6512,6 +6528,7 @@
     const pokerBetBtn = document.getElementById('pokerBetBtn');
     const pokerFoldBtn = document.getElementById('pokerFoldBtn');
     const pokerBetAmountInput = document.getElementById('pokerBetAmount');
+    const pokerNextRoundBtn = document.getElementById('pokerNextRoundBtn');
     const pokerStatusEl = document.getElementById('pokerStatus');
     const pokerDealerStatusEl = document.getElementById('pokerDealerStatus');
 
@@ -9343,10 +9360,16 @@ playHorseRaceBtn.onclick = () => {
 
     function updatePokerTurnState(){
       const userCanAct = pokerIsUserTurn() && !pokerTurnLocked;
+      const canStartNextRound = !pokerHandActive && pokerPlayers.length >= 2 && !pokerTurnLocked;
       setPokerControlsEnabled(userCanAct);
+      if(pokerNextRoundBtn){
+        pokerNextRoundBtn.disabled = !canStartNextRound;
+      }
       pokerUpdateActionLabels();
       if(!pokerHandActive){
-        pokerStatusEl.textContent = 'Wacht op spelers om de volgende hand te starten.';
+        pokerStatusEl.textContent = canStartNextRound
+          ? 'Klaar voor de volgende hand.'
+          : 'Wacht op spelers om de volgende hand te starten.';
         return;
       }
       if(!userCanAct && pokerPlayers[pokerCurrentPlayerIndex]){
@@ -9863,6 +9886,21 @@ playHorseRaceBtn.onclick = () => {
       pkRender();
       pokerAdvanceTurn();
     };
+
+    if(pokerNextRoundBtn){
+      pokerNextRoundBtn.onclick = ()=>{
+        if(pokerHandActive){
+          pokerStatusEl.textContent = 'Wacht tot de huidige hand voorbij is.';
+          return;
+        }
+        if(pokerPlayers.length < 2){
+          pokerStatusEl.textContent = 'Niet genoeg spelers voor een nieuwe hand.';
+          return;
+        }
+        pkNewHand();
+      };
+    }
+
 // ==================== PAARDENRACE LOGICA (GEFIXT) ====================
 
 const startRaceBtn = document.getElementById("startRaceBtn");
