@@ -8867,7 +8867,7 @@ playHorseRaceBtn.onclick = () => {
 
       if(index === 0 && currentUser){
         let delta = 0;
-        if(outcome === 'win') delta = Math.floor(bjBet * 1.5);
+        if(outcome === 'win') delta = Math.floor(bjBet * (player.blackjack ? 2.5 : 2));
         if(outcome === 'push') delta = bjBet;
         currentUser.credits += delta;
           if(outcome === 'win'){
@@ -8940,6 +8940,7 @@ playHorseRaceBtn.onclick = () => {
         player.hand = [];
         player.busted = false;
         player.standing = false;
+        player.blackjack = false;
       });
 
       if(bjShoeCards.length === 0){
@@ -8950,6 +8951,7 @@ playHorseRaceBtn.onclick = () => {
       renderBlackjack();
       await dealInitialCards();
       if(bjHandValue(bjPlayers[0].hand) === 21){
+        bjPlayers[0].blackjack = bjPlayers[0].hand.length === 2;
         bjPlayers[0].standing = true;
         await nextPlayer();
         return;
@@ -8977,9 +8979,9 @@ playHorseRaceBtn.onclick = () => {
     startGameBtn.onclick = ()=>{
       if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       const botCount = parseInt(botSelect.value, 10);
-      bjPlayers = [{ name: currentUser.name, bot: false, hand: [], busted: false, standing: false }];
+      bjPlayers = [{ name: currentUser.name, bot: false, hand: [], busted: false, standing: false, blackjack: false }];
       for(let i = 1; i <= botCount; i += 1){
-        bjPlayers.push({ name: `Bot ${i}`, bot: true, hand: [], busted: false, standing: false });
+        bjPlayers.push({ name: `Bot ${i}`, bot: true, hand: [], busted: false, standing: false, blackjack: false });
       }
       startRound();
     };
