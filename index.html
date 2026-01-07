@@ -8325,8 +8325,11 @@ playHorseRaceBtn.onclick = () => {
 
     function updatePlinkoPerBallLabel(){
       if(!plinkoPerBall || !plinkoBetInput) return;
-      const bet = parseInt(plinkoBetInput.value, 10) || 0;
-      plinkoPerBall.textContent = `Per bal: ${bet} credits`;
+      const totalBet = parseInt(plinkoBetInput.value, 10) || 0;
+      const ballCount = syncPlinkoBallCount();
+      const perBall = ballCount > 0 ? totalBet / ballCount : 0;
+      const displayValue = Number.isInteger(perBall) ? perBall : perBall.toFixed(2);
+      plinkoPerBall.textContent = `Per bal: ${displayValue} credits`;
     }
 
     function syncPlinkoBallCount(){
@@ -8445,7 +8448,7 @@ playHorseRaceBtn.onclick = () => {
       ballState.settled = true;
       highlightPlinkoSlot(slotIndex);
       const multiplier = plinkoSlotMultipliers[slotIndex];
-      const winAmount = Math.round(plinkoActiveBatch.bet * multiplier);
+      const winAmount = Math.round(plinkoActiveBatch.perBallBet * multiplier);
       plinkoActiveBatch.totalWin += winAmount;
       plinkoActiveBatch.landed += 1;
       plinkoStatus.textContent = `Bal ${plinkoActiveBatch.landed}/${plinkoBallCount} landt op ${multiplier}x.`;
@@ -8565,10 +8568,10 @@ playHorseRaceBtn.onclick = () => {
     async function dropPlinkoBall(){
       if(plinkoDropping) return;
       if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
-      const bet = parseInt(plinkoBetInput.value, 10) || 0;
-      if(bet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
+      const totalBet = parseInt(plinkoBetInput.value, 10) || 0;
+      if(totalBet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
       syncPlinkoBallCount();
-      const totalBet = bet * plinkoBallCount;
+      const perBallBet = totalBet / plinkoBallCount;
       if(currentUser.credits < totalBet) return showSiteMessage('Je hebt niet genoeg credits!');
 
       currentUser.credits -= totalBet;
@@ -8580,9 +8583,10 @@ playHorseRaceBtn.onclick = () => {
       dropPlinkoBtn.disabled = true;
       if(plinkoBallCountInput) plinkoBallCountInput.disabled = true;
       highlightPlinkoSlot(-1);
-      plinkoStatus.textContent = `Dropping ${plinkoBallCount} ballen. Totale inzet ${totalBet} credits.`;
+      const displayPerBall = Number.isInteger(perBallBet) ? perBallBet : perBallBet.toFixed(2);
+      plinkoStatus.textContent = `Dropping ${plinkoBallCount} ballen. Totale inzet ${totalBet} credits (${displayPerBall} per bal).`;
       plinkoActiveBatch = {
-        bet,
+        perBallBet,
         totalBet,
         totalWin: 0,
         landed: 0
@@ -8601,7 +8605,7 @@ playHorseRaceBtn.onclick = () => {
     layoutPlinkoPegs();
     dropPlinkoBtn.onclick = ()=>{ void dropPlinkoBall(); };
     plinkoBetInput.addEventListener('input', updatePlinkoPerBallLabel);
-    plinkoBallCountInput?.addEventListener('input', syncPlinkoBallCount);
+    plinkoBallCountInput?.addEventListener('input', updatePlinkoPerBallLabel);
     updatePlinkoPerBallLabel();
 
     /* ---------------------------
