@@ -8368,10 +8368,13 @@ playHorseRaceBtn.onclick = () => {
       plinkoPegPoints = [];
       for(let row = 0; row < plinkoPegRows; row += 1){
         const cols = 8 + row;
+        const rowWidthFactor = 1 - (row / Math.max(1, plinkoPegRows - 1)) * 0.32;
+        const rowWidth = pegAreaWidth * rowWidthFactor;
+        const rowOffset = (pegAreaWidth - rowWidth) / 2;
         for(let col = 0; col < cols; col += 1){
           const peg = document.createElement('div');
           peg.className = 'plinko-peg';
-          const x = ((col + 1) / (cols + 1)) * pegAreaWidth;
+          const x = rowOffset + ((col + 1) / (cols + 1)) * rowWidth;
           const y = ((row + 1) / (plinkoPegRows + 1)) * pegAreaHeight;
           peg.style.left = `${x}px`;
           peg.style.top = `${y}px`;
