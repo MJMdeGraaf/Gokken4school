@@ -4485,46 +4485,19 @@
 
   <!-- Skins -->
   <section id="skinsSection" style="display:none;">
-    <div class="skins-shell">
-      <header class="skins-header">
+    <div class="shop-shell skins-shell">
+      <header class="shop-header skins-header">
         <div>
           <h2 id="skinsTitle">Skins</h2>
-          <p>Kies een achtergrond per game. Nieuwe skins komen straks in de shop en Lucky Boxes.</p>
+          <p>Bekijk en selecteer de skins die je al in bezit hebt.</p>
         </div>
         <button id="backFromSkinsBtn">Terug naar menu</button>
       </header>
 
-      <div class="skins-controls">
-        <div class="skins-tabs" id="skinsTabs" role="tablist" aria-label="Skin categorieën"></div>
-      </div>
-
-      <div class="skins-panels">
-        <div class="skins-panel is-active" data-skins-panel="games">
-          <p class="skins-panel-title">Game layouts</p>
-          <div>
-            <label for="skinGameSelect">Kies een game</label><br>
-            <select id="skinGameSelect"></select>
-          </div>
-          <div id="skinGameTabs" class="skin-game-tabs" role="tablist" aria-label="Game selectie"></div>
-          <div id="skinsGrid" class="skins-grid"></div>
-        </div>
-        <div class="skins-panel" data-skins-panel="themes">
-          <p class="skins-panel-title">Thema’s & custom mix</p>
-          <div id="skinsThemeGrid" class="skins-grid"></div>
-        </div>
-        <div class="skins-panel" data-skins-panel="dice">
-          <p class="skins-panel-title">Dobbelstenen</p>
-          <div id="skinsDiceGrid" class="skins-grid"></div>
-        </div>
-        <div class="skins-panel" data-skins-panel="cards">
-          <p class="skins-panel-title">Speelkaarten</p>
-          <div id="skinsCardsGrid" class="skins-grid"></div>
-        </div>
-        <div class="skins-panel" data-skins-panel="balls">
-          <p class="skins-panel-title">Ballen</p>
-          <div id="skinsBallsGrid" class="skins-grid"></div>
-        </div>
-      </div>
+      <div id="skinsTabs" class="shop-tabs" role="tablist" aria-label="Skin categorieën"></div>
+      <div id="skinsGameTabs" class="shop-game-tabs" role="tablist" aria-label="Game selectie" style="display:none;"></div>
+      <div id="skinsSubtitle" class="shop-subtitle"></div>
+      <div id="skinsGrid" class="shop-grid"></div>
     </div>
   </section>
 
@@ -5071,14 +5044,9 @@
     const backFromSkinsBtn = document.getElementById('backFromSkinsBtn');
     const skinsTitle = document.getElementById('skinsTitle');
     const skinsTabs = document.getElementById('skinsTabs');
-    const skinsPanels = document.querySelectorAll('[data-skins-panel]');
-    const skinGameSelect = document.getElementById('skinGameSelect');
-    const skinGameTabs = document.getElementById('skinGameTabs');
+    const skinsGameTabs = document.getElementById('skinsGameTabs');
+    const skinsSubtitle = document.getElementById('skinsSubtitle');
     const skinsGrid = document.getElementById('skinsGrid');
-    const skinsThemeGrid = document.getElementById('skinsThemeGrid');
-    const skinsDiceGrid = document.getElementById('skinsDiceGrid');
-    const skinsCardsGrid = document.getElementById('skinsCardsGrid');
-    const skinsBallsGrid = document.getElementById('skinsBallsGrid');
     const luckyCoinsEl = document.getElementById('luckyCoins');
     const luckyCoinProgressEl = document.getElementById('luckyCoinProgress');
 
@@ -5608,59 +5576,138 @@
     ];
 
     function renderSkinGameTabs(){
-      if(!skinGameTabs || !skinGameSelect) return;
-      skinGameTabs.innerHTML = '';
-      skinGameSelect.innerHTML = '';
-      Object.entries(gameLabels).forEach(([key, label]) => {
-        const option = document.createElement('option');
-        option.value = key;
-        option.textContent = label;
-        skinGameSelect.appendChild(option);
-
-        const tab = document.createElement('button');
-        tab.type = 'button';
-        tab.className = 'skin-game-tab';
-        tab.textContent = label;
-        tab.dataset.gameKey = key;
-        tab.setAttribute('role', 'tab');
-        skinGameTabs.appendChild(tab);
-      });
+      if(!skinsGameTabs) return;
+      skinsGameTabs.innerHTML = Object.entries(gameLabels).map(([key, label]) => `
+        <button class="shop-game-tab ${key === activeSkinGame ? 'is-active' : ''}" type="button" data-game-key="${key}">
+          ${label}
+        </button>
+      `).join('');
     }
 
     function setActiveSkinGame(gameKey){
       if(!gameKey || !gameLabels[gameKey]) return;
       activeSkinGame = gameKey;
-      if(skinGameSelect){
-        skinGameSelect.value = gameKey;
-      }
-      if(skinGameTabs){
-        skinGameTabs.querySelectorAll('.skin-game-tab').forEach((tab) => {
+      if(skinsGameTabs){
+        skinsGameTabs.querySelectorAll('.shop-game-tab').forEach((tab) => {
           tab.classList.toggle('is-active', tab.dataset.gameKey === gameKey);
           tab.setAttribute('aria-selected', tab.dataset.gameKey === gameKey ? 'true' : 'false');
         });
       }
-      renderSkinGrid(gameKey);
+      renderSkinsGrid();
     }
 
-    function renderSkinGrid(gameKey){
-      if(!skinsGrid) return;
-      const ownedLayouts = currentUser?.shopInventory?.layouts?.[gameKey] || ['classic'];
-      const skins = (skinCatalog[gameKey] || []).filter((skin) => ownedLayouts.includes(skin.id));
-      const selected = getSelectedLayoutId(gameKey);
-      skinsGrid.innerHTML = skins.map((skin) => `
-        <button class="skin-card ${skin.id === selected ? 'is-selected' : ''}" type="button" data-skin-id="${skin.id}">
-          <span class="skin-card-preview" style="background: ${skin.preview};"></span>
-          <span class="skin-card-title">${skin.name}</span>
-          <span class="skin-card-desc">${skin.description}</span>
-          <span class="skin-card-tag">${skin.id === selected ? 'Geselecteerd' : 'Selecteer'}</span>
-        </button>
-      `).join('');
+    function buildSkinsCard({ id, name, description, preview, selected, actionType, icon, previewKey, gameKey }){
+      const actionLabel = selected ? 'Geselecteerd' : 'Selecteer';
+      const actionClass = selected ? 'shop-action selected' : 'shop-action';
+      const previewMarkup = buildShopPreviewMarkup(previewKey, id);
+      return `
+        <div class="shop-card is-owned ${selected ? 'is-selected' : ''}">
+          <div class="shop-item-image" style="background: ${preview};">
+            ${previewMarkup}
+            <span class="shop-preview-icon">${icon}</span>
+          </div>
+          <h4>${name}</h4>
+          <p>${description}</p>
+          <div class="shop-card-footer">
+            <span class="price-tag">In bezit</span>
+            <button class="${actionClass}" type="button" data-skin-type="${actionType}" data-skin-id="${id}" ${gameKey ? `data-game-key="${gameKey}"` : ''}>
+              ${actionLabel}
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSkinsGrid(){
+      if(!skinsGrid || !skinsSubtitle) return;
+      if(!currentUser){
+        skinsGrid.innerHTML = '';
+        skinsSubtitle.textContent = '';
+        return;
+      }
+      ensureShopFields(currentUser);
+      if(activeSkinsTab === 'games'){
+        const ownedLayouts = currentUser?.shopInventory?.layouts?.[activeSkinGame] || ['classic'];
+        const skins = (skinCatalog[activeSkinGame] || []).filter((skin) => ownedLayouts.includes(skin.id));
+        const selected = getSelectedLayoutId(activeSkinGame);
+        skinsSubtitle.textContent = `${gameLabels[activeSkinGame]} — ${skins.length} layouts in bezit`;
+        skinsGrid.innerHTML = skins.map((skin) => buildSkinsCard({
+          id: skin.id,
+          name: `${skin.name} Layout`,
+          description: skin.description,
+          preview: skin.preview,
+          selected: skin.id === selected,
+          actionType: 'layout',
+          icon: '🧩',
+          previewKey: 'layout',
+          gameKey: activeSkinGame
+        })).join('');
+        return;
+      }
+
+      const accessoryMap = {
+        themes: {
+          items: getOwnedThemeItems(currentUser.shopInventory?.themes),
+          selected: currentUser.shopSelection?.themeMode === 'custom' ? null : currentUser.shopSelection?.theme,
+          label: 'Thema’s',
+          actionType: 'theme',
+          icon: '🎨',
+          previewKey: 'bundles'
+        },
+        dice: {
+          items: getOwnedThemeItems(currentUser.shopInventory?.diceSkins),
+          selected: currentUser.shopSelection?.dice || 'classic',
+          label: 'Dobbelstenen',
+          actionType: 'accessory',
+          accessoryType: 'dice',
+          icon: '🎲',
+          previewKey: 'dice'
+        },
+        cards: {
+          items: getOwnedThemeItems(currentUser.shopInventory?.cardSkins),
+          selected: currentUser.shopSelection?.cards || 'classic',
+          label: 'Speelkaarten',
+          actionType: 'accessory',
+          accessoryType: 'cards',
+          icon: '🂠',
+          previewKey: 'cards'
+        },
+        balls: {
+          items: getOwnedThemeItems(currentUser.shopInventory?.ballSkins),
+          selected: currentUser.shopSelection?.balls || 'classic',
+          label: 'Ballen',
+          actionType: 'accessory',
+          accessoryType: 'balls',
+          icon: '⚪',
+          previewKey: 'balls'
+        }
+      };
+
+      const config = accessoryMap[activeSkinsTab];
+      if(!config){
+        skinsGrid.innerHTML = '';
+        skinsSubtitle.textContent = '';
+        return;
+      }
+
+      skinsSubtitle.textContent = `${config.label} — ${config.items.length} skins in bezit`;
+      skinsGrid.innerHTML = config.items.map((item) => buildSkinsCard({
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        preview: item.preview,
+        selected: item.id === config.selected,
+        actionType: config.actionType,
+        icon: config.icon,
+        previewKey: config.previewKey,
+        gameKey: config.accessoryType
+      })).join('');
     }
 
     function renderSkinsTabs(){
       if(!skinsTabs) return;
       skinsTabs.innerHTML = skinsTabsConfig.map((tab) => `
-        <button class="skins-tab ${tab.key === activeSkinsTab ? 'is-active' : ''}" type="button" data-skins-tab="${tab.key}">
+        <button class="shop-tab ${tab.key === activeSkinsTab ? 'is-active' : ''}" type="button" data-skins-tab="${tab.key}">
           ${tab.label}
         </button>
       `).join('');
@@ -5670,29 +5717,15 @@
       if(!tabKey) return;
       activeSkinsTab = tabKey;
       if(skinsTabs){
-        skinsTabs.querySelectorAll('.skins-tab').forEach((tab) => {
+        skinsTabs.querySelectorAll('.shop-tab').forEach((tab) => {
           tab.classList.toggle('is-active', tab.dataset.skinsTab === tabKey);
           tab.setAttribute('aria-selected', tab.dataset.skinsTab === tabKey ? 'true' : 'false');
         });
       }
-      skinsPanels.forEach((panel) => {
-        panel.classList.toggle('is-active', panel.dataset.skinsPanel === tabKey);
-      });
-      if(tabKey === 'themes'){
-        renderThemeGrid();
+      if(skinsGameTabs){
+        skinsGameTabs.style.display = tabKey === 'games' ? 'flex' : 'none';
       }
-      if(tabKey === 'dice'){
-        renderAccessoryGrid('dice');
-      }
-      if(tabKey === 'cards'){
-        renderAccessoryGrid('cards');
-      }
-      if(tabKey === 'balls'){
-        renderAccessoryGrid('balls');
-      }
-      if(tabKey === 'games'){
-        renderSkinGrid(activeSkinGame);
-      }
+      renderSkinsGrid();
     }
 
     function getOwnedThemeItems(list){
@@ -5700,53 +5733,11 @@
       return themeCatalog.filter((theme) => owned.has(theme.id));
     }
 
-    function renderThemeGrid(){
-      if(!skinsThemeGrid || !currentUser) return;
-      ensureShopFields(currentUser);
-      const ownedThemes = getOwnedThemeItems(currentUser.shopInventory?.themes);
-      const customTheme = {
-        id: 'custom',
-        name: 'Custom Mix',
-        description: 'Mix layouts, dobbelstenen, kaarten en ballen per categorie.',
-        preview: 'linear-gradient(135deg, #eef7ff, #fbd8ff)'
-      };
-      const selection = currentUser.shopSelection;
-      const selectedId = selection.themeMode === 'custom' ? 'custom' : selection.theme;
-      const items = [...ownedThemes, customTheme];
-      skinsThemeGrid.innerHTML = items.map((item) => `
-        <button class="skin-card ${item.id === selectedId ? 'is-selected' : ''}" type="button" data-theme-id="${item.id}">
-          <span class="skin-card-preview" style="background: ${item.preview};"></span>
-          <span class="skin-card-title">${item.name}</span>
-          <span class="skin-card-desc">${item.description}</span>
-          <span class="skin-card-tag">${item.id === selectedId ? 'Geselecteerd' : 'Selecteer'}</span>
-        </button>
-      `).join('');
-    }
-
     function getAccessoryConfig(type){
       if(type === 'dice') return { inventoryKey: 'diceSkins', selectionKey: 'dice', label: 'Dobbelstenen' };
       if(type === 'cards') return { inventoryKey: 'cardSkins', selectionKey: 'cards', label: 'Kaarten' };
       if(type === 'balls') return { inventoryKey: 'ballSkins', selectionKey: 'balls', label: 'Ballen' };
       return null;
-    }
-
-    function renderAccessoryGrid(type){
-      if(!currentUser) return;
-      const config = getAccessoryConfig(type);
-      if(!config) return;
-      const grid = type === 'dice' ? skinsDiceGrid : type === 'cards' ? skinsCardsGrid : skinsBallsGrid;
-      if(!grid) return;
-      ensureShopFields(currentUser);
-      const ownedThemes = getOwnedThemeItems(currentUser.shopInventory?.[config.inventoryKey]);
-      const selected = currentUser.shopSelection?.[config.selectionKey] || 'classic';
-      grid.innerHTML = ownedThemes.map((item) => `
-        <button class="skin-card ${item.id === selected ? 'is-selected' : ''}" type="button" data-accessory-type="${type}" data-accessory-id="${item.id}">
-          <span class="skin-card-preview" style="background: ${item.preview};"></span>
-          <span class="skin-card-title">${item.name}</span>
-          <span class="skin-card-desc">${item.description}</span>
-          <span class="skin-card-tag">${item.id === selected ? 'Geselecteerd' : 'Selecteer'}</span>
-        </button>
-      `).join('');
     }
 
     function activateCustomMix(){
@@ -5765,7 +5756,7 @@
       currentUser.gameSkins[gameKey] = skinId;
       currentUser.shopSelection.layouts[gameKey] = skinId;
       applyGameSkin(gameKey);
-      renderSkinGrid(gameKey);
+      renderSkinsGrid();
       saveCurrentUser();
     }
 
@@ -5777,7 +5768,7 @@
       activateCustomMix();
       currentUser.shopSelection[config.selectionKey] = skinId;
       applyShopSelections();
-      renderAccessoryGrid(type);
+      renderSkinsGrid();
       saveCurrentUser();
     }
 
@@ -5801,11 +5792,7 @@
         });
       }
       applyShopSelections();
-      renderThemeGrid();
-      renderSkinGrid(activeSkinGame);
-      renderAccessoryGrid('dice');
-      renderAccessoryGrid('cards');
-      renderAccessoryGrid('balls');
+      renderSkinsGrid();
       saveCurrentUser();
     }
 
@@ -5814,15 +5801,9 @@
     renderSkinsTabs();
     setActiveSkinsTab(activeSkinsTab);
 
-    if(skinGameSelect){
-      skinGameSelect.addEventListener('change', (event) => {
-        setActiveSkinGame(event.target.value);
-      });
-    }
-
-    if(skinGameTabs){
-      skinGameTabs.addEventListener('click', (event) => {
-        const tab = event.target.closest('.skin-game-tab');
+    if(skinsGameTabs){
+      skinsGameTabs.addEventListener('click', (event) => {
+        const tab = event.target.closest('.shop-game-tab');
         if(!tab) return;
         setActiveSkinGame(tab.dataset.gameKey);
       });
@@ -5830,9 +5811,22 @@
 
     if(skinsGrid){
       skinsGrid.addEventListener('click', (event) => {
-        const card = event.target.closest('.skin-card');
-        if(!card) return;
-        updateSkinSelection(activeSkinGame, card.dataset.skinId);
+        const action = event.target.closest('.shop-action');
+        if(!action) return;
+        const skinType = action.dataset.skinType;
+        const skinId = action.dataset.skinId;
+        if(!skinType || !skinId) return;
+        if(skinType === 'layout'){
+          updateSkinSelection(action.dataset.gameKey || activeSkinGame, skinId);
+          return;
+        }
+        if(skinType === 'theme'){
+          updateThemeSelection(skinId);
+          return;
+        }
+        if(skinType === 'accessory'){
+          updateAccessorySelection(action.dataset.gameKey, skinId);
+        }
       });
     }
 
@@ -5862,38 +5856,6 @@
             showSiteMessage('Onjuist wachtwoord.');
           }
         }
-      });
-    }
-
-    if(skinsThemeGrid){
-      skinsThemeGrid.addEventListener('click', (event) => {
-        const card = event.target.closest('[data-theme-id]');
-        if(!card) return;
-        updateThemeSelection(card.dataset.themeId);
-      });
-    }
-
-    if(skinsDiceGrid){
-      skinsDiceGrid.addEventListener('click', (event) => {
-        const card = event.target.closest('[data-accessory-id]');
-        if(!card) return;
-        updateAccessorySelection('dice', card.dataset.accessoryId);
-      });
-    }
-
-    if(skinsCardsGrid){
-      skinsCardsGrid.addEventListener('click', (event) => {
-        const card = event.target.closest('[data-accessory-id]');
-        if(!card) return;
-        updateAccessorySelection('cards', card.dataset.accessoryId);
-      });
-    }
-
-    if(skinsBallsGrid){
-      skinsBallsGrid.addEventListener('click', (event) => {
-        const card = event.target.closest('[data-accessory-id]');
-        if(!card) return;
-        updateAccessorySelection('balls', card.dataset.accessoryId);
       });
     }
 
