@@ -2412,12 +2412,13 @@
     .poker-seats {
       position: absolute;
       inset: -18px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, min-content);
       align-content: space-between;
-      gap: 10px;
+      gap: 10px 22px;
       pointer-events: none;
+      padding: 10px;
     }
 
     .poker-player {
@@ -2441,6 +2442,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-self: start;
+    }
+
+    .poker-player.bot.bot-slot-1{
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+    }
+
+    .poker-player.bot.bot-slot-2{
+      grid-column: 2;
+      grid-row: 1;
+      justify-self: end;
+    }
+
+    .poker-player.bot.bot-slot-3{
+      grid-column: 1;
+      grid-row: 2;
+      justify-self: start;
     }
 
     .poker-player.bot .card-pk{
@@ -9271,6 +9291,7 @@ playHorseRaceBtn.onclick = () => {
         pokerUserSpotEl.innerHTML = '<small>Sluit je aan om jouw hand te zien.</small>';
       }
 
+      let botCounter = 0;
       pokerPlayersEl.innerHTML = pokerPlayers
         .map((p,i)=>({ player: p, index: i }))
         .filter(({ player })=>!(currentUser && player.key === currentUser.key))
@@ -9281,7 +9302,9 @@ playHorseRaceBtn.onclick = () => {
           if(index===pokerDealerIndex) badges.push('D');
           if(index===pokerSmallBlindIndex) badges.push('SB');
           if(index===pokerBigBlindIndex) badges.push('BB');
-          return `<div class="poker-player ${player.isBot ? 'bot' : ''} ${isActing ? 'active' : ''}">
+          const botSlot = player.isBot ? ++botCounter : 0;
+          const botSlotClass = player.isBot ? ` bot-slot-${botSlot}` : '';
+          return `<div class="poker-player ${player.isBot ? 'bot' : ''}${botSlotClass} ${isActing ? 'active' : ''}">
             <h4>${player.name}
               <span class="poker-badges">${badges.map(b=>`<span>${b}</span>`).join('')}</span>
             </h4>
