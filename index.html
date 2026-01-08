@@ -15,6 +15,144 @@
         text-transform: uppercase;
     }
 
+    /* ============================ LEADERBOARD SCREEN ============================ */
+    #leaderboardSection{
+      min-height: 100vh;
+      padding: 28px;
+      background: var(--theme-dashboard-bg);
+      color: var(--theme-cream);
+      text-align: left;
+    }
+
+    .leaderboard-shell{
+        max-width: 1100px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .leaderboard-header{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        background: rgba(8, 24, 40, 0.45);
+        border: 1px solid rgba(140, 200, 255, 0.25);
+        border-radius: 18px;
+        padding: 16px 18px;
+        box-shadow: 0 16px 28px rgba(0,0,0,0.35);
+    }
+
+    .leaderboard-header h2{
+        margin: 0;
+        font-size: 26px;
+        letter-spacing: 0.6px;
+    }
+
+    .leaderboard-header p{
+        margin: 6px 0 0;
+        color: rgba(235, 226, 197, 0.8);
+    }
+
+    .leaderboard-controls{
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .leaderboard-bar{
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        background: rgba(7, 20, 35, 0.45);
+        border: 1px solid rgba(140, 200, 255, 0.2);
+        border-radius: 16px;
+        padding: 10px 12px;
+    }
+
+    .leaderboard-bar button{
+        padding: 8px 14px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 221, 128, 0.45);
+        background: rgba(255, 255, 255, 0.05);
+        color: #f8f5e7;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .leaderboard-bar button.is-active{
+        background: linear-gradient(135deg, #ffd986, #c9971d);
+        color: #2b1a00;
+        border-color: rgba(255, 221, 128, 0.9);
+        box-shadow: 0 10px 18px rgba(0,0,0,0.35);
+    }
+
+    .leaderboard-reward-info{
+        background: rgba(12, 32, 60, 0.55);
+        border-radius: 16px;
+        padding: 14px 16px;
+        border: 1px solid rgba(120, 200, 255, 0.3);
+        line-height: 1.5;
+        color: rgba(235, 226, 197, 0.85);
+    }
+
+    .leaderboard-list{
+        display: grid;
+        gap: 10px;
+    }
+
+    .leaderboard-entry{
+        display: grid;
+        grid-template-columns: 40px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 12px 16px;
+        border-radius: 16px;
+        background: rgba(10, 24, 44, 0.75);
+        border: 1px solid rgba(140, 200, 255, 0.2);
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .leaderboard-entry.you{
+        border-color: rgba(255, 221, 128, 0.65);
+        background: rgba(35, 68, 120, 0.6);
+    }
+
+    .leaderboard-rank{
+        font-weight: 800;
+        color: #ffe8a6;
+        font-size: 18px;
+    }
+
+    .leaderboard-name{
+        font-weight: 700;
+        color: #f2f7ff;
+    }
+
+    .leaderboard-score{
+        text-align: right;
+        font-weight: 700;
+        color: #dbe9ff;
+    }
+
+    .leaderboard-reward{
+        font-size: 12px;
+        color: rgba(255, 221, 128, 0.9);
+        margin-top: 4px;
+    }
+
+    .leaderboard-empty{
+        text-align: center;
+        color: rgba(235, 226, 197, 0.7);
+        padding: 24px;
+        border-radius: 16px;
+        border: 1px dashed rgba(140, 200, 255, 0.25);
+        background: rgba(10, 24, 44, 0.45);
+    }
+
     /* ============================ POPUP WINDOW ============================ */
     #lb-popup{
         position: fixed;
@@ -485,12 +623,48 @@
       margin-top: 0;
     }
 
+    .lootbox-explainer{
+      max-width: 760px;
+      margin: 8px auto 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: rgba(235, 226, 197, 0.82);
+    }
+
     .lootbox-menu-grid{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 22px;
       margin: 28px auto 10px;
       max-width: 860px;
+    }
+
+    .lootbox-reward-queue{
+      max-width: 860px;
+      margin: 14px auto 20px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 221, 128, 0.4);
+      background: rgba(14, 28, 54, 0.6);
+      color: rgba(235, 226, 197, 0.9);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lootbox-reward-item{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(9, 18, 38, 0.65);
+      border: 1px solid rgba(140, 200, 255, 0.2);
+    }
+
+    .lootbox-reward-item button{
+      margin: 0;
     }
 
     .lootbox-option{
@@ -513,6 +687,26 @@
       pointer-events: none;
     }
 
+    .lootbox-option.is-locked{
+      opacity: 0.6;
+    }
+
+    .lootbox-option.is-locked .lootbox-card{
+      filter: grayscale(0.3);
+      cursor: not-allowed;
+    }
+
+    .lootbox-lock{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(235, 226, 197, 0.85);
+      background: rgba(10, 24, 40, 0.6);
+      border: 1px dashed rgba(255, 221, 128, 0.4);
+      padding: 6px 10px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+
     .lootbox-star-row{
       display: flex;
       justify-content: center;
@@ -525,9 +719,10 @@
 
     #lootBoxSection{
       position: relative;
-      background: radial-gradient(circle at 30% 10%, rgba(255, 232, 168, 0.15), transparent 48%),
+      --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(255, 232, 168, 0.15), transparent 48%),
         radial-gradient(circle at 70% 20%, rgba(120, 160, 255, 0.16), transparent 48%),
         linear-gradient(150deg, #190d2b 0, #05040f 60%, #020107 100%);
+      background: var(--lootbox-bg);
       min-height: 100vh;
       text-align: center;
       padding: 24px;
@@ -550,7 +745,39 @@
       align-items: center;
       gap: 14px;
       margin-top: 20px;
+      min-height: 70vh;
+      justify-content: center;
       perspective: 900px;
+    }
+
+    #lootBoxSection[data-level="1"]{
+      --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(120, 210, 255, 0.25), transparent 48%),
+        radial-gradient(circle at 70% 20%, rgba(90, 150, 255, 0.2), transparent 48%),
+        linear-gradient(160deg, #0c1f3f 0, #052040 55%, #020712 100%);
+    }
+
+    #lootBoxSection[data-level="2"]{
+      --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(120, 255, 170, 0.22), transparent 48%),
+        radial-gradient(circle at 70% 20%, rgba(70, 190, 120, 0.2), transparent 48%),
+        linear-gradient(160deg, #0d2e1d 0, #063023 55%, #020a07 100%);
+    }
+
+    #lootBoxSection[data-level="3"]{
+      --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(210, 160, 120, 0.22), transparent 48%),
+        radial-gradient(circle at 70% 20%, rgba(190, 120, 60, 0.2), transparent 48%),
+        linear-gradient(160deg, #2c1b0b 0, #2a1206 55%, #090402 100%);
+    }
+
+    #lootBoxSection[data-level="4"]{
+      --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(220, 230, 245, 0.25), transparent 48%),
+        radial-gradient(circle at 70% 20%, rgba(160, 180, 210, 0.2), transparent 48%),
+        linear-gradient(160deg, #202633 0, #111826 55%, #06070d 100%);
+    }
+
+    #lootBoxSection[data-level="5"]{
+      --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(255, 230, 140, 0.3), transparent 48%),
+        radial-gradient(circle at 70% 20%, rgba(255, 200, 90, 0.2), transparent 48%),
+        linear-gradient(160deg, #2b1a05 0, #1b1004 55%, #080502 100%);
     }
 
     .lootbox-card{
@@ -715,6 +942,10 @@
       animation: lootboxSparkle 0.9s ease;
     }
 
+    .lootbox-card.is-staying{
+      animation: lootboxStay 0.6s ease;
+    }
+
     @keyframes lootboxTap{
       0%{ transform: scale(1); }
       35%{ transform: scale(0.96) rotate(-1deg); }
@@ -727,6 +958,13 @@
       35%{ transform: scale(1.08); box-shadow: 0 30px 50px rgba(255,215,128,0.45); }
       70%{ transform: scale(0.98); box-shadow: 0 26px 46px rgba(120,190,255,0.35); }
       100%{ transform: scale(1); box-shadow: 0 22px 40px rgba(0,0,0,0.6); }
+    }
+
+    @keyframes lootboxStay{
+      0%{ transform: scale(1); }
+      40%{ transform: scale(0.96) rotate(-1deg); }
+      75%{ transform: scale(1.02) rotate(1deg); }
+      100%{ transform: scale(1); }
     }
 
     @keyframes lootboxGlow{
@@ -807,7 +1045,7 @@
       -moz-user-select: none;
       -webkit-touch-callout: none;
     }
-    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #slotsSection, #skinsSection, #shopSection { display: none; padding: 20px; text-align:center; }
+    #login, #dashboard, #blackjackSection, #pokerSection, #lootBoxMenuSection, #lootBoxSection, #leaderboardSection, #slotsSection, #skinsSection, #shopSection { display: none; padding: 20px; text-align:center; }
     #login {
       position: relative;
       background:
@@ -1131,6 +1369,52 @@
 
     .lucky-drop-icon{
       font-size: 20px;
+    }
+
+    .lucky-drop-box{
+      width: 46px;
+      height: 46px;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .lucky-drop-box .lootbox-3d{
+      position: absolute;
+      inset: 0;
+      transform: translateZ(10px);
+      pointer-events: none;
+    }
+
+    .lucky-drop-box .lootbox-lid,
+    .lucky-drop-box .lootbox-body,
+    .lucky-drop-box .lootbox-ribbon{
+      border-radius: 10px;
+      box-shadow: inset 0 0 8px rgba(255,255,255,0.35), 0 6px 12px rgba(0,0,0,0.35);
+    }
+
+    .lucky-drop-box .lootbox-lid{
+      top: -8%;
+      height: 38%;
+    }
+
+    .lucky-drop-box .lootbox-body{
+      top: 24%;
+      height: 64%;
+    }
+
+    .lucky-drop-box .lootbox-ribbon{
+      top: 24%;
+      height: 60%;
+      width: 22%;
+      left: 39%;
+      border-radius: 8px;
+    }
+
+    .lucky-drop-box .lucky-drop-icon{
+      font-size: 20px;
+      position: relative;
+      z-index: 2;
     }
 
     .lucky-drop-badge{
@@ -4670,7 +4954,14 @@
         </div>
         <div class="menu-hero-actions">
           <button id="luckyDropBtn" class="lucky-drop-btn menu-hero-quick" aria-label="Open Lucky Boxes" title="Lucky Boxes">
-            <span class="lucky-drop-icon">🍀</span>
+            <span class="lucky-drop-box" aria-hidden="true">
+              <span class="lootbox-3d">
+                <span class="lootbox-lid"></span>
+                <span class="lootbox-body"></span>
+                <span class="lootbox-ribbon"></span>
+              </span>
+              <span class="lucky-drop-icon">🎁</span>
+            </span>
             <span class="lucky-drop-badge" aria-hidden="true">!</span>
           </button>
           <button id="lb-tab" class="menu-hero-quick menu-hero-leaderboard" aria-label="Open leaderboard" title="Leaderboard">🏆</button>
@@ -4732,7 +5023,9 @@
   <!-- Loot Boxes menu -->
   <section id="lootBoxMenuSection" style="display:none;">
     <h2>Lucky Boxes</h2>
-    <p>Kies een box om te openen. Je betaalt met Lucky Coins.</p>
+    <p>Kies een box om te openen. Je betaalt met Lucky Coins. Alleen de eerste drie boxes zijn direct te koop.</p>
+    <p class="lootbox-explainer">Elke opening geeft credits + kans op skins. Tijdens het openen is er 12,5% kans dat de reward-level omhoog gaat. Levels 4 en 5 zijn alleen via level-ups te behalen.</p>
+    <div id="lootBoxRewardQueue" class="lootbox-reward-queue" style="display:none;"></div>
     <div class="lootbox-menu-grid">
       <div class="lootbox-option">
         <div class="lootbox-star-row">★</div>
@@ -4773,9 +5066,9 @@
           <small>10 Lucky Coins</small>
         </div>
       </div>
-      <div class="lootbox-option">
+      <div class="lootbox-option is-locked">
         <div class="lootbox-star-row">★ ★ ★ ★</div>
-        <div class="lootbox-card lootbox-level-4" data-lootbox="royal">
+        <div class="lootbox-card lootbox-level-4" data-lootbox="royal" aria-disabled="true">
           <div class="lootbox-3d">
             <span class="lootbox-lid"></span>
             <span class="lootbox-body"></span>
@@ -4785,10 +5078,11 @@
           <div>Royal Lucky Box</div>
           <small>25 Lucky Coins</small>
         </div>
+        <div class="lootbox-lock">Locked — only via level-up</div>
       </div>
-      <div class="lootbox-option">
+      <div class="lootbox-option is-locked">
         <div class="lootbox-star-row">★ ★ ★ ★ ★</div>
-        <div class="lootbox-card lootbox-level-5" data-lootbox="mythic">
+        <div class="lootbox-card lootbox-level-5" data-lootbox="mythic" aria-disabled="true">
           <div class="lootbox-3d">
             <span class="lootbox-lid"></span>
             <span class="lootbox-body"></span>
@@ -4798,6 +5092,7 @@
           <div>Mythic Lucky Box</div>
           <small>50 Lucky Coins</small>
         </div>
+        <div class="lootbox-lock">Locked — only via level-up</div>
       </div>
     </div>
     <button id="backToMenuFromLuckyBoxes">Terug naar menu</button>
@@ -4806,7 +5101,7 @@
   <!-- Loot Box opening -->
   <section id="lootBoxSection" style="display:none;">
     <h2 id="lootBoxTitle">Lucky Box</h2>
-    <p id="lootBoxSubtitle">Tik op de box om te openen. Je hebt 1 kans.</p>
+    <p id="lootBoxSubtitle">Tik op de box om te openen. Je hebt 1 kans en 12,5% kans op een level-up.</p>
     <div class="lootbox-stage">
       <div id="lootBoxCard" class="lootbox-card lootbox-level-1">
         <div class="lootbox-3d">
@@ -4820,7 +5115,7 @@
       <div id="lootBoxChances" class="lootbox-chances">
         <div class="chance-dot">★</div>
       </div>
-      <div id="lootBoxHint">Tik om te openen (15% kans op skins).</div>
+      <div id="lootBoxHint">Tik om te openen (15% kans op skins, 12,5% kans op level-up).</div>
       <div id="lootBoxReward"></div>
     </div>
     <button id="backToMenuFromLoot">Terug naar menu</button>
@@ -5269,16 +5564,28 @@
     <div id="helpSteps" class="help-steps"></div>
   </div>
   
-  <!-- Leaderboard popup -->
-  <div id="lb-popup">
-      <div id="lb-popup-inner">
-          <div id="lb-left" class="lb-arrow">←</div>
-          <h2 id="lb-title">All-Time Earnings</h2>
-          <div id="lb-content"></div>
-          <div id="lb-right" class="lb-arrow">→</div>
-          <button id="lb-close">Sluiten</button>
+  <!-- Leaderboard screen -->
+  <section id="leaderboardSection" style="display:none;">
+    <div class="leaderboard-shell">
+      <header class="leaderboard-header">
+        <div>
+          <h2>Leaderboards</h2>
+          <p>Bekijk per game wie de meeste credits wint. Dag 1 is vandaag.</p>
+        </div>
+        <button id="backFromLeaderboardBtn">Terug naar menu</button>
+      </header>
+      <div class="leaderboard-controls">
+        <div id="leaderboardGameBar" class="leaderboard-bar" role="tablist" aria-label="Game selectie"></div>
+        <div id="leaderboardDayBar" class="leaderboard-bar" role="tablist" aria-label="Dag selectie"></div>
+        <div id="leaderboardAllTimeBar" class="leaderboard-bar" role="tablist" aria-label="All-time selectie"></div>
       </div>
-  </div>
+      <div class="leaderboard-reward-info" id="leaderboardRewardInfo">
+        Dagelijkse rewards: #1 krijgt een gegarandeerde 5★ Lucky Box, #2 een 4★, #3 een 3★. Deze worden de volgende dag om 11:00 CET uitgekeerd en poppen één keer na inloggen.
+      </div>
+      <div id="leaderboardList" class="leaderboard-list"></div>
+      <div id="leaderboardEmpty" class="leaderboard-empty" style="display:none;">Nog geen leaderboard data voor deze selectie.</div>
+    </div>
+  </section>
 
   <!-- Game result overlay -->
   <div id="gameResultOverlay" class="game-result-overlay" aria-hidden="true">
@@ -5324,6 +5631,35 @@
        --------------------------- */
     let users = {};
     let currentUser = null;
+    let serverTimeOffsetMs = 0;
+    let hasTrustedTime = false;
+
+    async function syncTrustedTime(){
+      try{
+        const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam', { cache: 'no-store' });
+        if(!response.ok) throw new Error('Time sync failed');
+        const data = await response.json();
+        const serverIso = data.dateTime || data.currentLocalTime || data.dateTimeString;
+        if(serverIso){
+          const serverTime = new Date(serverIso).getTime();
+          if(Number.isFinite(serverTime)){
+            serverTimeOffsetMs = serverTime - Date.now();
+            hasTrustedTime = true;
+          }
+        }
+      } catch (error){
+        hasTrustedTime = false;
+        serverTimeOffsetMs = 0;
+      }
+    }
+
+    function getTrustedDate(){
+      return new Date(Date.now() + serverTimeOffsetMs);
+    }
+
+    function getCETDateKey(date = getTrustedDate()){
+      return date.toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' });
+    }
 
     function keyForName(name){ return name.trim().toLowerCase(); }
 
@@ -5476,10 +5812,12 @@
     const lootBoxChances = document.getElementById('lootBoxChances');
     const lootBoxHint = document.getElementById('lootBoxHint');
     const lootBoxReward = document.getElementById('lootBoxReward');
+    const lootBoxRewardQueue = document.getElementById('lootBoxRewardQueue');
     const backToMenuFromLoot = document.getElementById('backToMenuFromLoot');
     const backToMenuFromLuckyBoxes = document.getElementById('backToMenuFromLuckyBoxes');
 
     setupMenuCardArt();
+    syncTrustedTime();
 
     const gameLabels = {
       all: 'Alle games',
@@ -6876,12 +7214,14 @@
 
     /* Leaderboard refs */
     const lbTab = document.getElementById('lb-tab');
-    const lbPopup = document.getElementById('lb-popup');
-    const lbLeft = document.getElementById('lb-left');
-    const lbRight = document.getElementById('lb-right');
-    const lbClose = document.getElementById('lb-close');
-    const lbTitle = document.getElementById('lb-title');
-    const lbContent = document.getElementById('lb-content');
+    const leaderboardSection = document.getElementById('leaderboardSection');
+    const leaderboardGameBar = document.getElementById('leaderboardGameBar');
+    const leaderboardDayBar = document.getElementById('leaderboardDayBar');
+    const leaderboardAllTimeBar = document.getElementById('leaderboardAllTimeBar');
+    const leaderboardList = document.getElementById('leaderboardList');
+    const leaderboardEmpty = document.getElementById('leaderboardEmpty');
+    const leaderboardRewardInfo = document.getElementById('leaderboardRewardInfo');
+    const backFromLeaderboardBtn = document.getElementById('backFromLeaderboardBtn');
 
     const helpFab = document.getElementById('helpFab');
     const helpPanel = document.getElementById('helpPanel');
@@ -6902,8 +7242,8 @@
     const siteMessageClose = document.getElementById('siteMessageClose');
 
     function closeLeaderboardPopup(){
-      if(lbPopup){
-        lbPopup.style.display = 'none';
+      if(leaderboardSection){
+        leaderboardSection.style.display = 'none';
       }
     }
 
@@ -7265,9 +7605,11 @@
       ensureLuckyFields(currentUser);
       ensureSkinFields(currentUser);
       ensureTrackingFields(currentUser);
+      ensureLeaderboardRewardFields(currentUser);
       loginSection.style.display='none';
       showDashboard(true);
       applyAllSkins();
+      await checkLeaderboardRewardsOnLogin();
       if(needsLuckyInit || needsSkinInit){
         saveCurrentUser();
       }
@@ -7311,6 +7653,7 @@
       };
       ensureSkinFields(currentUser);
       ensureTrackingFields(currentUser);
+      ensureLeaderboardRewardFields(currentUser);
       await saveCurrentUser();
       loginSection.style.display='none';
       showDashboard(true);
@@ -7323,8 +7666,18 @@
       if(typeof user.luckyCoinProgress !== 'number') user.luckyCoinProgress = 0;
     }
 
+    function ensureLeaderboardRewardFields(user){
+      if(!user) return;
+      if(!Array.isArray(user.leaderboardRewards)){
+        user.leaderboardRewards = [];
+      }
+      if(!user.leaderboardRewardClaims || typeof user.leaderboardRewardClaims !== 'object'){
+        user.leaderboardRewardClaims = {};
+      }
+    }
+
     function canPurchaseLuckyDrop(){
-      return !!currentUser && currentUser.luckyCoins >= 1;
+      return !!currentUser && (currentUser.luckyCoins >= 1 || (currentUser.leaderboardRewards && currentUser.leaderboardRewards.length > 0));
     }
 
     function updateLuckyDropIndicator(){
@@ -7395,14 +7748,14 @@
       }
     }
 
-    function getDateKey(date = new Date()){
-      return date.toISOString().slice(0, 10);
+    function getDateKey(date = getTrustedDate()){
+      return getCETDateKey(date);
     }
 
-    function getTrackingDates(){
+    function getTrackingDates(dayCount = 7){
       const dates = [];
-      const today = new Date();
-      for(let offset = 6; offset >= 0; offset -= 1){
+      const today = getTrustedDate();
+      for(let offset = 0; offset < dayCount; offset += 1){
         const date = new Date(today);
         date.setDate(today.getDate() - offset);
         dates.push(getDateKey(date));
@@ -7633,8 +7986,81 @@
     }
 
     async function refreshTrackingData(){
+      await syncTrustedTime();
       trackingUsersCache = await loadTrackingUsersFromDb();
       trackingDatesCache = getTrackingDates();
+    }
+
+    function getCETHour(date = getTrustedDate()){
+      const hourString = date.toLocaleTimeString('en-GB', { timeZone: 'Europe/Amsterdam', hour: '2-digit', hour12: false });
+      return Number.parseInt(hourString, 10);
+    }
+
+    function getLeaderboardRewardLevel(rank){
+      if(rank === 1) return 5;
+      if(rank === 2) return 4;
+      if(rank === 3) return 3;
+      return null;
+    }
+
+    async function checkLeaderboardRewardsOnLogin(){
+      if(!currentUser) return;
+      await syncTrustedTime();
+      ensureLeaderboardRewardFields(currentUser);
+      const now = getTrustedDate();
+      const currentHour = getCETHour(now);
+      if(!Number.isFinite(currentHour) || currentHour < 11) return;
+
+      const yesterday = new Date(now);
+      yesterday.setDate(now.getDate() - 1);
+      const rewardDateKey = getCETDateKey(yesterday);
+      if(currentUser.leaderboardRewardClaims[rewardDateKey]) return;
+
+      const users = await loadTrackingUsersFromDb();
+      const gameKeys = Object.keys(gameLabels).filter((key) => key !== 'all');
+      const dayIndex = getTrackingDates().findIndex((dateKey) => dateKey === rewardDateKey);
+      const awarded = [];
+
+      gameKeys.forEach((gameKey) => {
+        const ranked = users
+          .map((user) => ({
+            key: user.key,
+            name: user.name,
+            net: getTrackingStatsForDay(user, rewardDateKey, gameKey).net
+          }))
+          .filter((entry) => entry.net > 0)
+          .sort((a, b) => b.net - a.net)
+          .slice(0, 3);
+
+        const winnerIndex = ranked.findIndex((entry) => entry.key === currentUser.key);
+        if(winnerIndex !== -1){
+          const rank = winnerIndex + 1;
+          const rewardLevel = getLeaderboardRewardLevel(rank);
+          if(rewardLevel){
+            awarded.push({
+              level: rewardLevel,
+              gameKey,
+              dateKey: rewardDateKey,
+              dayIndex: dayIndex === -1 ? 2 : dayIndex + 1,
+              rank
+            });
+          }
+        }
+      });
+
+      if(awarded.length > 0){
+        currentUser.leaderboardRewards.push(...awarded);
+        const rewardLines = awarded.map((reward) => `#${reward.rank} ${gameLabels[reward.gameKey]} → ${reward.level}★ Lucky Box`);
+        showGameResultOverlay({
+          outcome: 'win',
+          title: 'Leaderboard reward!',
+          message: `Je dagelijkse reward is binnen (11:00 CET). ${rewardLines.join(' • ')}`
+        });
+      }
+
+      currentUser.leaderboardRewardClaims[rewardDateKey] = true;
+      await saveCurrentUser();
+      updateLuckyDropIndicator();
     }
 
     async function openTrackingPanel(){
@@ -7659,6 +8085,7 @@
       ensureLuckyFields(currentUser);
       ensureShopFields(currentUser);
       ensureSkinFields(currentUser);
+      ensureLeaderboardRewardFields(currentUser);
       displayName.textContent = currentUser.name;
       creditsEl.textContent = currentUser.credits;
       updateLuckyCoinDisplay();
@@ -7674,6 +8101,9 @@
       hideGameResultOverlay();
       renderDashboard();
       setHelpContext(null);
+      if(leaderboardSection){
+        leaderboardSection.style.display = 'none';
+      }
       if(skinsSection){
         skinsSection.style.display = 'none';
       }
@@ -7700,6 +8130,9 @@
       plinkoSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'none';
+      if(leaderboardSection){
+        leaderboardSection.style.display = 'none';
+      }
       shopSection.style.display = 'none';
       loginSection.style.display = 'flex';
       applyLoginSkinFromDevice();
@@ -8005,6 +8438,7 @@
       skinsSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'block';
       setHelpContext('lootbox-menu');
+      renderLootBoxRewardQueue();
       };
     }
 
@@ -8016,11 +8450,11 @@
     }
 
     const lootBoxConfigs = {
-      lucky: { name: 'Lucky Box', cost: 1, startLevel: 1 },
-      deluxe: { name: 'Deluxe Lucky Box', cost: 5, startLevel: 2 },
-      ultra: { name: 'Ultra Deluxe Lucky Box', cost: 10, startLevel: 3 },
-      royal: { name: 'Royal Lucky Box', cost: 25, startLevel: 4 },
-      mythic: { name: 'Mythic Lucky Box', cost: 50, startLevel: 5 }
+      lucky: { name: 'Lucky Box', cost: 1, startLevel: 1, purchasable: true },
+      deluxe: { name: 'Deluxe Lucky Box', cost: 5, startLevel: 2, purchasable: true },
+      ultra: { name: 'Ultra Deluxe Lucky Box', cost: 10, startLevel: 3, purchasable: true },
+      royal: { name: 'Royal Lucky Box', cost: 25, startLevel: 4, purchasable: false },
+      mythic: { name: 'Mythic Lucky Box', cost: 50, startLevel: 5, purchasable: false }
     };
     const lootBoxBaseCredits = {
       1: 50,
@@ -8030,12 +8464,18 @@
       5: 2500
     };
     const lootBoxSkinChance = 0.15;
+    const lootBoxLevelUpChance = 0.125;
     let currentLootBox = null;
 
     document.querySelectorAll('.lootbox-card[data-lootbox]').forEach((card)=>{
       card.addEventListener('click', ()=>{
-        triggerLootBoxAnimation(card, 'is-opening');
         const type = card.getAttribute('data-lootbox');
+        const config = lootBoxConfigs[type];
+        if(!config?.purchasable){
+          showSiteMessage('Deze Lucky Box is alleen via level-up te verdienen.');
+          return;
+        }
+        triggerLootBoxAnimation(card, 'is-opening');
         openLootBox(type);
       });
     });
@@ -8050,9 +8490,10 @@
     function updateLootBoxUI(){
       if(!currentLootBox) return;
       lootBoxTitle.textContent = currentLootBox.name;
-      lootBoxSubtitle.textContent = `Tik op de box om te openen. ${currentLootBox.remainingChances} kans over.`;
+      lootBoxSubtitle.textContent = `Tik op de box om te openen. ${currentLootBox.remainingChances} kans over (12,5% chance op level-up).`;
       lootBoxLevel.textContent = currentLootBox.level;
       lootBoxCard.className = `lootbox-card lootbox-level-${currentLootBox.level}`;
+      lootBoxSection.dataset.level = currentLootBox.level;
       if(currentLootBox.remainingChances === 0){
         lootBoxCard.classList.add('disabled');
       }
@@ -8066,6 +8507,10 @@
       if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       closeLeaderboardPopup();
       const config = lootBoxConfigs[type];
+      if(!config?.purchasable){
+        showSiteMessage('Deze Lucky Box is alleen via level-up te verdienen.');
+        return;
+      }
       ensureLuckyFields(currentUser);
       ensureShopFields(currentUser);
       ensureSkinFields(currentUser);
@@ -8081,16 +8526,71 @@
         remainingChances: 1
       };
       lootBoxReward.textContent = '';
-      lootBoxHint.textContent = 'Tik om te openen (15% kans op skins).';
+      lootBoxHint.textContent = 'Tik om te openen (15% kans op skins, 12,5% kans op level-up).';
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
-      lootBoxSection.style.display = 'block';
+      lootBoxSection.style.display = 'flex';
       setHelpContext('lootbox-open');
       updateLuckyCoinDisplay();
       updateLootBoxUI();
       saveCurrentUser();
+    }
+
+    function openRewardLootBox(rewardIndex){
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
+      ensureLeaderboardRewardFields(currentUser);
+      const reward = currentUser.leaderboardRewards[rewardIndex];
+      if(!reward) return;
+      currentUser.leaderboardRewards.splice(rewardIndex, 1);
+      currentLootBox = {
+        type: 'reward',
+        name: `${reward.level}★ Leaderboard Reward`,
+        level: reward.level,
+        remainingChances: 1
+      };
+      lootBoxReward.textContent = '';
+      lootBoxHint.textContent = 'Leaderboard reward geopend! (15% kans op skins, 12,5% kans op level-up).';
+      dashboard.style.display = 'none';
+      lootBoxMenuSection.style.display = 'none';
+      lootBoxSection.style.display = 'flex';
+      setHelpContext('lootbox-open');
+      updateLootBoxUI();
+      renderLootBoxRewardQueue();
+      updateLuckyDropIndicator();
+      saveCurrentUser();
+    }
+
+    function renderLootBoxRewardQueue(){
+      if(!lootBoxRewardQueue) return;
+      if(!currentUser){
+        lootBoxRewardQueue.style.display = 'none';
+        return;
+      }
+      ensureLeaderboardRewardFields(currentUser);
+      const rewards = currentUser.leaderboardRewards || [];
+      if(rewards.length === 0){
+        lootBoxRewardQueue.style.display = 'none';
+        lootBoxRewardQueue.innerHTML = '';
+        return;
+      }
+      lootBoxRewardQueue.style.display = 'flex';
+      lootBoxRewardQueue.innerHTML = `
+        <strong>Dagelijkse leaderboard rewards</strong>
+        ${rewards.map((reward, index) => `
+          <div class="lootbox-reward-item">
+            <div>${reward.level}★ Lucky Box • ${gameLabels[reward.gameKey] || reward.gameKey} • dag ${reward.dayIndex}</div>
+            <button type="button" data-reward-index="${index}">Open</button>
+          </div>
+        `).join('')}
+      `;
+      lootBoxRewardQueue.querySelectorAll('button[data-reward-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const index = Number(button.dataset.rewardIndex);
+          if(Number.isFinite(index)) openRewardLootBox(index);
+        });
+      });
     }
 
     function getAvailableThemes(list){
@@ -8302,12 +8802,22 @@
     lootBoxCard.onclick = ()=>{
       if(!currentLootBox || currentLootBox.remainingChances === 0) return;
       currentLootBox.remainingChances = 0;
-      triggerLootBoxAnimation(lootBoxCard, 'is-opening');
+      const previousLevel = currentLootBox.level;
+      const didLevelUp = Math.random() < lootBoxLevelUpChance && currentLootBox.level < 5;
+      if(didLevelUp){
+        currentLootBox.level += 1;
+      }
+      triggerLootBoxAnimation(lootBoxCard, didLevelUp ? 'is-leveling' : 'is-staying');
 
       const reward = resolveLootBoxReward(currentLootBox.level);
       currentUser.credits += reward.credits;
 
-      const rewardLines = [`Beloning: ${reward.credits} credits (level ${currentLootBox.level}).`];
+      const rewardLines = [
+        didLevelUp
+          ? `Level up! ${previousLevel} → ${currentLootBox.level}.`
+          : `Level blijft ${currentLootBox.level}.`,
+        `Beloning: ${reward.credits} credits (level ${currentLootBox.level}).`
+      ];
       if(reward.grantedSkins.length > 0){
         rewardLines.push(`Nieuwe skins: ${reward.grantedSkins.join(', ')}.`);
       } else {
@@ -8344,6 +8854,7 @@ playHorseRaceBtn.onclick = () => {
       lootBoxSection.style.display = 'none';
       lootBoxMenuSection.style.display = 'block';
       setHelpContext('lootbox-menu');
+      renderLootBoxRewardQueue();
     };
 
     backToMenuFromLuckyBoxes.onclick = ()=>{
@@ -11026,151 +11537,140 @@ startRaceBtn.onclick = async () => {
 };
 
     /* ---------------------------
-       Leaderboard popup
+       Leaderboard screen
        --------------------------- */
-    let lbIndex = 0;
-    const leaderboardConfigs = [
-      {
-        key: 'earnings',
-        title: 'All-Time Earnings',
-        value: (u)=>u.totalEarned||0,
-        extra: (u)=>`${u.totalEarned||0} credits`
-      },
-      {
-        key: 'winrate',
-        title: 'Win Percentage (overall)',
-        value: (u)=>u.games ? (u.wins/u.games) : 0,
-        extra: (u)=>`${u.games?Math.round(100*u.wins/u.games):0}%`
-      },
-      {
-        key: 'bjwinrate',
-        title: 'Blackjack Win Percentage',
-        value: (u)=>u.bjGames ? (u.bjWins/u.bjGames) : 0,
-        extra: (u)=>`${u.bjGames?Math.round(100*u.bjWins/u.bjGames):0}%`
-      },
-      {
-        key: 'pkwinrate',
-        title: 'Poker Win Percentage',
-        value: (u)=>u.pkGames ? (u.pkWins/u.pkGames) : 0,
-        extra: (u)=>`${u.pkGames?Math.round(100*u.pkWins/u.pkGames):0}%`
-      },
-      {
-        key: 'crapswinrate',
-        title: 'Craps Win Percentage',
-        value: (u)=>u.crapsGames ? (u.crapsWins/u.crapsGames) : 0,
-        extra: (u)=>`${u.crapsGames?Math.round(100*u.crapsWins/u.crapsGames):0}%`
-      },
-      {
-        key: 'baccaratwinrate',
-        title: 'Baccarat Win Percentage',
-        value: (u)=>u.baccaratGames ? (u.baccaratWins/u.baccaratGames) : 0,
-        extra: (u)=>`${u.baccaratGames?Math.round(100*u.baccaratWins/u.baccaratGames):0}%`
-      },
-      {
-        key: 'roulettewinrate',
-        title: 'Roulette Win Percentage',
-        value: (u)=>u.rouletteGames ? (u.rouletteWins/u.rouletteGames) : 0,
-        extra: (u)=>`${u.rouletteGames?Math.round(100*u.rouletteWins/u.rouletteGames):0}%`
-      },
-      {
-        key: 'slotswinrate',
-        title: 'Slots Win Percentage',
-        value: (u)=>u.slotsGames ? (u.slotsWins/u.slotsGames) : 0,
-        extra: (u)=>`${u.slotsGames?Math.round(100*u.slotsWins/u.slotsGames):0}%`
-      },
-      {
-        key: 'plinkowinrate',
-        title: 'Plinko Win Percentage',
-        value: (u)=>u.plinkoGames ? (u.plinkoWins/u.plinkoGames) : 0,
-        extra: (u)=>`${u.plinkoGames?Math.round(100*u.plinkoWins/u.plinkoGames):0}%`
-      },
-      {
-        key: 'horsewinrate',
-        title: 'Horse Race Win Percentage',
-        value: (u)=>u.horseGames ? (u.horseWins/u.horseGames) : 0,
-        extra: (u)=>`${u.horseGames?Math.round(100*u.horseWins/u.horseGames):0}%`
-      }
-    ];
+    let activeLeaderboardGame = 'all';
+    let activeLeaderboardDayIndex = 0;
+    let leaderboardView = 'day';
 
-    async function loadUsersArrayFromDb(){
-      const snap = await db.ref('users').once('value');
-      const obj = snap.val() || {};
-      return Object.entries(obj).map(([k,u])=>({
-        key: k,
-        name: u.name,
-        totalEarned: u.totalEarned||0,
-        wins: u.wins||0,
-        losses: u.losses||0,
-        games: u.gamesPlayed||0,
-        bjWins: u.bjWins||0,
-        bjLosses: u.bjLosses||0,
-        bjGames: u.bjGames||0,
-        pkWins: u.pkWins||0,
-        pkLosses: u.pkLosses||0,
-        pkGames: u.pkGames||0,
-        crapsWins: u.crapsWins||0,
-        crapsLosses: u.crapsLosses||0,
-        crapsGames: u.crapsGames||0,
-        baccaratWins: u.baccaratWins||0,
-        baccaratLosses: u.baccaratLosses||0,
-        baccaratGames: u.baccaratGames||0,
-        rouletteWins: u.rouletteWins||0,
-        rouletteLosses: u.rouletteLosses||0,
-        rouletteGames: u.rouletteGames||0,
-        slotsWins: u.slotsWins||0,
-        slotsLosses: u.slotsLosses||0,
-        slotsGames: u.slotsGames||0,
-        plinkoWins: u.plinkoWins||0,
-        plinkoLosses: u.plinkoLosses||0,
-        plinkoGames: u.plinkoGames||0,
-        horseWins: u.horseWins||0,
-        horseLosses: u.horseLosses||0,
-        horseGames: u.horseGames||0
-      }));
+    function getLeaderboardDayLabel(index){
+      return `day ${index + 1}`;
     }
 
-    async function openLeaderboard(){
-      lbPopup.style.display='block';
-      const config = leaderboardConfigs[lbIndex];
-      lbTitle.textContent = config.title;
+    function renderLeaderboardBars(dates){
+      if(!leaderboardGameBar || !leaderboardDayBar || !leaderboardAllTimeBar) return;
+      const gameKeys = Object.keys(gameLabels);
+      leaderboardGameBar.innerHTML = gameKeys.map((gameKey) => `
+        <button type="button" data-game="${gameKey}" class="${gameKey === activeLeaderboardGame ? 'is-active' : ''}">
+          ${gameLabels[gameKey]}
+        </button>
+      `).join('');
 
-      const arr = await loadUsersArrayFromDb();
-      arr.sort((a,b)=>config.value(b) - config.value(a));
+      leaderboardDayBar.innerHTML = dates.map((_, index) => `
+        <button type="button" data-day-index="${index}" class="${leaderboardView === 'day' && index === activeLeaderboardDayIndex ? 'is-active' : ''}">
+          ${getLeaderboardDayLabel(index)}
+        </button>
+      `).join('');
 
-      let html='';
-      const top=arr.slice(0,10);
-      top.forEach((u,i)=>{
-        const isYou=currentUser && (u.key===currentUser.key);
-        const extra = config.extra(u);
-        html+=`
-          <div class="lb-entry ${isYou ? 'you' : ''}">
-            <span class="lb-rank">${i+1}.</span>
-            <span class="lb-name">${u.name} ${isYou ? '<em>(jij)</em>' : ''}</span>
-            <span class="lb-extra">${extra}</span>
-          </div>
-        `;
+      leaderboardAllTimeBar.innerHTML = `
+        <button type="button" data-alltime="true" class="${leaderboardView === 'alltime' ? 'is-active' : ''}">All-time</button>
+      `;
+
+      leaderboardGameBar.querySelectorAll('button[data-game]').forEach((button) => {
+        button.addEventListener('click', () => {
+          activeLeaderboardGame = button.dataset.game;
+          renderLeaderboard();
+        });
       });
 
-      let yourRank=-1;
-      if(currentUser) yourRank=arr.findIndex(x=>x.key===currentUser.key);
-      if(yourRank>9){
-        const u=arr[yourRank];
-        const extra = config.extra(u);
-        html+=`<hr><div class="lb-entry">
-          <span class="lb-rank">${yourRank+1}.</span>
-          <span class="lb-name">${u.name}</span>
-          <span class="lb-extra">${extra}</span>
-        </div>`;
-      } else if(yourRank===-1 && currentUser){
-        html+=`<hr><div class="lb-entry"><span class="lb-name">Jij staat nog niet in de statistieken.</span></div>`;
+      leaderboardDayBar.querySelectorAll('button[data-day-index]').forEach((button) => {
+        button.addEventListener('click', () => {
+          leaderboardView = 'day';
+          activeLeaderboardDayIndex = Number(button.dataset.dayIndex);
+          renderLeaderboard();
+        });
+      });
+
+      const allTimeButton = leaderboardAllTimeBar.querySelector('button[data-alltime]');
+      if(allTimeButton){
+        allTimeButton.addEventListener('click', () => {
+          leaderboardView = 'alltime';
+          renderLeaderboard();
+        });
       }
-      lbContent.innerHTML=html;
     }
 
-    lbTab.onclick = ()=>{ lbIndex=0; openLeaderboard(); };
-    lbClose.onclick = ()=>{ lbPopup.style.display='none'; };
-    lbLeft.onclick = ()=>{ lbIndex=(lbIndex-1+leaderboardConfigs.length)%leaderboardConfigs.length; openLeaderboard(); };
-    lbRight.onclick = ()=>{ lbIndex=(lbIndex+1)%leaderboardConfigs.length; openLeaderboard(); };
+    function getLeaderboardScore(user, dates, dayIndex){
+      if(leaderboardView === 'alltime'){
+        return sumGameStatForUser(user, activeLeaderboardGame, dates, 'net');
+      }
+      const dateKey = dates[dayIndex];
+      return getTrackingStatsForDay(user, dateKey, activeLeaderboardGame).net;
+    }
+
+    function renderLeaderboard(){
+      if(!leaderboardList || !leaderboardEmpty) return;
+      const dates = trackingDatesCache.length ? trackingDatesCache : getTrackingDates();
+      renderLeaderboardBars(dates);
+      const users = trackingUsersCache || [];
+      const entries = users.map((user) => {
+        const gamesCount = leaderboardView === 'alltime'
+          ? sumGameStatForUser(user, activeLeaderboardGame, dates, 'games')
+          : getTrackingStatsForDay(user, dates[activeLeaderboardDayIndex], activeLeaderboardGame).games;
+        return {
+          user,
+          net: getLeaderboardScore(user, dates, activeLeaderboardDayIndex),
+          games: gamesCount
+        };
+      }).filter((entry) => entry.games > 0);
+
+      entries.sort((a, b) => b.net - a.net);
+
+      if(entries.length === 0){
+        leaderboardList.innerHTML = '';
+        leaderboardEmpty.style.display = 'block';
+        leaderboardRewardInfo.textContent = 'Nog geen data voor deze selectie.';
+        return;
+      }
+
+      leaderboardEmpty.style.display = 'none';
+      const dayLabel = getLeaderboardDayLabel(activeLeaderboardDayIndex);
+      leaderboardRewardInfo.textContent = leaderboardView === 'alltime'
+        ? 'All-time overzicht. Dagelijkse rewards worden alleen per dag uitgedeeld om 11:00 CET.'
+        : `${dayLabel} rewards: #1 krijgt een gegarandeerde 5★ Lucky Box, #2 een 4★, #3 een 3★. Uitbetaling de volgende dag om 11:00 CET.`;
+
+      const topEntries = entries.slice(0, 10);
+      leaderboardList.innerHTML = topEntries.map((entry, index) => {
+        const rank = index + 1;
+        const rewardLevel = leaderboardView === 'day' ? getLeaderboardRewardLevel(rank) : null;
+        const rewardLabel = rewardLevel ? `<div class="leaderboard-reward">Reward: ${rewardLevel}★ Lucky Box</div>` : '';
+        const isYou = currentUser && entry.user.key === currentUser.key;
+        return `
+          <div class="leaderboard-entry ${isYou ? 'you' : ''}">
+            <div class="leaderboard-rank">${rank}</div>
+            <div>
+              <div class="leaderboard-name">${entry.user.name}${isYou ? ' (jij)' : ''}</div>
+              ${rewardLabel}
+            </div>
+            <div class="leaderboard-score">${formatCredits(entry.net)} credits</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function openLeaderboardScreen(){
+      if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
+      await refreshTrackingData();
+      activeLeaderboardGame = 'all';
+      activeLeaderboardDayIndex = 0;
+      leaderboardView = 'day';
+      dashboard.style.display = 'none';
+      lootBoxMenuSection.style.display = 'none';
+      lootBoxSection.style.display = 'none';
+      skinsSection.style.display = 'none';
+      shopSection.style.display = 'none';
+      leaderboardSection.style.display = 'block';
+      setHelpContext(null);
+      renderLeaderboard();
+    }
+
+    if(lbTab){
+      lbTab.onclick = ()=>{ openLeaderboardScreen(); };
+    }
+
+    if(backFromLeaderboardBtn){
+      backFromLeaderboardBtn.onclick = ()=>{ leaderboardSection.style.display = 'none'; showDashboard(true); };
+    }
 
     const blockCopyHandlers = (event)=>event.preventDefault();
     ['copy', 'cut', 'paste', 'contextmenu', 'selectstart', 'dragstart'].forEach((eventName)=>{
