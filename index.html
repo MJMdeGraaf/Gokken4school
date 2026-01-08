@@ -3680,6 +3680,38 @@
       background: rgba(10, 24, 46, 0.65);
       border: 1px solid rgba(255, 221, 128, 0.25);
       box-shadow: inset 0 0 10px rgba(0,0,0,0.35);
+      justify-self: center;
+      width: 100%;
+    }
+
+    .plinko-multiplier:nth-child(1),
+    .plinko-multiplier:nth-child(13){
+      width: 55%;
+    }
+
+    .plinko-multiplier:nth-child(2),
+    .plinko-multiplier:nth-child(12){
+      width: 65%;
+    }
+
+    .plinko-multiplier:nth-child(3),
+    .plinko-multiplier:nth-child(11){
+      width: 75%;
+    }
+
+    .plinko-multiplier:nth-child(4),
+    .plinko-multiplier:nth-child(10){
+      width: 85%;
+    }
+
+    .plinko-multiplier:nth-child(5),
+    .plinko-multiplier:nth-child(9){
+      width: 92%;
+    }
+
+    .plinko-multiplier:nth-child(6),
+    .plinko-multiplier:nth-child(8){
+      width: 96%;
     }
 
     .plinko-multiplier.active{
@@ -3703,12 +3735,12 @@
     /* Global currency display */
     #currencyDisplay{
       position: fixed;
-      top: 12px;
-      left: 12px;
+      top: 8px;
+      left: 6px;
       right: auto;
       display: none;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       z-index: 99999;
       align-items: flex-start;
       flex-wrap: wrap;
@@ -3717,48 +3749,48 @@
     .currency-chip{
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       background: rgba(6, 12, 24, 0.75);
       color: #fff;
-      padding: 8px 14px;
+      padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.18);
       box-shadow: 0 8px 22px rgba(0,0,0,0.45);
-      min-width: 150px;
+      min-width: 132px;
     }
 
     .currency-values{
       display: flex;
       flex-direction: column;
       line-height: 1.1;
-      font-size: 12px;
+      font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       opacity: 0.85;
     }
 
     .currency-values strong{
-      font-size: 18px;
+      font-size: 16px;
       letter-spacing: 0.02em;
       text-transform: none;
       opacity: 1;
     }
 
     .currency-sub{
-      font-size: 11px;
+      font-size: 10px;
       text-transform: none;
       letter-spacing: 0.02em;
       opacity: 0.7;
     }
 
     .coin-icon{
-      width: 32px;
-      height: 32px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
       display: grid;
       place-items: center;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 12px;
       box-shadow: inset 0 2px 5px rgba(255,255,255,0.35), inset 0 -2px 6px rgba(0,0,0,0.4);
     }
 
@@ -8703,19 +8735,32 @@ playHorseRaceBtn.onclick = () => {
     let plinkoAnimationId = null;
     let plinkoActiveBatch = null;
 
+    function getPlinkoBallCountValue(){
+      if(!plinkoBallCountInput) return plinkoBallCount;
+      const rawValue = plinkoBallCountInput.value.trim();
+      if(rawValue === '') return null;
+      const parsedValue = parseInt(rawValue, 10);
+      if(!Number.isFinite(parsedValue)) return null;
+      return Math.max(plinkoBallMin, Math.min(plinkoBallMax, parsedValue));
+    }
+
     function updatePlinkoPerBallLabel(){
       if(!plinkoPerBall || !plinkoBetInput) return;
       const totalBet = parseInt(plinkoBetInput.value, 10) || 0;
-      const ballCount = syncPlinkoBallCount();
+      const ballCount = getPlinkoBallCountValue() ?? plinkoBallCount;
       const perBall = ballCount > 0 ? totalBet / ballCount : 0;
       const displayValue = Number.isInteger(perBall) ? perBall : perBall.toFixed(2);
       plinkoPerBall.textContent = `Per bal: ${displayValue} credits`;
     }
 
-    function syncPlinkoBallCount(){
+    function syncPlinkoBallCount(force = false){
       if(!plinkoBallCountInput) return plinkoBallCount;
-      const rawValue = parseInt(plinkoBallCountInput.value, 10);
-      const safeValue = Number.isFinite(rawValue) ? rawValue : plinkoBallCount;
+      const rawValue = plinkoBallCountInput.value.trim();
+      if(rawValue === '' && !force){
+        return plinkoBallCount;
+      }
+      const parsedValue = parseInt(rawValue, 10);
+      const safeValue = Number.isFinite(parsedValue) ? parsedValue : plinkoBallMin;
       const clamped = Math.max(plinkoBallMin, Math.min(plinkoBallMax, safeValue));
       plinkoBallCount = clamped;
       plinkoBallCountInput.value = clamped;
@@ -9042,7 +9087,7 @@ playHorseRaceBtn.onclick = () => {
       if(!currentUser) return showSiteMessage('Je moet eerst inloggen!');
       const totalBet = parseInt(plinkoBetInput.value, 10) || 0;
       if(totalBet < 10) return showSiteMessage('Minimum inzet is 10 credits.');
-      syncPlinkoBallCount();
+      syncPlinkoBallCount(true);
       const perBallBet = totalBet / plinkoBallCount;
       if(currentUser.credits < totalBet) return showSiteMessage('Je hebt niet genoeg credits!');
 
@@ -9078,6 +9123,10 @@ playHorseRaceBtn.onclick = () => {
     dropPlinkoBtn.onclick = ()=>{ void dropPlinkoBall(); };
     plinkoBetInput.addEventListener('input', updatePlinkoPerBallLabel);
     plinkoBallCountInput?.addEventListener('input', updatePlinkoPerBallLabel);
+    plinkoBallCountInput?.addEventListener('blur', ()=>{
+      syncPlinkoBallCount(true);
+      updatePlinkoPerBallLabel();
+    });
     updatePlinkoPerBallLabel();
 
     /* ---------------------------
