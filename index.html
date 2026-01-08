@@ -2074,29 +2074,53 @@
       width: 76px;
       height: 110px;
       border-radius: 12px;
-      background: linear-gradient(145deg, #ffffff, #f0f0f0);
-      border: 2px solid #d4af37;
-      color: #111;
+      background: #ffffff;
+      border: 2px solid #e2e2e2;
+      color: #121212;
       font-weight: 700;
+      font-family: "Georgia", "Times New Roman", serif;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       box-shadow:
         0 6px 14px rgba(0,0,0,0.55),
-        inset 0 0 0 1px rgba(255,255,255,0.75);
+        inset 0 0 0 1px rgba(255,255,255,0.9);
+      overflow: hidden;
     }
 
     .bj-card .corner{
       position: absolute;
       top: 8px;
       left: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
       font-size: 12px;
       font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.2px;
+    }
+
+    .bj-card .corner-value{
+      font-size: 14px;
+    }
+
+    .bj-card .corner-suit{
+      font-size: 12px;
+    }
+
+    .bj-card .corner.bottom{
+      top: auto;
+      left: auto;
+      right: 8px;
+      bottom: 8px;
+      transform: rotate(180deg);
     }
 
     .bj-card .center{
-      font-size: 22px;
+      font-size: 32px;
       line-height: 1;
     }
 
@@ -2356,9 +2380,9 @@
     .card-pk {
       width: 72px;
       height: 102px;
-      background: linear-gradient(160deg, #ffffff 0%, #f6f0e7 100%);
-      color: #111;
-      border-radius: 10px;
+      background: #ffffff;
+      color: #121212;
+      border-radius: 12px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -2368,7 +2392,8 @@
       padding: 8px;
       box-shadow: 0 6px 16px rgba(0,0,0,0.7);
       animation: dealCard 0.35s ease;
-      border: 1px solid #d6c4a4;
+      border: 2px solid #e2e2e2;
+      overflow: hidden;
     }
 
     .card-pk.back {
@@ -2388,8 +2413,13 @@
       position: absolute;
       top: 6px;
       left: 8px;
-      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 12px;
       font-weight: 700;
+      line-height: 1;
     }
 
     .card-pk .card-corner.bottom{
@@ -2400,8 +2430,16 @@
       transform: rotate(180deg);
     }
 
+    .card-pk .corner-value{
+      font-size: 14px;
+    }
+
+    .card-pk .corner-suit{
+      font-size: 12px;
+    }
+
     .card-pk .card-center{
-      font-size: 26px;
+      font-size: 30px;
       font-weight: 700;
     }
 
@@ -2871,16 +2909,57 @@
     .baccarat-card{
       width: 70px;
       height: 100px;
-      background: #fdfdfd;
-      color:#111;
-      border-radius: 10px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-weight:700;
-      border:2px solid #d4af37;
+      background: #ffffff;
+      color: #121212;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      border: 2px solid #e2e2e2;
+      font-family: "Georgia", "Times New Roman", serif;
+      position: relative;
       box-shadow: 0 6px 16px rgba(0,0,0,0.6);
       animation: dealCard 0.35s ease;
+      overflow: hidden;
+    }
+
+    .baccarat-card .corner{
+      position: absolute;
+      top: 6px;
+      left: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .baccarat-card .corner.bottom{
+      top: auto;
+      left: auto;
+      right: 8px;
+      bottom: 6px;
+      transform: rotate(180deg);
+    }
+
+    .baccarat-card .corner-value{
+      font-size: 14px;
+    }
+
+    .baccarat-card .corner-suit{
+      font-size: 12px;
+    }
+
+    .baccarat-card .center{
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .baccarat-card.red{
+      color: #b01e2d;
     }
 
     .baccarat-fly-card{
@@ -7889,16 +7968,44 @@ playHorseRaceBtn.onclick = () => {
 
     resetCrapsRound();
 
-    function baccaratCard(){
-      const suits = ['♠','♥','♦','♣'];
-      const values = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-      const value = values[Math.floor(Math.random() * values.length)];
-      const suit = suits[Math.floor(Math.random() * suits.length)];
-      let points = parseInt(value, 10);
-      if(Number.isNaN(points)){
-        points = value === 'A' ? 1 : 0;
+    const baccaratSuits = ['♠','♥','♦','♣'];
+    const baccaratValues = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+    let baccaratShoeCards = [];
+
+    function baccaratShuffle(cards){
+      for(let i = cards.length - 1; i > 0; i -= 1){
+        const j = Math.floor(Math.random() * (i + 1));
+        [cards[i], cards[j]] = [cards[j], cards[i]];
       }
-      return { value, suit, points };
+    }
+
+    function baccaratCardPoints(value){
+      if(value === 'A') return 1;
+      if(value === '10' || value === 'J' || value === 'Q' || value === 'K') return 0;
+      return parseInt(value, 10);
+    }
+
+    function baccaratBuildShoe(deckCount = 1){
+      baccaratShoeCards = [];
+      for(let d = 0; d < deckCount; d += 1){
+        for(const suit of baccaratSuits){
+          for(const value of baccaratValues){
+            baccaratShoeCards.push({
+              value,
+              suit,
+              points: baccaratCardPoints(value)
+            });
+          }
+        }
+      }
+      baccaratShuffle(baccaratShoeCards);
+    }
+
+    function baccaratDrawCard(){
+      if(baccaratShoeCards.length === 0){
+        baccaratBuildShoe();
+      }
+      return baccaratShoeCards.pop();
     }
 
     function baccaratScore(hand){
@@ -7921,9 +8028,20 @@ playHorseRaceBtn.onclick = () => {
     }
 
     function appendBaccaratCard(row, card){
+      const isRed = card.suit === '♥' || card.suit === '♦';
       const cardEl = document.createElement('div');
-      cardEl.className = 'baccarat-card';
-      cardEl.textContent = `${card.value}${card.suit}`;
+      cardEl.className = `baccarat-card ${isRed ? 'red' : ''}`;
+      cardEl.innerHTML = `
+        <div class="corner">
+          <span class="corner-value">${card.value}</span>
+          <span class="corner-suit">${card.suit}</span>
+        </div>
+        <div class="center">${card.suit}</div>
+        <div class="corner bottom">
+          <span class="corner-value">${card.value}</span>
+          <span class="corner-suit">${card.suit}</span>
+        </div>
+      `;
       row.appendChild(cardEl);
       return cardEl;
     }
@@ -7956,9 +8074,10 @@ playHorseRaceBtn.onclick = () => {
 
     const baccaratDealDelay = 900;
     const baccaratInitialDelay = 600;
+    const baccaratMinCardsPerRound = 6;
 
     async function dealBaccaratCard(hand, row, label, delay = baccaratDealDelay){
-      const card = baccaratCard();
+      const card = baccaratDrawCard();
       hand.push(card);
       const cardEl = appendBaccaratCard(row, card);
       updateBaccaratLabel(row, hand, label);
@@ -7978,6 +8097,10 @@ playHorseRaceBtn.onclick = () => {
       baccaratBetInput.disabled = true;
       baccaratBetType.disabled = true;
       baccaratStatusEl.textContent = 'Kaarten worden gedeeld...';
+
+      if(baccaratShoeCards.length < baccaratMinCardsPerRound){
+        baccaratBuildShoe();
+      }
 
       currentUser.credits -= bet;
       updateTracking('baccarat', { betAmount: bet, gamesPlayed: 1 });
@@ -8667,7 +8790,7 @@ playHorseRaceBtn.onclick = () => {
        --------------------------- */
     const bjSuits = ['♠','♥','♦','♣'];
     const bjValues = ['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
-    const bjShoeDecks = 6;
+    const bjCardsPerHandBuffer = 6;
     let bjShoeCards = [];
 
     function bjShuffle(cards){
@@ -8677,9 +8800,9 @@ playHorseRaceBtn.onclick = () => {
       }
     }
 
-    function bjBuildShoe(){
+    function bjBuildShoe(deckCount = 1){
       bjShoeCards = [];
-      for(let d = 0; d < bjShoeDecks; d += 1){
+      for(let d = 0; d < deckCount; d += 1){
         for(const suit of bjSuits){
           for(const value of bjValues){
             bjShoeCards.push({ suit, value });
@@ -8694,8 +8817,18 @@ playHorseRaceBtn.onclick = () => {
       bjShoeCount.textContent = `Shoe: ${bjShoeCards.length} kaarten`;
     }
 
+    function bjEnsureShoeForRound(){
+      const neededCards = (bjPlayers.length + 1) * bjCardsPerHandBuffer;
+      if(bjShoeCards.length < neededCards){
+        const decksNeeded = Math.max(1, Math.ceil(neededCards / 52));
+        bjBuildShoe(decksNeeded);
+      }
+    }
+
     function bjDrawCard(){
-      if(bjShoeCards.length < 30){
+      if(!bjRoundActive){
+        bjEnsureShoeForRound();
+      } else if(bjShoeCards.length === 0){
         bjBuildShoe();
       }
       const card = bjShoeCards.pop();
@@ -8748,8 +8881,15 @@ playHorseRaceBtn.onclick = () => {
       const red = isRedSuit(card.suit);
       return `
         <div class="bj-card ${red ? 'red' : ''}">
-          <div class="corner">${card.value}${card.suit}</div>
-          <div class="center">${card.value}${card.suit}</div>
+          <div class="corner">
+            <span class="corner-value">${card.value}</span>
+            <span class="corner-suit">${card.suit}</span>
+          </div>
+          <div class="center">${card.suit}</div>
+          <div class="corner bottom">
+            <span class="corner-value">${card.value}</span>
+            <span class="corner-suit">${card.suit}</span>
+          </div>
         </div>
       `;
     }
@@ -9009,9 +9149,7 @@ playHorseRaceBtn.onclick = () => {
         player.blackjack = false;
       });
 
-      if(bjShoeCards.length === 0){
-        bjBuildShoe();
-      }
+      bjEnsureShoeForRound();
 
       bjStatus.textContent = 'Kaarten worden gedeeld...';
       renderBlackjack();
@@ -9131,9 +9269,15 @@ playHorseRaceBtn.onclick = () => {
       const isRed = card.suit === '♥' || card.suit === '♦';
       const colorClass = isRed ? 'card-red' : '';
       return `
-        <span class="card-corner ${colorClass}">${card.value}${card.suit}</span>
+        <span class="card-corner ${colorClass}">
+          <span class="corner-value">${card.value}</span>
+          <span class="corner-suit">${card.suit}</span>
+        </span>
         <span class="card-center ${colorClass}">${card.suit}</span>
-        <span class="card-corner bottom ${colorClass}">${card.value}${card.suit}</span>
+        <span class="card-corner bottom ${colorClass}">
+          <span class="corner-value">${card.value}</span>
+          <span class="corner-suit">${card.suit}</span>
+        </span>
       `;
     }
 
