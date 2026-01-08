@@ -719,6 +719,7 @@
 
     #lootBoxSection{
       position: relative;
+      --lootbox-wind-color: rgba(120, 210, 255, 0.85);
       --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(255, 232, 168, 0.15), transparent 48%),
         radial-gradient(circle at 70% 20%, rgba(120, 160, 255, 0.16), transparent 48%),
         linear-gradient(150deg, #190d2b 0, #05040f 60%, #020107 100%);
@@ -748,36 +749,103 @@
       min-height: 70vh;
       justify-content: center;
       perspective: 900px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lootbox-wind{
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      z-index: 0;
+      filter: drop-shadow(0 0 40px rgba(0,0,0,0.45));
+      animation: lootboxWindPulse 3.2s ease-in-out infinite;
+    }
+
+    .lootbox-wind-ring{
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.35);
+      background:
+        conic-gradient(from 0deg, rgba(255,255,255,0.08), var(--lootbox-wind-color), rgba(255,255,255,0.08));
+      mask: radial-gradient(circle at center, transparent 58%, #000 60%);
+      animation: lootboxWindSpin 5s linear infinite;
+      opacity: 0.85;
+    }
+
+    .lootbox-wind-core{
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.65), var(--lootbox-wind-color));
+      filter: blur(0.2px);
+      box-shadow: 0 0 35px var(--lootbox-wind-color);
+      animation: lootboxWindCore 2.4s ease-in-out infinite;
+    }
+
+    .lootbox-stage.is-leveling .lootbox-wind-ring{
+      animation: lootboxWindSpin 1.8s linear infinite;
+      border-color: rgba(255,255,255,0.7);
+    }
+
+    .lootbox-stage.is-leveling .lootbox-wind-core{
+      box-shadow: 0 0 45px var(--lootbox-wind-color);
+      animation: lootboxWindCore 1.2s ease-in-out infinite;
+    }
+
+    @keyframes lootboxWindSpin{
+      from{ transform: rotate(0deg); }
+      to{ transform: rotate(360deg); }
+    }
+
+    @keyframes lootboxWindPulse{
+      0%, 100%{ transform: scale(0.98); opacity: 0.85; }
+      50%{ transform: scale(1.04); opacity: 1; }
+    }
+
+    @keyframes lootboxWindCore{
+      0%, 100%{ transform: scale(0.92); }
+      50%{ transform: scale(1); }
     }
 
     #lootBoxSection[data-level="1"]{
       --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(120, 210, 255, 0.25), transparent 48%),
         radial-gradient(circle at 70% 20%, rgba(90, 150, 255, 0.2), transparent 48%),
         linear-gradient(160deg, #0c1f3f 0, #052040 55%, #020712 100%);
+      --lootbox-wind-color: rgba(108, 210, 255, 0.9);
     }
 
     #lootBoxSection[data-level="2"]{
       --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(120, 255, 170, 0.22), transparent 48%),
         radial-gradient(circle at 70% 20%, rgba(70, 190, 120, 0.2), transparent 48%),
         linear-gradient(160deg, #0d2e1d 0, #063023 55%, #020a07 100%);
+      --lootbox-wind-color: rgba(120, 255, 185, 0.9);
     }
 
     #lootBoxSection[data-level="3"]{
       --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(210, 160, 120, 0.22), transparent 48%),
         radial-gradient(circle at 70% 20%, rgba(190, 120, 60, 0.2), transparent 48%),
         linear-gradient(160deg, #2c1b0b 0, #2a1206 55%, #090402 100%);
+      --lootbox-wind-color: rgba(255, 187, 120, 0.9);
     }
 
     #lootBoxSection[data-level="4"]{
       --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(220, 230, 245, 0.25), transparent 48%),
         radial-gradient(circle at 70% 20%, rgba(160, 180, 210, 0.2), transparent 48%),
         linear-gradient(160deg, #202633 0, #111826 55%, #06070d 100%);
+      --lootbox-wind-color: rgba(210, 225, 255, 0.95);
     }
 
     #lootBoxSection[data-level="5"]{
       --lootbox-bg: radial-gradient(circle at 30% 10%, rgba(255, 230, 140, 0.3), transparent 48%),
         radial-gradient(circle at 70% 20%, rgba(255, 200, 90, 0.2), transparent 48%),
         linear-gradient(160deg, #2b1a05 0, #1b1004 55%, #080502 100%);
+      --lootbox-wind-color: rgba(255, 215, 120, 0.95);
     }
 
     .lootbox-card{
@@ -798,6 +866,7 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
       overflow: hidden;
       transform-style: preserve-3d;
+      z-index: 1;
     }
 
     .lootbox-card:hover{
@@ -913,6 +982,25 @@
     .chance-dot.used{
       opacity: 0.3;
       filter: grayscale(1);
+    }
+
+    .lootbox-reward-panel{
+      margin-top: 6px;
+      width: min(540px, 92vw);
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(8, 16, 30, 0.75);
+      border: 1px solid rgba(140, 200, 255, 0.25);
+      color: #eaf1ff;
+      text-align: left;
+      display: grid;
+      gap: 6px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+    }
+
+    .lootbox-reward-panel div{
+      font-size: 14px;
+      line-height: 1.4;
     }
 
     .lootbox-level-1{ background: linear-gradient(140deg, #55f0ff, #1aa7c9); }
@@ -1355,11 +1443,13 @@
 
     .lucky-drop-btn{
       position: relative;
-      border: 1px solid rgba(255, 221, 128, 0.6);
-      background: linear-gradient(140deg, rgba(255, 215, 128, 0.85), rgba(168, 118, 18, 0.85));
+      border: none;
+      background: transparent;
       box-shadow: 0 10px 18px rgba(0,0,0,0.35);
       padding: 0;
       margin: 0;
+      width: 54px;
+      height: 54px;
     }
 
     .lucky-drop-btn:hover{
@@ -1367,13 +1457,9 @@
       filter: brightness(1.08);
     }
 
-    .lucky-drop-icon{
-      font-size: 20px;
-    }
-
     .lucky-drop-box{
-      width: 46px;
-      height: 46px;
+      width: 54px;
+      height: 54px;
       position: relative;
       display: grid;
       place-items: center;
@@ -1411,22 +1497,16 @@
       border-radius: 8px;
     }
 
-    .lucky-drop-box .lucky-drop-icon{
-      font-size: 20px;
-      position: relative;
-      z-index: 2;
-    }
-
     .lucky-drop-badge{
       position: absolute;
-      top: -6px;
-      right: -6px;
-      width: 18px;
-      height: 18px;
+      top: -2px;
+      right: -2px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
-      background: linear-gradient(140deg, #ffd769, #b78608);
-      color: #3b2600;
-      font-size: 12px;
+      background: linear-gradient(140deg, #ff4a4a, #b31212);
+      color: #fff4f4;
+      font-size: 13px;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -1434,7 +1514,7 @@
       opacity: 0;
       transform: scale(0.6);
       transition: opacity 0.2s ease, transform 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.45);
     }
 
     .lucky-drop-btn.has-available .lucky-drop-badge{
@@ -1513,6 +1593,12 @@
       transform: translateY(-2px);
       box-shadow: 0 16px 28px rgba(6, 18, 40, 0.55);
       filter: brightness(1.08);
+    }
+
+    .menu-hero-quick.lucky-drop-btn{
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
     }
 
     .menu-hero-shop{
@@ -1704,6 +1790,59 @@
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
+    }
+
+    .skins-admin-panel{
+      margin-top: 10px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(12, 16, 28, 0.85);
+      border: 1px solid rgba(255, 200, 214, 0.2);
+      box-shadow: inset 0 0 26px rgba(120, 80, 160, 0.2);
+      text-align: left;
+      display: grid;
+      gap: 12px;
+    }
+
+    .skins-admin-panel h3{
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0.4px;
+    }
+
+    .skins-admin-panel p{
+      margin: 0;
+      color: rgba(214, 229, 255, 0.75);
+      font-size: 13px;
+    }
+
+    .skins-admin-row{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      align-items: center;
+    }
+
+    .skins-admin-row label{
+      font-size: 12px;
+      color: rgba(214, 229, 255, 0.75);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .skins-admin-row input{
+      width: 100%;
+      background: rgba(10, 14, 22, 0.85);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: #f6fbff;
+    }
+
+    .skins-admin-actions{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     /* ============================ SHOP ============================ */
@@ -4715,6 +4854,124 @@
     color: #ffe8a6;
 }
 
+.photo-finish-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(4, 6, 12, 0.82);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    z-index: 99990;
+}
+
+.photo-finish-overlay.is-visible{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.photo-finish-card{
+    width: min(640px, 92vw);
+    background: linear-gradient(150deg, rgba(12, 18, 30, 0.98), rgba(6, 10, 18, 0.98));
+    border-radius: 20px;
+    border: 1px solid rgba(255, 215, 125, 0.35);
+    box-shadow: 0 24px 50px rgba(0,0,0,0.5);
+    padding: 18px 20px;
+    display: grid;
+    gap: 12px;
+    text-align: left;
+}
+
+.photo-finish-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.photo-finish-title{
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+}
+
+.photo-finish-close{
+    border: none;
+    background: rgba(255,255,255,0.08);
+    color: #f6e9c4;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.photo-finish-frame{
+    position: relative;
+    height: 180px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: linear-gradient(180deg, rgba(30, 72, 40, 0.92), rgba(12, 30, 18, 0.95));
+    overflow: hidden;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.35);
+}
+
+.photo-finish-frame::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%);
+    opacity: 0.6;
+}
+
+.photo-finish-line{
+    position: absolute;
+    top: 10px;
+    right: 70px;
+    bottom: 10px;
+    width: 10px;
+    background: repeating-linear-gradient(
+        180deg,
+        #f8f4e8 0,
+        #f8f4e8 10px,
+        #1b1b1b 10px,
+        #1b1b1b 20px
+    );
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgba(255, 233, 175, 0.6);
+}
+
+.photo-finish-horses{
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+.photo-finish-horse{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,0.4));
+    transition: transform 0.4s ease;
+}
+
+.photo-finish-horse.winner{
+    transform: translateY(-50%) scale(1.05);
+}
+
+.photo-finish-meta{
+    display: grid;
+    gap: 6px;
+    color: rgba(214, 229, 255, 0.85);
+    font-size: 14px;
+}
+
+.photo-finish-meta strong{
+    color: #ffe8a6;
+}
+
 @keyframes gallop{
     0%, 100%{ transform: translateY(0); }
     50%{ transform: translateY(-2px); }
@@ -4960,7 +5217,6 @@
                 <span class="lootbox-body"></span>
                 <span class="lootbox-ribbon"></span>
               </span>
-              <span class="lucky-drop-icon">🎁</span>
             </span>
             <span class="lucky-drop-badge" aria-hidden="true">!</span>
           </button>
@@ -5023,8 +5279,8 @@
   <!-- Loot Boxes menu -->
   <section id="lootBoxMenuSection" style="display:none;">
     <h2>Lucky Boxes</h2>
-    <p>Kies een box om te openen. Je betaalt met Lucky Coins. Alleen de eerste drie boxes zijn direct te koop.</p>
-    <p class="lootbox-explainer">Elke opening geeft credits + kans op skins. Tijdens het openen is er 12,5% kans dat de reward-level omhoog gaat. Levels 4 en 5 zijn alleen via level-ups te behalen.</p>
+    <p>Kies een box om te openen. Je betaalt met Lucky Coins. Deze shop toont de 3 beschikbare Lucky Boxes.</p>
+    <p class="lootbox-explainer">Elke opening geeft credits + kans op skins. Je hebt per box 3 kansen op level-ups. Levels 4 en 5 zijn alleen via level-ups te behalen.</p>
     <div id="lootBoxRewardQueue" class="lootbox-reward-queue" style="display:none;"></div>
     <div class="lootbox-menu-grid">
       <div class="lootbox-option">
@@ -5066,34 +5322,6 @@
           <small>10 Lucky Coins</small>
         </div>
       </div>
-      <div class="lootbox-option is-locked">
-        <div class="lootbox-star-row">★ ★ ★ ★</div>
-        <div class="lootbox-card lootbox-level-4" data-lootbox="royal" aria-disabled="true">
-          <div class="lootbox-3d">
-            <span class="lootbox-lid"></span>
-            <span class="lootbox-body"></span>
-            <span class="lootbox-ribbon"></span>
-          </div>
-          <div class="lootbox-icon">🎁</div>
-          <div>Royal Lucky Box</div>
-          <small>25 Lucky Coins</small>
-        </div>
-        <div class="lootbox-lock">Locked — only via level-up</div>
-      </div>
-      <div class="lootbox-option is-locked">
-        <div class="lootbox-star-row">★ ★ ★ ★ ★</div>
-        <div class="lootbox-card lootbox-level-5" data-lootbox="mythic" aria-disabled="true">
-          <div class="lootbox-3d">
-            <span class="lootbox-lid"></span>
-            <span class="lootbox-body"></span>
-            <span class="lootbox-ribbon"></span>
-          </div>
-          <div class="lootbox-icon">🎁</div>
-          <div>Mythic Lucky Box</div>
-          <small>50 Lucky Coins</small>
-        </div>
-        <div class="lootbox-lock">Locked — only via level-up</div>
-      </div>
     </div>
     <button id="backToMenuFromLuckyBoxes">Terug naar menu</button>
   </section>
@@ -5101,8 +5329,12 @@
   <!-- Loot Box opening -->
   <section id="lootBoxSection" style="display:none;">
     <h2 id="lootBoxTitle">Lucky Box</h2>
-    <p id="lootBoxSubtitle">Tik op de box om te openen. Je hebt 1 kans en 12,5% kans op een level-up.</p>
+    <p id="lootBoxSubtitle">Tik op de box om te openen. Je hebt 3 kansen en 12,5% kans op een level-up per poging.</p>
     <div class="lootbox-stage">
+      <div class="lootbox-wind" aria-hidden="true">
+        <div class="lootbox-wind-ring"></div>
+        <div class="lootbox-wind-core"></div>
+      </div>
       <div id="lootBoxCard" class="lootbox-card lootbox-level-1">
         <div class="lootbox-3d">
           <span class="lootbox-lid"></span>
@@ -5114,9 +5346,11 @@
       </div>
       <div id="lootBoxChances" class="lootbox-chances">
         <div class="chance-dot">★</div>
+        <div class="chance-dot">★</div>
+        <div class="chance-dot">★</div>
       </div>
       <div id="lootBoxHint">Tik om te openen (15% kans op skins, 12,5% kans op level-up).</div>
-      <div id="lootBoxReward"></div>
+      <div id="lootBoxReward" class="lootbox-reward-panel"></div>
     </div>
     <button id="backToMenuFromLoot">Terug naar menu</button>
   </section>
@@ -5136,6 +5370,20 @@
       <div id="skinsGameTabs" class="shop-game-tabs" role="tablist" aria-label="Game selectie" style="display:none;"></div>
       <div id="skinsSubtitle" class="shop-subtitle"></div>
       <div id="skinsGrid" class="shop-grid"></div>
+      <div id="skinsAdminPanel" class="skins-admin-panel" style="display:none;">
+        <h3>Admin commands</h3>
+        <p>Werk credits bij voor een specifieke gebruiker.</p>
+        <div class="skins-admin-row">
+          <label for="skinsAdminUser">Accountnaam</label>
+          <input id="skinsAdminUser" type="text" placeholder="Gebruikersnaam">
+          <label for="skinsAdminAmount">Credits</label>
+          <input id="skinsAdminAmount" type="number" min="1" value="100">
+        </div>
+        <div class="skins-admin-actions">
+          <button id="skinsAdminAdd" class="menu-action-btn primary" type="button">Credits toevoegen</button>
+          <button id="skinsAdminRemove" class="menu-action-btn" type="button">Credits verwijderen</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -5474,6 +5722,22 @@
 
         <div id="raceStatus" class="race-status">Kies je paard en zet je credits in.</div>
         <div id="raceResults" class="race-results" aria-live="polite"></div>
+        <div id="photoFinishOverlay" class="photo-finish-overlay" aria-hidden="true">
+            <div class="photo-finish-card">
+                <div class="photo-finish-header">
+                    <div class="photo-finish-title">📸 Photo finish</div>
+                    <button id="photoFinishClose" class="photo-finish-close" type="button">✕</button>
+                </div>
+                <div class="photo-finish-frame">
+                    <div class="photo-finish-line"></div>
+                    <div id="photoFinishHorses" class="photo-finish-horses"></div>
+                </div>
+                <div class="photo-finish-meta">
+                    <div>Winnaar: <strong id="photoFinishWinner">-</strong></div>
+                    <div>Tijd: <span id="photoFinishTime">-</span></div>
+                </div>
+            </div>
+        </div>
 
         <!-- Race Track -->
         <div id="raceTrack" class="race-track">
@@ -5687,6 +5951,7 @@
     const horseRaceSection = document.getElementById('horseRaceSection');
     const lootBoxMenuSection = document.getElementById('lootBoxMenuSection');
     const lootBoxSection = document.getElementById('lootBoxSection');
+    const lootBoxStage = document.querySelector('.lootbox-stage');
     const skinsSection = document.getElementById('skinsSection');
     const shopSection = document.getElementById('shopSection');
     const shopTabs = document.getElementById('shopTabs');
@@ -5710,6 +5975,11 @@
     const devBanInput = document.getElementById('devBanInput');
     const devBanBtn = document.getElementById('devBanBtn');
     const closeDevPortal = document.getElementById('closeDevPortal');
+    const skinsAdminPanel = document.getElementById('skinsAdminPanel');
+    const skinsAdminUser = document.getElementById('skinsAdminUser');
+    const skinsAdminAmount = document.getElementById('skinsAdminAmount');
+    const skinsAdminAdd = document.getElementById('skinsAdminAdd');
+    const skinsAdminRemove = document.getElementById('skinsAdminRemove');
     const playerTrackingPanel = document.getElementById('playerTrackingPanel');
     const closeTrackingPanel = document.getElementById('closeTrackingPanel');
     const trackingPrevGame = document.getElementById('trackingPrevGame');
@@ -8142,17 +8412,56 @@
 
     let developerClicks = 0;
     let developerClickTimer = null;
+    let developerModeEnabled = false;
     let trackingTapCount = 0;
     let trackingTapTimer = null;
 
     function openDeveloperPortal(){
       if(!developerPortal) return;
+      developerModeEnabled = true;
       developerPortal.style.display = 'flex';
+      updateSkinsAdminPanel();
     }
 
     function closeDeveloperPortal(){
       if(!developerPortal) return;
       developerPortal.style.display = 'none';
+      developerModeEnabled = false;
+      updateSkinsAdminPanel();
+    }
+
+    function updateSkinsAdminPanel(){
+      if(!skinsAdminPanel) return;
+      skinsAdminPanel.style.display = developerModeEnabled ? 'grid' : 'none';
+    }
+
+    async function updateUserCreditsByName(rawName, delta){
+      const trimmed = (rawName || '').trim();
+      const amount = Math.floor(Math.abs(Number(delta)));
+      if(!trimmed){
+        showSiteMessage('Vul een accountnaam in.');
+        return;
+      }
+      if(!Number.isFinite(amount) || amount <= 0){
+        showSiteMessage('Vul een geldig aantal credits in.');
+        return;
+      }
+      const normalizedDelta = Number(delta) < 0 ? -amount : amount;
+      const key = keyForName(trimmed);
+      const existing = await loadUser(key);
+      if(!existing){
+        showSiteMessage('Account niet gevonden.');
+        return;
+      }
+      existing.credits = Math.max(0, (existing.credits || 0) + normalizedDelta);
+      await db.ref('users/'+key).set(existing);
+      if(currentUser && currentUser.key === key){
+        currentUser.credits = existing.credits;
+        renderDashboard();
+      }
+      showSiteMessage(`Credits bijgewerkt voor "${existing.name || trimmed}".`, { type: 'success' });
+      if(skinsAdminUser) skinsAdminUser.value = '';
+      if(skinsAdminAmount) skinsAdminAmount.value = '100';
     }
 
     async function deleteAccountByName(rawName){
@@ -8228,6 +8537,20 @@
       devBanBtn.addEventListener('click', () => {
         if(!devBanInput) return;
         deleteAccountByName(devBanInput.value);
+      });
+    }
+
+    if(skinsAdminAdd){
+      skinsAdminAdd.addEventListener('click', () => {
+        if(!developerModeEnabled) return;
+        updateUserCreditsByName(skinsAdminUser?.value, Number(skinsAdminAmount?.value || 0));
+      });
+    }
+
+    if(skinsAdminRemove){
+      skinsAdminRemove.addEventListener('click', () => {
+        if(!developerModeEnabled) return;
+        updateUserCreditsByName(skinsAdminUser?.value, -Number(skinsAdminAmount?.value || 0));
       });
     }
 
@@ -8419,6 +8742,7 @@
         setActiveSkinsTab(activeSkinsTab);
         renderSkinGameTabs();
         setActiveSkinGame(activeSkinGame);
+        updateSkinsAdminPanel();
       };
     }
 
@@ -8465,6 +8789,7 @@
     };
     const lootBoxSkinChance = 0.15;
     const lootBoxLevelUpChance = 0.125;
+    const lootBoxMaxChances = 3;
     let currentLootBox = null;
 
     document.querySelectorAll('.lootbox-card[data-lootbox]').forEach((card)=>{
@@ -8490,7 +8815,8 @@
     function updateLootBoxUI(){
       if(!currentLootBox) return;
       lootBoxTitle.textContent = currentLootBox.name;
-      lootBoxSubtitle.textContent = `Tik op de box om te openen. ${currentLootBox.remainingChances} kans over (12,5% chance op level-up).`;
+      const chanceLabel = currentLootBox.remainingChances === 1 ? 'kans' : 'kansen';
+      lootBoxSubtitle.textContent = `Tik op de box om te openen. ${currentLootBox.remainingChances} ${chanceLabel} over (12,5% kans op level-up).`;
       lootBoxLevel.textContent = currentLootBox.level;
       lootBoxCard.className = `lootbox-card lootbox-level-${currentLootBox.level}`;
       lootBoxSection.dataset.level = currentLootBox.level;
@@ -8523,10 +8849,11 @@
         type,
         name: config.name,
         level: config.startLevel,
-        remainingChances: 1
+        remainingChances: lootBoxMaxChances,
+        rewardLog: []
       };
       lootBoxReward.textContent = '';
-      lootBoxHint.textContent = 'Tik om te openen (15% kans op skins, 12,5% kans op level-up).';
+      lootBoxHint.textContent = 'Tik om te openen (15% kans op skins, 12,5% kans op level-up per poging).';
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
@@ -8548,10 +8875,11 @@
         type: 'reward',
         name: `${reward.level}★ Leaderboard Reward`,
         level: reward.level,
-        remainingChances: 1
+        remainingChances: lootBoxMaxChances,
+        rewardLog: []
       };
       lootBoxReward.textContent = '';
-      lootBoxHint.textContent = 'Leaderboard reward geopend! (15% kans op skins, 12,5% kans op level-up).';
+      lootBoxHint.textContent = 'Leaderboard reward geopend! (15% kans op skins, 12,5% kans op level-up per poging).';
       dashboard.style.display = 'none';
       lootBoxMenuSection.style.display = 'none';
       lootBoxSection.style.display = 'flex';
@@ -8801,31 +9129,55 @@
 
     lootBoxCard.onclick = ()=>{
       if(!currentLootBox || currentLootBox.remainingChances === 0) return;
-      currentLootBox.remainingChances = 0;
+      currentLootBox.remainingChances = Math.max(0, currentLootBox.remainingChances - 1);
       const previousLevel = currentLootBox.level;
       const didLevelUp = Math.random() < lootBoxLevelUpChance && currentLootBox.level < 5;
       if(didLevelUp){
         currentLootBox.level += 1;
       }
       triggerLootBoxAnimation(lootBoxCard, didLevelUp ? 'is-leveling' : 'is-staying');
+      if(lootBoxStage){
+        lootBoxStage.classList.remove('is-leveling');
+        void lootBoxStage.offsetWidth;
+        if(didLevelUp){
+          lootBoxStage.classList.add('is-leveling');
+          setTimeout(() => {
+            lootBoxStage.classList.remove('is-leveling');
+          }, 1600);
+        }
+      }
 
       const reward = resolveLootBoxReward(currentLootBox.level);
       currentUser.credits += reward.credits;
+      const attemptNumber = lootBoxMaxChances - currentLootBox.remainingChances;
+      const rewardEntry = {
+        attempt: attemptNumber,
+        level: currentLootBox.level,
+        didLevelUp,
+        credits: reward.credits,
+        skins: reward.grantedSkins
+      };
+      if(!Array.isArray(currentLootBox.rewardLog)){
+        currentLootBox.rewardLog = [];
+      }
+      currentLootBox.rewardLog.unshift(rewardEntry);
 
       const rewardLines = [
-        didLevelUp
-          ? `Level up! ${previousLevel} → ${currentLootBox.level}.`
-          : `Level blijft ${currentLootBox.level}.`,
-        `Beloning: ${reward.credits} credits (level ${currentLootBox.level}).`
+        `Poging ${attemptNumber}/${lootBoxMaxChances}: ${didLevelUp ? `Level up! ${previousLevel} → ${currentLootBox.level}.` : `Level blijft ${currentLootBox.level}.`}`,
+        `Beloning: ${reward.credits} credits (level ${currentLootBox.level}).`,
+        reward.grantedSkins.length > 0
+          ? `Nieuwe skins: ${reward.grantedSkins.join(', ')}.`
+          : 'Geen nieuwe skins deze keer.'
       ];
-      if(reward.grantedSkins.length > 0){
-        rewardLines.push(`Nieuwe skins: ${reward.grantedSkins.join(', ')}.`);
-      } else {
-        rewardLines.push('Geen nieuwe skins deze keer.');
-      }
 
-      lootBoxHint.textContent = 'Kist geopend! Je beloning is uitgekeerd.';
-      lootBoxReward.innerHTML = rewardLines.map((line) => `<div>${line}</div>`).join('');
+      lootBoxHint.textContent = currentLootBox.remainingChances > 0
+        ? `Kist geopend! ${currentLootBox.remainingChances} kansen over.`
+        : 'Kist geopend! Alle kansen gebruikt.';
+      lootBoxReward.innerHTML = currentLootBox.rewardLog.map((entry) => `
+        <div><strong>Poging ${entry.attempt}/${lootBoxMaxChances}</strong> — ${entry.didLevelUp ? `Level up naar ${entry.level}` : `Level ${entry.level} behouden`}</div>
+        <div>Beloning: ${entry.credits} credits.</div>
+        <div>${entry.skins.length > 0 ? `Skins: ${entry.skins.join(', ')}` : 'Geen skins gedropt.'}</div>
+      `).join('');
       updateLootBoxUI();
       saveCurrentUser().then(renderDashboard);
     };
@@ -11347,6 +11699,11 @@ const raceStatus = document.getElementById("raceStatus");
 const raceResults = document.getElementById("raceResults");
 const raceTrack = document.getElementById("raceTrack");
 const finishLine = document.getElementById("finishLine");
+const photoFinishOverlay = document.getElementById("photoFinishOverlay");
+const photoFinishHorses = document.getElementById("photoFinishHorses");
+const photoFinishWinner = document.getElementById("photoFinishWinner");
+const photoFinishTime = document.getElementById("photoFinishTime");
+const photoFinishClose = document.getElementById("photoFinishClose");
 
 const horses = [
     document.getElementById("horse1"),
@@ -11358,6 +11715,16 @@ const horseMeta = horses.map((horse, index) => ({
     name: horse?.dataset?.horseName || `Paard ${index + 1}`
 }));
 let raceInProgress = false;
+
+function resetPhotoFinishOverlay(){
+    if(photoFinishOverlay){
+        photoFinishOverlay.classList.remove("is-visible");
+        photoFinishOverlay.setAttribute("aria-hidden", "true");
+    }
+    if(photoFinishHorses) photoFinishHorses.innerHTML = "";
+    if(photoFinishWinner) photoFinishWinner.textContent = "-";
+    if(photoFinishTime) photoFinishTime.textContent = "-";
+}
 
 function showHorseRace(){
     dashboard.style.display = "none";
@@ -11380,8 +11747,15 @@ function showHorseRace(){
 backToMenuRace.onclick = () => {
     endTrackingSession('horse');
     horseRaceSection.style.display = "none";
+    resetPhotoFinishOverlay();
     showDashboard(true);
 };
+
+if(photoFinishClose){
+    photoFinishClose.onclick = () => {
+        resetPhotoFinishOverlay();
+    };
+}
 
 // START RACE
 startRaceBtn.onclick = async () => {
@@ -11405,6 +11779,7 @@ startRaceBtn.onclick = async () => {
     });
     raceResults.classList.remove("show");
     raceResults.innerHTML = "";
+    resetPhotoFinishOverlay();
     raceStatus.textContent = "De race is gestart... houd de finish in de gaten!";
     raceInProgress = true;
     startRaceBtn.disabled = true;
@@ -11429,10 +11804,10 @@ startRaceBtn.onclick = async () => {
     });
 
     async function playSlowMoReplay(ranking){
-        const replayDistance = 90;
-        const baseDuration = 2600;
+        const replayDistance = 120;
+        const baseDuration = 3200;
         const fastestTime = ranking[0].finishTime;
-        raceStatus.textContent = "📸 Slowmotion replay...";
+        raceStatus.textContent = "📸 Photo finish replay...";
         raceTrack.classList.add("replay-focus");
 
         ranking.forEach((entry) => {
@@ -11445,7 +11820,7 @@ startRaceBtn.onclick = async () => {
         await new Promise(requestAnimationFrame);
         const durations = ranking.map((entry) => {
             const timeDelta = Math.max(0, entry.finishTime - fastestTime);
-            return baseDuration + Math.min(3000, timeDelta * 90);
+            return baseDuration + Math.min(3400, timeDelta * 120);
         });
 
         ranking.forEach((entry, idx) => {
@@ -11453,11 +11828,35 @@ startRaceBtn.onclick = async () => {
             entry.horse.style.left = `${finishPositions[entry.index]}px`;
         });
 
-        await wait(Math.max(...durations) + 200);
+        await wait(Math.max(...durations) + 260);
         horses.forEach(horse => {
             horse.style.transition = "";
         });
         raceTrack.classList.remove("replay-focus");
+    }
+
+    function showPhotoFinish(ranking){
+        if(!photoFinishOverlay || !photoFinishHorses) return;
+        photoFinishHorses.innerHTML = "";
+        const winner = ranking[0];
+        const runnerUp = ranking[1];
+        const entries = [winner, runnerUp].filter(Boolean);
+
+        entries.forEach((entry, idx) => {
+            const clone = entry.horse.cloneNode(true);
+            clone.classList.add("photo-finish-horse");
+            if(idx === 0) clone.classList.add("winner");
+            const gap = entry.finishTime - winner.finishTime;
+            const offset = Math.min(70, Math.max(0, gap * 0.35));
+            clone.style.left = `calc(100% - 220px - ${offset}px)`;
+            clone.style.top = `calc(50% + ${idx * 28 - 14}px)`;
+            photoFinishHorses.appendChild(clone);
+        });
+
+        if(photoFinishWinner) photoFinishWinner.textContent = horseMeta[winner.index].name;
+        if(photoFinishTime) photoFinishTime.textContent = `${(winner.finishTime / 1000).toFixed(2)}s`;
+        photoFinishOverlay.classList.add("is-visible");
+        photoFinishOverlay.setAttribute("aria-hidden", "false");
     }
 
     async function finalizeRace(states){
@@ -11467,6 +11866,7 @@ startRaceBtn.onclick = async () => {
         const isPhotoFinish = photoFinishGap <= 120;
 
         await playSlowMoReplay(ranking);
+        showPhotoFinish(ranking);
         ranking[0].horse.classList.add("winner");
 
         const resultsHtml = `
@@ -11479,7 +11879,7 @@ startRaceBtn.onclick = async () => {
               </div>
             `).join("")}
           </div>
-          ${isPhotoFinish ? `<div class="photo-finish">📸 Foto finish! Verschil: ${(photoFinishGap).toFixed(0)}ms</div>` : ""}
+          ${isPhotoFinish ? `<div class="photo-finish">📸 Foto finish beschikbaar • verschil ${(photoFinishGap).toFixed(0)}ms</div>` : ""}
         `;
 
         raceResults.innerHTML = resultsHtml;
