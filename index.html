@@ -6830,7 +6830,7 @@
         steps: [
           { icon: '🪙', title: 'Kies inzet', text: 'Plaats je inzet op Player, Banker of Tie en klik “Deel kaarten”. Dat is de enige actie die je kiest.' },
           { icon: '🂡', title: 'Waarden uitleg', text: 'A=1, 2‑9 zijn hun waarde, 10/J/Q/K = 0. Tel de kaarten op en neem alleen het laatste cijfer.' },
-          { icon: '🏆', title: 'Wie wint', text: 'De hand die het dichtst bij 9 komt wint. Voorbeeld: Player heeft 7+6=13 → telt als 3. Banker heeft 9+0=9 → Banker wint.' }
+          { icon: '🏆', title: 'Derde kaart regels', text: 'Natural 8/9 stopt direct. Player trekt bij 0‑5, past bij 6‑7. Banker volgt de officiële regels op basis van de Player‑derde kaart.' }
         ]
       },
       roulette: {
@@ -8401,12 +8401,36 @@ playHorseRaceBtn.onclick = () => {
       const playerScore = baccaratScore(playerHand);
       const bankerScore = baccaratScore(bankerHand);
 
-      if(playerScore < 8 && bankerScore < 8){
+      let playerThirdCardPoints = null;
+      const playerHasNatural = playerScore >= 8;
+      const bankerHasNatural = bankerScore >= 8;
+
+      if(!playerHasNatural && !bankerHasNatural){
         if(playerScore <= 5){
-          await dealBaccaratCard(playerHand, baccaratPlayerRow, 'Player');
+          const playerThirdCard = await dealBaccaratCard(playerHand, baccaratPlayerRow, 'Player');
+          playerThirdCardPoints = playerThirdCard.points;
         }
-        const newBankerScore = baccaratScore(bankerHand);
-        if(newBankerScore <= 5){
+
+        const bankerScoreAfter = baccaratScore(bankerHand);
+        let bankerShouldDraw = false;
+
+        if(playerThirdCardPoints === null){
+          bankerShouldDraw = bankerScoreAfter <= 5;
+        } else {
+          if(bankerScoreAfter <= 2){
+            bankerShouldDraw = true;
+          } else if(bankerScoreAfter === 3){
+            bankerShouldDraw = playerThirdCardPoints !== 8;
+          } else if(bankerScoreAfter === 4){
+            bankerShouldDraw = playerThirdCardPoints >= 2 && playerThirdCardPoints <= 7;
+          } else if(bankerScoreAfter === 5){
+            bankerShouldDraw = playerThirdCardPoints >= 4 && playerThirdCardPoints <= 7;
+          } else if(bankerScoreAfter === 6){
+            bankerShouldDraw = playerThirdCardPoints === 6 || playerThirdCardPoints === 7;
+          }
+        }
+
+        if(bankerShouldDraw){
           await dealBaccaratCard(bankerHand, baccaratBankerRow, 'Banker');
         }
       }
@@ -8422,7 +8446,7 @@ playHorseRaceBtn.onclick = () => {
         if(winner === 'tie'){
           winAmount = bet * 9;
         } else if(winner === 'banker'){
-          winAmount = Math.floor(bet * 1.95);
+          winAmount = bet * 2;
         } else {
           winAmount = bet * 2;
         }
