@@ -9888,7 +9888,7 @@ playHorseRaceBtn.onclick = () => {
 
     function pokerIsUserTurn(){
       const idx = pokerUserIndex();
-      return idx !== -1 && idx === pokerCurrentPlayerIndex;
+      return pokerHandActive && idx !== -1 && idx === pokerCurrentPlayerIndex;
     }
 
     function setPokerControlsEnabled(enabled){
@@ -10376,6 +10376,10 @@ playHorseRaceBtn.onclick = () => {
     };
 
     pokerCheckBtn.onclick = ()=>{
+      if(!pokerHandActive){
+        pokerStatusEl.textContent = 'De hand is voorbij. Start een nieuwe hand.';
+        return;
+      }
       if(!pokerIsUserTurn()){
         pokerStatusEl.textContent = 'Wacht op je beurt om te checken.';
         return;
@@ -10398,6 +10402,10 @@ playHorseRaceBtn.onclick = () => {
     };
 
     pokerBetBtn.onclick = ()=>{
+      if(!pokerHandActive){
+        pokerStatusEl.textContent = 'De hand is voorbij. Start een nieuwe hand.';
+        return;
+      }
       if(!pokerIsUserTurn()){
         pokerStatusEl.textContent = 'Wacht op je beurt om te raisen.';
         return;
@@ -10440,6 +10448,10 @@ playHorseRaceBtn.onclick = () => {
     };
 
     pokerFoldBtn.onclick = ()=>{
+      if(!pokerHandActive){
+        pokerStatusEl.textContent = 'De hand is voorbij. Start een nieuwe hand.';
+        return;
+      }
       if(!pokerIsUserTurn()){
         pokerStatusEl.textContent = 'Wacht op je beurt om te folden.';
         return;
