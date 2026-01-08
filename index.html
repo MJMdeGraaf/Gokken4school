@@ -3588,8 +3588,8 @@
       width: 4px;
       height: 100px;
       border-radius: 999px;
-      background: linear-gradient(180deg, rgba(255, 120, 120, 0.9), rgba(255, 190, 120, 0.6));
-      box-shadow: 0 0 18px rgba(255, 120, 120, 0.55);
+      background: transparent;
+      box-shadow: none;
       transform-origin: top center;
     }
 
@@ -8500,7 +8500,7 @@ playHorseRaceBtn.onclick = () => {
        Plinko logic
        --------------------------- */
     const plinkoSlotMultipliers = [8, 4, 2.4, 1.2, 0.9 , 0.7, 0.5, 0.7, 0.9, 1.2, 2.4, 4, 8];
-    const plinkoPegRows = 9;
+    const plinkoPegRows = 11;
     const plinkoBallMin = 1;
     const plinkoBallMax = 10;
     let plinkoBallCount = 10;
@@ -8508,6 +8508,7 @@ playHorseRaceBtn.onclick = () => {
     const plinkoPegRadius = 6;
     const plinkoGravity = 0.19;
     const plinkoBounce = 0.72;
+    const plinkoBounceX = 0.625;
     const plinkoCenterBias = 0;
     let plinkoDropping = false;
     let plinkoPegPoints = [];
@@ -8600,9 +8601,9 @@ playHorseRaceBtn.onclick = () => {
       plinkoPegPoints = [];
       const minWidthFactor = 0.32;
       const maxWidthFactor = 1;
-      const baseCols = 5;
+      const topRowPegXs = [];
       for(let row = 0; row < plinkoPegRows; row += 1){
-        const cols = baseCols + row;
+        const cols = row + 3;
         const rowWidthFactor = minWidthFactor + (row / Math.max(1, plinkoPegRows - 1)) * (maxWidthFactor - minWidthFactor);
         const rowWidth = pegAreaWidth * rowWidthFactor;
         const rowOffset = (pegAreaWidth - rowWidth) / 2;
@@ -8618,39 +8619,36 @@ playHorseRaceBtn.onclick = () => {
             x: x + (pegRect.left - boardRect.left),
             y: y + (pegRect.top - boardRect.top)
           });
+          if(row === 0){
+            topRowPegXs.push(x + (pegRect.left - boardRect.left));
+          }
         }
       }
-      const centerPeg = document.createElement('div');
-      centerPeg.className = 'plinko-peg';
-      const centerX = pegAreaWidth / 2;
-      const centerY = pegAreaHeight * 0.08;
-      centerPeg.style.left = `${centerX}px`;
-      centerPeg.style.top = `${centerY}px`;
-      plinkoPegs.appendChild(centerPeg);
-      plinkoPegPoints.push({
-        x: centerX + (pegRect.left - boardRect.left),
-        y: centerY + (pegRect.top - boardRect.top)
-      });
       const slotHeight = plinkoSlots?.getBoundingClientRect().height || 96;
+      const topGap = topRowPegXs.length > 1 ? (topRowPegXs[1] - topRowPegXs[0]) : (plinkoBoardMetrics?.width || boardRect.width) * 0.04;
+      const dropX = topRowPegXs.length > 1 ? topRowPegXs[0] + topGap / 2 : boardRect.width / 2;
       plinkoBoardMetrics = {
         width: boardRect.width,
         height: boardRect.height,
         slotWidth: boardRect.width / plinkoSlotMultipliers.length,
         slotHeight,
         centerX: boardRect.width / 2,
+        dropX,
+        dropSpread: Math.max(6, topGap * 0.18),
         landingY: boardRect.height - slotHeight + plinkoBallRadius
       };
       const wallTopY = Math.max(28, plinkoBallRadius + 6);
       const wallBottomY = plinkoBoardMetrics.height - slotHeight - 18;
-      const wallInset = Math.max(24, plinkoBoardMetrics.width * 0.05);
+      const wallInsetLeft = Math.max(16, pegRect.left - boardRect.left);
+      const wallInsetRight = Math.max(16, boardRect.right - pegRect.right);
       const wallTestY = wallBottomY - 12;
       const leftWall = orientPlinkoWallInward(
-        buildPlinkoWall(plinkoBoardMetrics.centerX, wallTopY, wallInset, wallBottomY),
+        buildPlinkoWall(plinkoBoardMetrics.centerX, wallTopY, wallInsetLeft, wallBottomY),
         plinkoBoardMetrics.centerX,
         wallTestY
       );
       const rightWall = orientPlinkoWallInward(
-        buildPlinkoWall(plinkoBoardMetrics.centerX, wallTopY, plinkoBoardMetrics.width - wallInset, wallBottomY),
+        buildPlinkoWall(plinkoBoardMetrics.centerX, wallTopY, plinkoBoardMetrics.width - wallInsetRight, wallBottomY),
         plinkoBoardMetrics.centerX,
         wallTestY
       );
@@ -8682,12 +8680,13 @@ playHorseRaceBtn.onclick = () => {
 
     function spawnPlinkoBall(){
       if(!plinkoBoardMetrics) return;
-      const startSpread = plinkoBoardMetrics.width * 0.04;
+      const startSpread = plinkoBoardMetrics.dropSpread ?? plinkoBoardMetrics.width * 0.04;
+      const dropX = plinkoBoardMetrics.dropX ?? plinkoBoardMetrics.centerX;
       const startX = Math.min(
         plinkoBoardMetrics.width - plinkoBallRadius,
         Math.max(
           plinkoBallRadius,
-          gaussianRandom(plinkoBoardMetrics.centerX, startSpread)
+          gaussianRandom(dropX, startSpread)
         )
       );
       const ball = document.createElement('div');
@@ -8765,11 +8764,11 @@ playHorseRaceBtn.onclick = () => {
 
         if(ball.x <= minX){
           ball.x = minX;
-          ball.vx *= -0.5;
+          ball.vx *= -0.5 * plinkoBounceX;
         }
         if(ball.x >= maxX){
           ball.x = maxX;
-          ball.vx *= -0.5;
+          ball.vx *= -0.5 * plinkoBounceX;
         }
 
         if(plinkoBoardMetrics.walls){
@@ -8785,7 +8784,7 @@ playHorseRaceBtn.onclick = () => {
               if(velocityDot < 0){
                 ball.vx -= 2 * velocityDot * wall.nx;
                 ball.vy -= 2 * velocityDot * wall.ny;
-                ball.vx *= plinkoBounce;
+                ball.vx *= plinkoBounce * plinkoBounceX;
                 ball.vy *= plinkoBounce;
               }
             }
@@ -8808,7 +8807,7 @@ playHorseRaceBtn.onclick = () => {
               ball.vx -= 2 * dot * nx;
               ball.vy -= 2 * dot * ny;
             }
-            ball.vx *= plinkoBounce;
+            ball.vx *= plinkoBounce * plinkoBounceX;
             ball.vy *= plinkoBounce;
             ball.vx += (Math.random() - 0.5) * 0.2;
           }
