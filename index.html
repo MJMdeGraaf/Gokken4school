@@ -2576,6 +2576,32 @@
       margin-top: 4px;
     }
 
+    .poker-hand-summary {
+      margin-top: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffe7a8;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .poker-hand-crown {
+      margin-top: 2px;
+      font-size: 16px;
+      text-align: center;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
+
+    .poker-player.bot .poker-hand-summary {
+      font-size: 10px;
+      margin-top: 4px;
+    }
+
+    .poker-player.bot .poker-hand-crown {
+      font-size: 13px;
+    }
+
     .poker-actions {
       margin-top: 18px;
       display: grid;
@@ -9604,6 +9630,8 @@ playHorseRaceBtn.onclick = () => {
     let pokerSmallBlindIndex = 0;
     let pokerBigBlindIndex = 0;
     let pokerDesiredBots = 3;
+    let pokerHandSummaries = null;
+    let pokerHandWinners = new Set();
 
     function pkDraw(){ return pkDeck.pop(); }
 
@@ -9797,11 +9825,16 @@ playHorseRaceBtn.onclick = () => {
         if(userIndex === pokerSmallBlindIndex) badges.push('SB');
         if(userIndex === pokerBigBlindIndex) badges.push('BB');
         const showHand = pokerHandActive || userPlayer.hand.length;
+        const showSummary = !pokerHandActive && pokerHandSummaries && pokerHandSummaries[userPlayer.key];
+        const summaryMarkup = showSummary
+          ? `<div class="poker-hand-summary">${pokerHandSummaries[userPlayer.key]}</div>${pokerHandWinners.has(userPlayer.key) ? '<div class="poker-hand-crown">👑</div>' : ''}`
+          : '';
         pokerUserSpotEl.innerHTML = `
           <h4>${userPlayer.name} (jij)
             <span class="poker-badges">${badges.map(b=>`<span>${b}</span>`).join('')}</span>
           </h4>
           <div class="hand">${userPlayer.hand.map(c=>showHand ? `<div class="card-pk">${pkFormatCard(c)}</div>` : '<div class="card-pk back"></div>').join('')}</div>
+          ${summaryMarkup}
           <div class="poker-info-row">Stack: ${userPlayer.stack}</div>
           <div class="poker-info-row">Bet: ${userPlayer.bet} | Totaal: ${userPlayer.committed}</div>
           <div class="poker-seat-row">Seat ${userPlayer.seat} ${userPlayer.folded?'[FOLD]':''} ${userPlayer.allIn?'[ALL-IN]':''}</div>
@@ -9824,11 +9857,16 @@ playHorseRaceBtn.onclick = () => {
           if(index===pokerBigBlindIndex) badges.push('BB');
           const botSlot = player.isBot ? ++botCounter : 0;
           const botSlotClass = player.isBot ? ` bot-slot-${botSlot}` : '';
+          const showSummary = !pokerHandActive && pokerHandSummaries && pokerHandSummaries[player.key];
+          const summaryMarkup = showSummary
+            ? `<div class="poker-hand-summary">${pokerHandSummaries[player.key]}</div>${pokerHandWinners.has(player.key) ? '<div class="poker-hand-crown">👑</div>' : ''}`
+            : '';
           return `<div class="poker-player ${player.isBot ? 'bot' : ''}${botSlotClass} ${isActing ? 'active' : ''}">
             <h4>${player.name}
               <span class="poker-badges">${badges.map(b=>`<span>${b}</span>`).join('')}</span>
             </h4>
             <div class="hand">${player.hand.map(c=>showHand ? `<div class="card-pk">${pkFormatCard(c)}</div>` : '<div class="card-pk back"></div>').join('')}</div>
+            ${summaryMarkup}
             <div class="poker-info-row">Stack: ${player.stack}</div>
             <div class="poker-info-row">Bet: ${player.bet} | Totaal: ${player.committed}</div>
             <div class="poker-seat-row">Seat ${player.seat} ${player.folded?'[FOLD]':''} ${player.allIn?'[ALL-IN]':''}</div>
@@ -9912,8 +9950,24 @@ playHorseRaceBtn.onclick = () => {
       return { potTotal, share, remainder };
     }
 
+    function pokerClearHandSummaries(){
+      pokerHandSummaries = null;
+      pokerHandWinners = new Set();
+    }
+
+    function pokerSetHandSummaries(winners){
+      pokerHandSummaries = {};
+      pokerHandWinners = new Set(winners.map(winner=>winner.key));
+      pokerPlayers.forEach(player=>{
+        if(!player.hand || player.hand.length === 0) return;
+        const score = pkEvaluateHand([...player.hand, ...pokerCommunity]);
+        pokerHandSummaries[player.key] = score.name;
+      });
+    }
+
     function pokerHandleHandComplete({ winners, handName, potInfo }){
       pokerHandActive = false;
+      pokerSetHandSummaries(winners);
       pkRender();
       updatePokerTurnState();
       const userIdx = pokerUserIndex();
@@ -10109,6 +10163,7 @@ playHorseRaceBtn.onclick = () => {
 
     function pkNewHand(){
       hideGameResultOverlay();
+      pokerClearHandSummaries();
       if(pokerPlayers.length < 2){
         pokerHandActive = false;
         pokerDealerStatusEl.textContent = 'Wacht op minimaal 2 spelers.';
@@ -10275,6 +10330,7 @@ playHorseRaceBtn.onclick = () => {
       pokerSmallBlindIndex = 0;
       pokerBigBlindIndex = 0;
       pokerCurrentPlayerIndex = 0;
+      pokerClearHandSummaries();
       setPokerControlsEnabled(false);
       pokerDealerStatusEl.textContent = 'Spel gestopt. Sluit je aan om te spelen.';
       pokerStatusEl.textContent = 'Sluit je aan om te spelen.';
@@ -10496,11 +10552,43 @@ startRaceBtn.onclick = async () => {
         return Math.max(0, Math.min(finishX, lane.clientWidth - horseWidth));
     });
 
+    async function playSlowMoReplay(ranking){
+        const replayDistance = 140;
+        const baseDuration = 1600;
+        const fastestTime = ranking[0].finishTime;
+        raceStatus.textContent = "📸 Slowmotion replay...";
+
+        ranking.forEach((entry) => {
+            const finishX = finishPositions[entry.index];
+            const startX = Math.max(0, finishX - replayDistance);
+            entry.horse.style.transition = "none";
+            entry.horse.style.left = `${startX}px`;
+        });
+
+        await new Promise(requestAnimationFrame);
+        const durations = ranking.map((entry) => {
+            const timeDelta = Math.max(0, entry.finishTime - fastestTime);
+            return baseDuration + Math.min(700, timeDelta * 3);
+        });
+
+        ranking.forEach((entry, idx) => {
+            entry.horse.style.transition = `left ${durations[idx]}ms cubic-bezier(0.2, 0.6, 0.2, 1)`;
+            entry.horse.style.left = `${finishPositions[entry.index]}px`;
+        });
+
+        await wait(Math.max(...durations) + 200);
+        horses.forEach(horse => {
+            horse.style.transition = "";
+        });
+    }
+
     async function finalizeRace(states){
         const ranking = [...states].sort((a, b) => a.finishTime - b.finishTime);
         const winner = ranking[0].index + 1;
         const photoFinishGap = ranking[1].finishTime - ranking[0].finishTime;
         const isPhotoFinish = photoFinishGap <= 120;
+
+        await playSlowMoReplay(ranking);
         ranking[0].horse.classList.add("winner");
 
         const resultsHtml = `
