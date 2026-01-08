@@ -501,6 +501,7 @@
       box-shadow: 0 18px 40px rgba(0,0,0,0.55), inset 0 0 30px rgba(80, 30, 110, 0.35);
       position: relative;
       overflow: hidden;
+      perspective: 900px;
     }
 
     .lootbox-option::after{
@@ -549,6 +550,7 @@
       align-items: center;
       gap: 14px;
       margin-top: 20px;
+      perspective: 900px;
     }
 
     .lootbox-card{
@@ -568,10 +570,11 @@
       position: relative;
       transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
       overflow: hidden;
+      transform-style: preserve-3d;
     }
 
     .lootbox-card:hover{
-      transform: translateY(-4px);
+      transform: translateY(-4px) rotateX(4deg);
       box-shadow: 0 24px 40px rgba(0,0,0,0.7);
       filter: brightness(1.08);
     }
@@ -592,6 +595,7 @@
       mask-composite: exclude;
       opacity: 0.6;
       pointer-events: none;
+      transform: translateZ(1px);
     }
 
     .lootbox-card::after{
@@ -602,6 +606,57 @@
       background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), transparent 40%);
       opacity: 0.5;
       pointer-events: none;
+      transform: translateZ(2px);
+    }
+
+    .lootbox-3d{
+      position: absolute;
+      inset: 26px;
+      transform: translateZ(18px);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .lootbox-lid,
+    .lootbox-body,
+    .lootbox-ribbon{
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-radius: 16px;
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.25), 0 10px 18px rgba(0,0,0,0.35);
+    }
+
+    .lootbox-lid{
+      top: -6%;
+      height: 34%;
+      background: linear-gradient(160deg, rgba(255,255,255,0.65), rgba(255,255,255,0.1));
+      transform: rotateX(12deg) translateZ(8px);
+    }
+
+    .lootbox-body{
+      top: 22%;
+      height: 64%;
+      background: linear-gradient(160deg, rgba(255,255,255,0.2), rgba(0,0,0,0.2));
+      transform: translateZ(4px);
+    }
+
+    .lootbox-ribbon{
+      top: 20%;
+      height: 66%;
+      width: 18%;
+      left: 41%;
+      right: auto;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.25));
+      box-shadow: 0 0 18px rgba(255,255,255,0.45);
+      transform: translateZ(10px);
+    }
+
+    .lootbox-card > *:not(.lootbox-3d){
+      position: relative;
+      z-index: 2;
+      transform: translateZ(24px);
     }
 
     .lootbox-icon{
@@ -643,6 +698,10 @@
       animation: lootboxTap 0.35s ease;
     }
 
+    .lootbox-card.is-opening{
+      animation: lootboxSpinShake 0.85s ease;
+    }
+
     .lootbox-card.is-leveling{
       animation: lootboxLevelUp 0.75s ease;
     }
@@ -679,6 +738,14 @@
       0%{ transform: scale(1); filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
       40%{ transform: scale(1.18); filter: drop-shadow(0 0 16px rgba(255,255,255,0.85)); }
       100%{ transform: scale(1); filter: drop-shadow(0 0 0 rgba(255,255,255,0)); }
+    }
+
+    @keyframes lootboxSpinShake{
+      0%{ transform: rotateX(0deg) rotateY(0deg) translateZ(0) scale(1); }
+      25%{ transform: rotateX(6deg) rotateY(160deg) translateZ(0) scale(1.06); }
+      50%{ transform: rotateX(-6deg) rotateY(320deg) translateX(-2px) scale(1.08); }
+      70%{ transform: rotateX(4deg) rotateY(360deg) translateX(2px) scale(1.04); }
+      100%{ transform: rotateX(0deg) rotateY(360deg) translateZ(0) scale(1); }
     }
 
     /* ============================ Rest of page ============================ */
@@ -4670,6 +4737,11 @@
       <div class="lootbox-option">
         <div class="lootbox-star-row">★</div>
         <div class="lootbox-card lootbox-level-1" data-lootbox="lucky">
+          <div class="lootbox-3d">
+            <span class="lootbox-lid"></span>
+            <span class="lootbox-body"></span>
+            <span class="lootbox-ribbon"></span>
+          </div>
           <div class="lootbox-icon">🎁</div>
           <div>Lucky Box</div>
           <small>1 Lucky Coin</small>
@@ -4678,6 +4750,11 @@
       <div class="lootbox-option">
         <div class="lootbox-star-row">★ ★</div>
         <div class="lootbox-card lootbox-level-2" data-lootbox="deluxe">
+          <div class="lootbox-3d">
+            <span class="lootbox-lid"></span>
+            <span class="lootbox-body"></span>
+            <span class="lootbox-ribbon"></span>
+          </div>
           <div class="lootbox-icon">🎁</div>
           <div>Deluxe Lucky Box</div>
           <small>5 Lucky Coins</small>
@@ -4686,9 +4763,40 @@
       <div class="lootbox-option">
         <div class="lootbox-star-row">★ ★ ★</div>
         <div class="lootbox-card lootbox-level-3" data-lootbox="ultra">
+          <div class="lootbox-3d">
+            <span class="lootbox-lid"></span>
+            <span class="lootbox-body"></span>
+            <span class="lootbox-ribbon"></span>
+          </div>
           <div class="lootbox-icon">🎁</div>
           <div>Ultra Deluxe Lucky Box</div>
           <small>10 Lucky Coins</small>
+        </div>
+      </div>
+      <div class="lootbox-option">
+        <div class="lootbox-star-row">★ ★ ★ ★</div>
+        <div class="lootbox-card lootbox-level-4" data-lootbox="royal">
+          <div class="lootbox-3d">
+            <span class="lootbox-lid"></span>
+            <span class="lootbox-body"></span>
+            <span class="lootbox-ribbon"></span>
+          </div>
+          <div class="lootbox-icon">🎁</div>
+          <div>Royal Lucky Box</div>
+          <small>25 Lucky Coins</small>
+        </div>
+      </div>
+      <div class="lootbox-option">
+        <div class="lootbox-star-row">★ ★ ★ ★ ★</div>
+        <div class="lootbox-card lootbox-level-5" data-lootbox="mythic">
+          <div class="lootbox-3d">
+            <span class="lootbox-lid"></span>
+            <span class="lootbox-body"></span>
+            <span class="lootbox-ribbon"></span>
+          </div>
+          <div class="lootbox-icon">🎁</div>
+          <div>Mythic Lucky Box</div>
+          <small>50 Lucky Coins</small>
         </div>
       </div>
     </div>
@@ -4698,18 +4806,21 @@
   <!-- Loot Box opening -->
   <section id="lootBoxSection" style="display:none;">
     <h2 id="lootBoxTitle">Lucky Box</h2>
-    <p id="lootBoxSubtitle">Klik op de box om te upgraden. Je hebt 3 kansen.</p>
+    <p id="lootBoxSubtitle">Tik op de box om te openen. Je hebt 1 kans.</p>
     <div class="lootbox-stage">
       <div id="lootBoxCard" class="lootbox-card lootbox-level-1">
+        <div class="lootbox-3d">
+          <span class="lootbox-lid"></span>
+          <span class="lootbox-body"></span>
+          <span class="lootbox-ribbon"></span>
+        </div>
         <div class="lootbox-icon">🎁</div>
         <div>Reward level <span id="lootBoxLevel">1</span></div>
       </div>
       <div id="lootBoxChances" class="lootbox-chances">
         <div class="chance-dot">★</div>
-        <div class="chance-dot">★</div>
-        <div class="chance-dot">★</div>
       </div>
-      <div id="lootBoxHint">Klik om te upgraden (12,5% kans per klik).</div>
+      <div id="lootBoxHint">Tik om te openen (15% kans op skins).</div>
       <div id="lootBoxReward"></div>
     </div>
     <button id="backToMenuFromLoot">Terug naar menu</button>
@@ -7907,20 +8018,23 @@
     const lootBoxConfigs = {
       lucky: { name: 'Lucky Box', cost: 1, startLevel: 1 },
       deluxe: { name: 'Deluxe Lucky Box', cost: 5, startLevel: 2 },
-      ultra: { name: 'Ultra Deluxe Lucky Box', cost: 10, startLevel: 3 }
+      ultra: { name: 'Ultra Deluxe Lucky Box', cost: 10, startLevel: 3 },
+      royal: { name: 'Royal Lucky Box', cost: 25, startLevel: 4 },
+      mythic: { name: 'Mythic Lucky Box', cost: 50, startLevel: 5 }
     };
-    const lootBoxRewards = {
+    const lootBoxBaseCredits = {
       1: 50,
       2: 150,
       3: 500,
       4: 1000,
       5: 2500
     };
+    const lootBoxSkinChance = 0.15;
     let currentLootBox = null;
 
     document.querySelectorAll('.lootbox-card[data-lootbox]').forEach((card)=>{
       card.addEventListener('click', ()=>{
-        triggerLootBoxAnimation(card, 'is-tapped');
+        triggerLootBoxAnimation(card, 'is-opening');
         const type = card.getAttribute('data-lootbox');
         openLootBox(type);
       });
@@ -7936,7 +8050,7 @@
     function updateLootBoxUI(){
       if(!currentLootBox) return;
       lootBoxTitle.textContent = currentLootBox.name;
-      lootBoxSubtitle.textContent = `Klik op de box om te upgraden. ${currentLootBox.remainingChances} kansen over.`;
+      lootBoxSubtitle.textContent = `Tik op de box om te openen. ${currentLootBox.remainingChances} kans over.`;
       lootBoxLevel.textContent = currentLootBox.level;
       lootBoxCard.className = `lootbox-card lootbox-level-${currentLootBox.level}`;
       if(currentLootBox.remainingChances === 0){
@@ -7953,6 +8067,8 @@
       closeLeaderboardPopup();
       const config = lootBoxConfigs[type];
       ensureLuckyFields(currentUser);
+      ensureShopFields(currentUser);
+      ensureSkinFields(currentUser);
       if(currentUser.luckyCoins < config.cost){
         showSiteMessage(`Je hebt ${config.cost} Lucky Coins nodig voor ${config.name}.`);
         return;
@@ -7962,10 +8078,10 @@
         type,
         name: config.name,
         level: config.startLevel,
-        remainingChances: 3
+        remainingChances: 1
       };
       lootBoxReward.textContent = '';
-      lootBoxHint.textContent = 'Klik om te upgraden (12,5% kans per klik).';
+      lootBoxHint.textContent = 'Tik om te openen (15% kans op skins).';
       dashboard.style.display = 'none';
       blackjackSection.style.display = 'none';
       pokerSection.style.display = 'none';
@@ -7977,25 +8093,231 @@
       saveCurrentUser();
     }
 
+    function getAvailableThemes(list){
+      const owned = new Set(list || []);
+      return themeCatalog.filter((theme) => theme.id !== 'classic' && !owned.has(theme.id));
+    }
+
+    function getMissingLayouts(){
+      const missing = [];
+      Object.keys(gameLabels).forEach((gameKey) => {
+        const owned = new Set(currentUser.shopInventory.layouts?.[gameKey] || ['classic']);
+        themeCatalog.forEach((theme) => {
+          if(theme.id === 'classic') return;
+          if(!owned.has(theme.id)){
+            missing.push({ gameKey, themeId: theme.id });
+          }
+        });
+      });
+      return missing;
+    }
+
+    function pickRandomItems(items, count){
+      const pool = [...items];
+      const chosen = [];
+      while(pool.length > 0 && chosen.length < count){
+        const index = Math.floor(Math.random() * pool.length);
+        chosen.push(pool.splice(index, 1)[0]);
+      }
+      return chosen;
+    }
+
+    function addThemeSkin(inventoryKey, themeId){
+      addInventoryItem(currentUser.shopInventory[inventoryKey], themeId);
+      const theme = getThemeById(themeId);
+      return theme ? theme.name : themeId;
+    }
+
+    function addLayoutSkin(gameKey, themeId){
+      addInventoryItem(currentUser.shopInventory.layouts[gameKey], themeId);
+      const theme = getThemeById(themeId);
+      return `${theme ? theme.name : themeId} ${gameLabels[gameKey]} layout`;
+    }
+
+    function applyCreditMultiplier(baseCredits, multiplier){
+      return Math.round(baseCredits * multiplier);
+    }
+
+    function resolveLootBoxReward(level){
+      const baseCredits = lootBoxBaseCredits[level];
+      let credits = baseCredits;
+      const grantedSkins = [];
+      const applySkins = Math.random() < lootBoxSkinChance;
+
+      if(applySkins){
+        if(level === 1){
+          const missingBalls = getAvailableThemes(currentUser.shopInventory.ballSkins);
+          if(missingBalls.length === 0){
+            credits = applyCreditMultiplier(baseCredits, 2);
+          } else {
+            const [ball] = pickRandomItems(missingBalls, 1);
+            if(ball){
+              const name = addThemeSkin('ballSkins', ball.id);
+              grantedSkins.push(`${name} ball skin`);
+            }
+          }
+        } else if(level === 2){
+          const missingBalls = getAvailableThemes(currentUser.shopInventory.ballSkins);
+          const missingDice = getAvailableThemes(currentUser.shopInventory.diceSkins);
+          if(missingBalls.length === 1){
+            const [ball] = missingBalls;
+            const name = addThemeSkin('ballSkins', ball.id);
+            grantedSkins.push(`${name} ball skin`);
+            credits = applyCreditMultiplier(baseCredits, 1.5);
+          } else if(missingBalls.length >= 2){
+            const canDice = missingDice.length > 0;
+            const giveDice = canDice && Math.random() < 0.5;
+            if(giveDice){
+              const [dice] = pickRandomItems(missingDice, 1);
+              if(dice){
+                const name = addThemeSkin('diceSkins', dice.id);
+                grantedSkins.push(`${name} dice skin`);
+              }
+            } else {
+              const picks = pickRandomItems(missingBalls, 2);
+              picks.forEach((ball) => {
+                const name = addThemeSkin('ballSkins', ball.id);
+                grantedSkins.push(`${name} ball skin`);
+              });
+            }
+          } else if(missingDice.length > 0){
+            const [dice] = pickRandomItems(missingDice, 1);
+            if(dice){
+              const name = addThemeSkin('diceSkins', dice.id);
+              grantedSkins.push(`${name} dice skin`);
+            }
+          } else {
+            credits = applyCreditMultiplier(baseCredits, 2);
+          }
+        } else if(level === 3){
+          const missingLogin = getAvailableThemes(currentUser.shopInventory.loginSkins);
+          const missingMenu = getAvailableThemes(currentUser.shopInventory.menuSkins);
+          if(missingLogin.length > 0 && missingMenu.length > 0){
+            const [login] = pickRandomItems(missingLogin, 1);
+            const [menu] = pickRandomItems(missingMenu, 1);
+            if(login){
+              const name = addThemeSkin('loginSkins', login.id);
+              grantedSkins.push(`${name} login screen`);
+            }
+            if(menu){
+              const name = addThemeSkin('menuSkins', menu.id);
+              grantedSkins.push(`${name} menu screen`);
+            }
+          } else if(missingLogin.length > 0 || missingMenu.length > 0){
+            const pool = missingLogin.length > 0 ? missingLogin : missingMenu;
+            const [item] = pickRandomItems(pool, 1);
+            if(item){
+              if(missingLogin.length > 0){
+                const name = addThemeSkin('loginSkins', item.id);
+                grantedSkins.push(`${name} login screen`);
+              } else {
+                const name = addThemeSkin('menuSkins', item.id);
+                grantedSkins.push(`${name} menu screen`);
+              }
+            }
+            credits = applyCreditMultiplier(baseCredits, 1.5);
+          } else {
+            credits = applyCreditMultiplier(baseCredits, 2);
+          }
+        } else if(level === 4){
+          const missingLayouts = getMissingLayouts();
+          if(missingLayouts.length === 0){
+            credits = applyCreditMultiplier(baseCredits, 2);
+          } else {
+            const picks = pickRandomItems(missingLayouts, Math.min(4, missingLayouts.length));
+            picks.forEach((layout) => {
+              grantedSkins.push(addLayoutSkin(layout.gameKey, layout.themeId));
+            });
+            if(picks.length < 4){
+              const multiplierMap = { 3: 1.25, 2: 1.5, 1: 1.75, 0: 2 };
+              credits = applyCreditMultiplier(baseCredits, multiplierMap[picks.length] || 2);
+            }
+          }
+        } else if(level === 5){
+          let missingCount = 0;
+          const missingLogin = getAvailableThemes(currentUser.shopInventory.loginSkins);
+          const missingMenu = getAvailableThemes(currentUser.shopInventory.menuSkins);
+          const missingCards = getAvailableThemes(currentUser.shopInventory.cardSkins);
+          const missingDice = getAvailableThemes(currentUser.shopInventory.diceSkins);
+          const missingBalls = getAvailableThemes(currentUser.shopInventory.ballSkins);
+          const missingLayouts = getMissingLayouts();
+
+          const [login] = pickRandomItems(missingLogin, 1);
+          if(login){
+            const name = addThemeSkin('loginSkins', login.id);
+            grantedSkins.push(`${name} login screen`);
+          } else {
+            missingCount += 1;
+          }
+
+          const [menu] = pickRandomItems(missingMenu, 1);
+          if(menu){
+            const name = addThemeSkin('menuSkins', menu.id);
+            grantedSkins.push(`${name} menu screen`);
+          } else {
+            missingCount += 1;
+          }
+
+          const [cards] = pickRandomItems(missingCards, 1);
+          if(cards){
+            const name = addThemeSkin('cardSkins', cards.id);
+            grantedSkins.push(`${name} card skin`);
+          } else {
+            missingCount += 1;
+          }
+
+          const [dice] = pickRandomItems(missingDice, 1);
+          if(dice){
+            const name = addThemeSkin('diceSkins', dice.id);
+            grantedSkins.push(`${name} dice skin`);
+          } else {
+            missingCount += 1;
+          }
+
+          const [ball] = pickRandomItems(missingBalls, 1);
+          if(ball){
+            const name = addThemeSkin('ballSkins', ball.id);
+            grantedSkins.push(`${name} ball skin`);
+          } else {
+            missingCount += 1;
+          }
+
+          const layoutPicks = pickRandomItems(missingLayouts, Math.min(3, missingLayouts.length));
+          layoutPicks.forEach((layout) => {
+            grantedSkins.push(addLayoutSkin(layout.gameKey, layout.themeId));
+          });
+          if(layoutPicks.length < 3){
+            missingCount += (3 - layoutPicks.length);
+          }
+
+          if(missingCount > 0){
+            credits = applyCreditMultiplier(baseCredits, 1 + (missingCount * 0.125));
+          }
+        }
+      }
+
+      return { credits, grantedSkins };
+    }
+
     lootBoxCard.onclick = ()=>{
       if(!currentLootBox || currentLootBox.remainingChances === 0) return;
-      const previousLevel = currentLootBox.level;
-      currentLootBox.remainingChances -= 1;
-      if(Math.random() < 0.125 && currentLootBox.level < 5){
-        currentLootBox.level += 1;
+      currentLootBox.remainingChances = 0;
+      triggerLootBoxAnimation(lootBoxCard, 'is-opening');
+
+      const reward = resolveLootBoxReward(currentLootBox.level);
+      currentUser.credits += reward.credits;
+
+      const rewardLines = [`Beloning: ${reward.credits} credits (level ${currentLootBox.level}).`];
+      if(reward.grantedSkins.length > 0){
+        rewardLines.push(`Nieuwe skins: ${reward.grantedSkins.join(', ')}.`);
+      } else {
+        rewardLines.push('Geen nieuwe skins deze keer.');
       }
-      triggerLootBoxAnimation(lootBoxCard, 'is-tapped');
-      if(currentLootBox.level > previousLevel){
-        triggerLootBoxAnimation(lootBoxCard, 'is-leveling');
-      }
-      if(currentLootBox.remainingChances === 0){
-        const reward = lootBoxRewards[currentLootBox.level];
-        currentUser.credits += reward;
-        lootBoxHint.textContent = 'Kist geopend! Je beloning is uitgekeerd.';
-        lootBoxReward.textContent = `Beloning: ${reward} credits (level ${currentLootBox.level}).`;
-        saveCurrentUser().then(renderDashboard);
-      }
+
+      lootBoxHint.textContent = 'Kist geopend! Je beloning is uitgekeerd.';
+      lootBoxReward.innerHTML = rewardLines.map((line) => `<div>${line}</div>`).join('');
       updateLootBoxUI();
+      saveCurrentUser().then(renderDashboard);
     };
 const playHorseRaceBtn = document.getElementById("playHorseRaceBtn");
 
@@ -10597,7 +10919,7 @@ startRaceBtn.onclick = async () => {
 
     async function playSlowMoReplay(ranking){
         const replayDistance = 90;
-        const baseDuration = 1000;
+        const baseDuration = 2600;
         const fastestTime = ranking[0].finishTime;
         raceStatus.textContent = "📸 Slowmotion replay...";
         raceTrack.classList.add("replay-focus");
@@ -10612,7 +10934,7 @@ startRaceBtn.onclick = async () => {
         await new Promise(requestAnimationFrame);
         const durations = ranking.map((entry) => {
             const timeDelta = Math.max(0, entry.finishTime - fastestTime);
-            return baseDuration + Math.min(1200, timeDelta * 30);
+            return baseDuration + Math.min(3000, timeDelta * 90);
         });
 
         ranking.forEach((entry, idx) => {
