@@ -6937,6 +6937,45 @@
     applyLoginSkinFromDevice();
     loginSection.style.display = 'flex';
 
+    const blockedUsernameTerms = [
+      'fuck', 'fucker', 'motherfucker', 'shit', 'bitch', 'asshole', 'bastard', 'cunt', 'dick', 'pussy', 'slut', 'whore',
+      'kut', 'kloot', 'klojo', 'lul', 'eikel', 'tering', 'tyfus', 'kanker', 'hoer', 'slet'
+    ];
+
+    const usernameLeetMap = new Map([
+      ['0', 'o'],
+      ['1', 'i'],
+      ['3', 'e'],
+      ['4', 'a'],
+      ['5', 's'],
+      ['7', 't'],
+      ['8', 'b'],
+      ['9', 'g'],
+      ['@', 'a'],
+      ['$', 's']
+    ]);
+
+    function normalizeUsernameForFilter(value){
+      return value
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[0-9@$]/g, (match)=>usernameLeetMap.get(match) || match)
+        .replace(/[^a-z0-9]/g, '');
+    }
+
+    function usernameContainsBlockedTerm(value){
+      const raw = value.toLowerCase();
+      const normalized = normalizeUsernameForFilter(value);
+      return blockedUsernameTerms.some((term)=>{
+        const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const wordRegex = new RegExp(`\\b${escaped}\\b`, 'i');
+        const normalizedTerm = normalizeUsernameForFilter(term);
+        if(normalizedTerm.length >= 4 && normalized.includes(normalizedTerm)) return true;
+        return wordRegex.test(raw);
+      });
+    }
+
     loginBtn.onclick = async ()=>{
       const rawName = usernameInput.value.trim();
       const passwd = passwordInput.value.trim();
@@ -6966,6 +7005,9 @@
       const rawName = usernameInput.value.trim();
       const passwd = passwordInput.value.trim();
       if(!rawName || !passwd) return showSiteMessage('Vul gebruikersnaam en wachtwoord in.');
+      if(usernameContainsBlockedTerm(rawName)){
+        return showSiteMessage('Deze gebruikersnaam bevat ongepaste taal.');
+      }
 
       const key = keyForName(rawName);
       const existing = await loadUser(key);
