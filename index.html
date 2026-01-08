@@ -3809,6 +3809,34 @@
       margin-top: 16px;
     }
 
+    .developer-ban{
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .developer-ban label{
+      font-size: 13px;
+      color: rgba(210, 225, 255, 0.85);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .developer-ban input{
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(140, 200, 255, 0.35);
+      background: rgba(10, 20, 38, 0.65);
+      color: #f5f8ff;
+      outline: none;
+    }
+
+    .developer-ban input:focus{
+      border-color: rgba(255, 221, 128, 0.7);
+      box-shadow: 0 0 0 2px rgba(255, 221, 128, 0.2);
+    }
+
     /* Player tracking panel */
     #playerTrackingPanel{
       position: fixed;
@@ -4425,6 +4453,11 @@
         <button id="devCreditsBtn" class="menu-action-btn primary">Geef oneindig credits</button>
         <button id="devLuckyBtn" class="menu-action-btn primary">Geef oneindig lucky coins</button>
         <button id="closeDevPortal" class="menu-action-btn">Sluiten</button>
+      </div>
+      <div class="developer-ban">
+        <label for="devBanInput">Ban account (verwijderen)</label>
+        <input id="devBanInput" type="text" placeholder="Accountnaam om te verwijderen">
+        <button id="devBanBtn" class="menu-action-btn">Verwijder account</button>
       </div>
     </div>
   </div>
@@ -5162,6 +5195,8 @@
     const developerPortal = document.getElementById('developerPortal');
     const devCreditsBtn = document.getElementById('devCreditsBtn');
     const devLuckyBtn = document.getElementById('devLuckyBtn');
+    const devBanInput = document.getElementById('devBanInput');
+    const devBanBtn = document.getElementById('devBanBtn');
     const closeDevPortal = document.getElementById('closeDevPortal');
     const playerTrackingPanel = document.getElementById('playerTrackingPanel');
     const closeTrackingPanel = document.getElementById('closeTrackingPanel');
@@ -6922,11 +6957,6 @@
     applyLoginSkinFromDevice();
     loginSection.style.display = 'flex';
 
-    const blockedUsernameTerms = [
-      'fuck', 'fucker', 'motherfucker', 'shit', 'bitch', 'asshole', 'bastard', 'cunt', 'dick', 'pussy', 'slut', 'whore',
-      'kut', 'kloot', 'klojo', 'lul', 'eikel', 'tering', 'tyfus', 'kanker', 'hoer', 'slet'
-    ];
-
     const usernameLeetMap = new Map([
       ['0', 'o'],
       ['1', 'i'],
@@ -6949,16 +6979,97 @@
         .replace(/[^a-z0-9]/g, '');
     }
 
+    const blockedUsernameTerms = new Set();
+    const normalizedBlockedUsernameTerms = new Set();
+    const fallbackBlockedUsernameTerms = [
+      'fuck', 'fucker', 'motherfucker', 'shit', 'bitch', 'asshole', 'bastard', 'cunt', 'dick', 'pussy', 'slut', 'whore',
+      'kut', 'kloot', 'klojo', 'lul', 'eikel', 'tering', 'tyfus', 'kanker', 'hoer', 'slet'
+    ];
+    const profanitySources = [
+      {
+        label: 'LDNOOBW (EN)',
+        url: 'https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/en'
+      },
+      {
+        label: 'LDNOOBW (NL)',
+        url: 'https://raw.githubusercontent.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/master/nl'
+      },
+      {
+        label: 'Google profanity words',
+        url: 'https://raw.githubusercontent.com/coffee-and-fun/google-profanity-words/master/data/list.txt'
+      }
+    ];
+
+    function addBlockedUsernameTerms(terms = []){
+      terms.forEach((term)=>{
+        const clean = String(term || '').trim();
+        if(!clean) return;
+        blockedUsernameTerms.add(clean);
+        const normalized = normalizeUsernameForFilter(clean);
+        if(normalized){
+          normalizedBlockedUsernameTerms.add(normalized);
+        }
+      });
+    }
+
+    function parseWordlist(text){
+      return text
+        .split(/\r?\n/)
+        .map((line)=>line.trim())
+        .filter((line)=>line && !line.startsWith('#') && !line.startsWith('//'));
+    }
+
+    async function loadExternalProfanityLists(){
+      const results = await Promise.allSettled(
+        profanitySources.map(async (source)=>{
+          const response = await fetch(source.url);
+          if(!response.ok){
+            throw new Error(`Failed to load ${source.label}`);
+          }
+          const text = await response.text();
+          return parseWordlist(text);
+        })
+      );
+      results.forEach((result)=>{
+        if(result.status === 'fulfilled'){
+          addBlockedUsernameTerms(result.value);
+        }
+      });
+    }
+
+    addBlockedUsernameTerms(fallbackBlockedUsernameTerms);
+    loadExternalProfanityLists();
+
+    function containsTermWithBoundary(raw, term){
+      let idx = raw.indexOf(term);
+      while(idx !== -1){
+        const before = idx === 0 ? '' : raw[idx - 1];
+        const after = idx + term.length >= raw.length ? '' : raw[idx + term.length];
+        const beforeOk = !before || !/[a-z0-9]/.test(before);
+        const afterOk = !after || !/[a-z0-9]/.test(after);
+        if(beforeOk && afterOk){
+          return true;
+        }
+        idx = raw.indexOf(term, idx + 1);
+      }
+      return false;
+    }
+
     function usernameContainsBlockedTerm(value){
       const raw = value.toLowerCase();
       const normalized = normalizeUsernameForFilter(value);
-      return blockedUsernameTerms.some((term)=>{
-        const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const wordRegex = new RegExp(`\\b${escaped}\\b`, 'i');
-        const normalizedTerm = normalizeUsernameForFilter(term);
-        if(normalizedTerm.length >= 4 && normalized.includes(normalizedTerm)) return true;
-        return wordRegex.test(raw);
-      });
+      for(const term of blockedUsernameTerms){
+        if(term.length < 3) continue;
+        if(containsTermWithBoundary(raw, term.toLowerCase())){
+          return true;
+        }
+      }
+      for(const term of normalizedBlockedUsernameTerms){
+        if(term.length >= 4 && normalized.includes(term)){
+          return true;
+        }
+      }
+      return false;
     }
 
     loginBtn.onclick = async ()=>{
@@ -6990,6 +7101,8 @@
       const rawName = usernameInput.value.trim();
       const passwd = passwordInput.value.trim();
       if(!rawName || !passwd) return showSiteMessage('Vul gebruikersnaam en wachtwoord in.');
+      const acceptedWarning = confirm('Let op: accounts met een ongepaste naam worden geblokkeerd. Je moet je accountnaam later invullen in een enquête. Doorgaan met aanmaken?');
+      if(!acceptedWarning) return;
       if(usernameContainsBlockedTerm(rawName)){
         return showSiteMessage('Deze gebruikersnaam bevat ongepaste taal.');
       }
@@ -7433,6 +7546,28 @@
       developerPortal.style.display = 'none';
     }
 
+    async function deleteAccountByName(rawName){
+      const trimmed = (rawName || '').trim();
+      if(!trimmed){
+        showSiteMessage('Vul een accountnaam in om te verwijderen.');
+        return;
+      }
+      const key = keyForName(trimmed);
+      const existing = await loadUser(key);
+      if(!existing){
+        showSiteMessage('Account niet gevonden.');
+        return;
+      }
+      const confirmed = confirm(`Weet je zeker dat je het account "${existing.name || trimmed}" wilt verwijderen? Dit kan niet ongedaan worden gemaakt.`);
+      if(!confirmed) return;
+      await db.ref('users/'+key).remove();
+      if(currentUser && currentUser.key === key && logoutBtn){
+        logoutBtn.onclick();
+      }
+      showSiteMessage(`Account "${existing.name || trimmed}" is verwijderd.`, { type: 'warning' });
+      if(devBanInput) devBanInput.value = '';
+    }
+
     if(welcomeBack){
       welcomeBack.addEventListener('click', () => {
         developerClicks += 1;
@@ -7477,6 +7612,13 @@
         await saveCurrentUser();
         renderDashboard();
         showSiteMessage('Oneindige lucky coins geactiveerd.');
+      });
+    }
+
+    if(devBanBtn){
+      devBanBtn.addEventListener('click', () => {
+        if(!devBanInput) return;
+        deleteAccountByName(devBanInput.value);
       });
     }
 
