@@ -4764,7 +4764,7 @@
             <button id="pokerFoldBtn">Fold</button>
           </div>
           <div class="poker-action-row">
-            <label for="pokerBetAmount">Raise naar:</label>
+            <label for="pokerBetAmount">Raise met:</label>
             <input type="number" id="pokerBetAmount" min="0" value="200" style="width:120px;">
           </div>
           <div class="poker-action-row">
@@ -5077,8 +5077,7 @@
       <div class="game-result-title" id="gameResultTitle">Resultaat</div>
       <div class="game-result-message" id="gameResultMessage"></div>
       <div class="game-result-actions" id="gameResultActions">
-        <button id="gameResultPlayAgain">Speel opnieuw</button>
-        <button id="gameResultMainMenu" class="secondary">Hoofdmenu</button>
+        <button id="gameResultBack">Terug</button>
       </div>
     </div>
   </div>
@@ -5272,6 +5271,7 @@
     setupMenuCardArt();
 
     const gameLabels = {
+      all: 'Alle games',
       blackjack: 'Blackjack',
       poker: 'Poker',
       craps: 'Craps',
@@ -6684,8 +6684,7 @@
     const gameResultTitle = document.getElementById('gameResultTitle');
     const gameResultMessage = document.getElementById('gameResultMessage');
     const gameResultActions = document.getElementById('gameResultActions');
-    const gameResultPlayAgain = document.getElementById('gameResultPlayAgain');
-    const gameResultMainMenu = document.getElementById('gameResultMainMenu');
+    const gameResultBack = document.getElementById('gameResultBack');
     const siteMessage = document.getElementById('siteMessage');
     const siteMessageTitle = document.getElementById('siteMessageTitle');
     const siteMessageText = document.getElementById('siteMessageText');
@@ -6712,7 +6711,7 @@
         subtitle: 'Je krijgt 2 eigen kaarten en gebruikt tot 5 kaarten om de beste hand te maken.',
         steps: [
           { icon: '🪙', title: 'Koop je in', text: 'Kies een tafel en betaal de buy‑in. Small en big blinds zijn verplichte inzetten om de pot te starten.' },
-          { icon: '🗣️', title: 'Mogelijke acties', text: 'Check = niets inzetten als er nog geen bet is. Call = meebetalen tot het huidige bedrag. Bet/Raise = (meer) inzetten; vul “Raise naar” in. Fold = je hand weggooien en je doet niet meer mee.' },
+          { icon: '🗣️', title: 'Mogelijke acties', text: 'Check = niets inzetten als er nog geen bet is. Call = meebetalen tot het huidige bedrag. Bet/Raise = (meer) inzetten; vul “Raise met” in. Fold = je hand weggooien en je doet niet meer mee.' },
           { icon: '🏅', title: 'Rondes & winst', text: 'Er komen 5 open kaarten op tafel: 3 (flop), 1 (turn), 1 (river). Maak de beste 5‑kaarten hand met jouw 2 kaarten + de open kaarten. Beste hand wint de pot of iedereen anders foldt.' }
         ]
       },
@@ -6839,23 +6838,21 @@
     }
 
     let gameResultAutoClose = null;
-    let gameResultPlayAgainHandler = null;
-    let gameResultMainMenuHandler = null;
+    let gameResultBackHandler = null;
     let siteMessageAutoClose = null;
 
     function hideGameResultOverlay(){
       if(!gameResultOverlay) return;
       gameResultOverlay.classList.remove('is-visible');
       gameResultOverlay.setAttribute('aria-hidden', 'true');
-      gameResultPlayAgainHandler = null;
-      gameResultMainMenuHandler = null;
+      gameResultBackHandler = null;
       if(gameResultAutoClose){
         clearTimeout(gameResultAutoClose);
         gameResultAutoClose = null;
       }
     }
 
-    function showGameResultOverlay({ outcome = 'win', title, message, showActions = false, autoCloseMs = 2200, onPlayAgain, onMainMenu } = {}){
+    function showGameResultOverlay({ outcome = 'win', title, message, onMainMenu, onBack } = {}){
       if(!gameResultOverlay || !gameResultCard) return;
       if(gameResultAutoClose){
         clearTimeout(gameResultAutoClose);
@@ -6866,33 +6863,21 @@
       gameResultMessage.textContent = message || '';
       gameResultCard.classList.remove('win', 'lose', 'push');
       gameResultCard.classList.add(outcome === 'lose' ? 'lose' : outcome === 'push' ? 'push' : 'win');
-      gameResultActions.style.display = showActions ? 'flex' : 'none';
-      gameResultPlayAgainHandler = typeof onPlayAgain === 'function' ? onPlayAgain : null;
-      gameResultMainMenuHandler = typeof onMainMenu === 'function' ? onMainMenu : null;
+      gameResultActions.style.display = 'flex';
+      gameResultBackHandler = typeof onMainMenu === 'function'
+        ? onMainMenu
+        : typeof onBack === 'function'
+          ? onBack
+          : null;
       gameResultOverlay.classList.add('is-visible');
       gameResultOverlay.setAttribute('aria-hidden', 'false');
-
-      if(!showActions){
-        gameResultAutoClose = setTimeout(() => {
-          hideGameResultOverlay();
-        }, autoCloseMs);
-      }
     }
 
-    if(gameResultPlayAgain){
-      gameResultPlayAgain.addEventListener('click', () => {
+    if(gameResultBack){
+      gameResultBack.addEventListener('click', () => {
         hideGameResultOverlay();
-        if(gameResultPlayAgainHandler){
-          gameResultPlayAgainHandler();
-        }
-      });
-    }
-
-    if(gameResultMainMenu){
-      gameResultMainMenu.addEventListener('click', () => {
-        hideGameResultOverlay();
-        if(gameResultMainMenuHandler){
-          gameResultMainMenuHandler();
+        if(gameResultBackHandler){
+          gameResultBackHandler();
         }
       });
     }
@@ -7217,12 +7202,29 @@
       });
     }
 
+    function getTrackingStatsForDay(user, dateKey, gameKey){
+      const day = user.tracking?.days?.[dateKey];
+      if(!day) return { bets: 0, net: 0, games: 0, timeMs: 0 };
+      if(gameKey === 'all'){
+        return Object.values(day.games || {}).reduce((acc, entry) => {
+          acc.bets += entry?.bets || 0;
+          acc.net += entry?.net || 0;
+          acc.games += entry?.games || 0;
+          acc.timeMs += entry?.timeMs || 0;
+          return acc;
+        }, { bets: 0, net: 0, games: 0, timeMs: 0 });
+      }
+      const entry = day.games?.[gameKey];
+      return {
+        bets: entry?.bets || 0,
+        net: entry?.net || 0,
+        games: entry?.games || 0,
+        timeMs: entry?.timeMs || 0
+      };
+    }
+
     function sumGameStatForUser(user, gameKey, dates, field){
-      return dates.reduce((total, dateKey) => {
-        const day = user.tracking?.days?.[dateKey];
-        const value = day?.games?.[gameKey]?.[field] || 0;
-        return total + value;
-      }, 0);
+      return dates.reduce((total, dateKey) => total + getTrackingStatsForDay(user, dateKey, gameKey)[field], 0);
     }
 
     function sumDailyCreditsNet(user, dates){
@@ -7256,13 +7258,13 @@
       const headers = ['Speler', ...dayLabels, 'total'];
 
       const totalBetsByDay = dates.map((dateKey) => (
-        users.reduce((sum, user) => sum + (user.tracking?.days?.[dateKey]?.games?.[gameKey]?.bets || 0), 0)
+        users.reduce((sum, user) => sum + getTrackingStatsForDay(user, dateKey, gameKey).bets, 0)
       ));
       const totalNetByDay = dates.map((dateKey) => (
-        users.reduce((sum, user) => sum + (user.tracking?.days?.[dateKey]?.games?.[gameKey]?.net || 0), 0)
+        users.reduce((sum, user) => sum + getTrackingStatsForDay(user, dateKey, gameKey).net, 0)
       ));
       const totalPlayersByDay = dates.map((dateKey) => (
-        users.filter(user => (user.tracking?.days?.[dateKey]?.games?.[gameKey]?.games || 0) > 0).length
+        users.filter(user => getTrackingStatsForDay(user, dateKey, gameKey).games > 0).length
       ));
 
       const totalBetsAll = totalBetsByDay.reduce((sum, value) => sum + value, 0);
@@ -7279,7 +7281,7 @@
 
       const betRows = sortedUsers.map((user) => {
         const totals = dates.map((dateKey, index) => {
-          const bet = user.tracking?.days?.[dateKey]?.games?.[gameKey]?.bets || 0;
+          const bet = getTrackingStatsForDay(user, dateKey, gameKey).bets;
           const percent = totalBetsByDay[index] ? (bet / totalBetsByDay[index]) * 100 : 0;
           return `${formatCredits(bet)} (${formatPercent(percent)})`;
         });
@@ -7299,16 +7301,16 @@
       ];
 
       const netRows = sortedUsers.map((user) => {
-        const dayValues = dates.map((dateKey) => formatCredits(user.tracking?.days?.[dateKey]?.games?.[gameKey]?.net || 0));
+        const dayValues = dates.map((dateKey) => formatCredits(getTrackingStatsForDay(user, dateKey, gameKey).net));
         const totalNet = sumGameStatForUser(user, gameKey, dates, 'net');
         return [user.name, ...dayValues, formatCredits(totalNet)];
       });
 
       const avgRows = sortedUsers.map((user) => {
         const dayValues = dates.map((dateKey) => {
-          const entry = user.tracking?.days?.[dateKey]?.games?.[gameKey];
-          const net = entry?.net || 0;
-          const games = entry?.games || 0;
+          const entry = getTrackingStatsForDay(user, dateKey, gameKey);
+          const net = entry.net || 0;
+          const games = entry.games || 0;
           const avg = games ? net / games : 0;
           return formatCredits(avg);
         });
@@ -7325,7 +7327,7 @@
       });
 
       const timeRows = sortedUsers.map((user) => {
-        const dayValues = dates.map((dateKey) => formatDuration(user.tracking?.days?.[dateKey]?.games?.[gameKey]?.timeMs || 0));
+        const dayValues = dates.map((dateKey) => formatDuration(getTrackingStatsForDay(user, dateKey, gameKey).timeMs));
         const totalTime = sumGameStatForUser(user, gameKey, dates, 'timeMs');
         return [user.name, ...dayValues, formatDuration(totalTime)];
       });
@@ -9269,8 +9271,6 @@ playHorseRaceBtn.onclick = () => {
           outcome: userOutcome === 'push' ? 'push' : userOutcome,
           title: userOutcome === 'win' ? 'Blackjack: winst!' : userOutcome === 'push' ? 'Blackjack: gelijkspel' : 'Blackjack: verlies',
           message: outcomeLabel,
-          showActions: true,
-          onPlayAgain: () => { void startRound(); },
           onMainMenu: () => { backToMenuBtn?.click(); }
         });
       }
@@ -9754,8 +9754,6 @@ playHorseRaceBtn.onclick = () => {
         outcome: userWon ? 'win' : 'lose',
         title: userWon ? 'Poker: winst!' : 'Poker: verlies',
         message,
-        showActions: true,
-        onPlayAgain: () => { pkNewHand(); },
         onMainMenu: () => { leavePokerTable({ silent: true, goToMenu: true }); }
       });
     }
@@ -9902,7 +9900,7 @@ playHorseRaceBtn.onclick = () => {
         pokerMinRaise = raiseAmount;
         bot.actedThisRound = true;
         pokerPlayers.forEach(p=>{ if(p!==bot) p.actedThisRound = p.folded || p.allIn; });
-        pokerStatusEl.textContent = `${bot.name} raiset naar ${totalTo}.`;
+        pokerStatusEl.textContent = `${bot.name} raiset met ${totalTo}.`;
       } else {
         const callAmount = Math.min(toCall, bot.stack);
         bot.stack -= callAmount;
@@ -10071,32 +10069,25 @@ playHorseRaceBtn.onclick = () => {
         return;
       }
       const pl = pokerPlayers[idx];
-      const leavingDuringHand = pokerHandActive;
       currentUser.credits += pl.stack;
       pokerPlayers.splice(idx,1);
-      if(leavingDuringHand && pokerPlayers.length >= 2){
-        const adjustIndex = (value) => {
-          if(value > idx) return value - 1;
-          if(value === idx) return value - 1;
-          return value;
-        };
-        pokerDealerIndex = adjustIndex(pokerDealerIndex);
-        pokerSmallBlindIndex = adjustIndex(pokerSmallBlindIndex);
-        pokerBigBlindIndex = adjustIndex(pokerBigBlindIndex);
-        pokerCurrentPlayerIndex = adjustIndex(pokerCurrentPlayerIndex);
-      } else {
-        pokerHandActive = false;
-        pokerPot = 0;
-        pokerCommunity = [];
-        pokerRevealHands = false;
-      }
+      endTrackingSession('poker');
+      pokerPlayers = [];
+      pokerHandActive = false;
+      pokerPot = 0;
+      pokerCommunity = [];
+      pokerRevealHands = false;
+      pokerCurrentBet = 0;
+      pokerMinRaise = pokerBigBlind;
+      pokerStage = 'Pre-flop';
+      pokerDealerIndex = 0;
+      pokerSmallBlindIndex = 0;
+      pokerBigBlindIndex = 0;
+      pokerCurrentPlayerIndex = 0;
       setPokerControlsEnabled(false);
-      pokerDealerStatusEl.textContent = 'Speler verlaat de tafel.';
+      pokerDealerStatusEl.textContent = 'Spel gestopt. Sluit je aan om te spelen.';
+      pokerStatusEl.textContent = 'Sluit je aan om te spelen.';
       pkRender();
-      if(leavingDuringHand && pokerPlayers.length >= 2){
-        pokerCurrentPlayerIndex = pokerCurrentPlayerIndex < -1 ? -1 : pokerCurrentPlayerIndex;
-        pokerAdvanceTurn();
-      }
       saveCurrentUser().then(()=>{
         renderDashboard();
         if(!silent){
@@ -10116,6 +10107,11 @@ playHorseRaceBtn.onclick = () => {
     backFromPokerBtn.onclick = ()=>{
       if(pokerUserHasActiveStake()){
         showSiteMessage('Je kan niet weggaan terwijl je nog in de hand zit of een bet hebt lopen.');
+        return;
+      }
+      const idx = pokerPlayers.findIndex(p=>p.key===currentUser.key);
+      if(idx !== -1){
+        leavePokerTable({ goToMenu: true });
         return;
       }
       endTrackingSession('poker');
@@ -10184,7 +10180,7 @@ playHorseRaceBtn.onclick = () => {
       }
       player.actedThisRound = true;
       pokerPlayers.forEach(p=>{ if(p!==player) p.actedThisRound = p.folded || p.allIn; });
-      pokerStatusEl.textContent = `Raise naar ${raiseTo}.`;
+      pokerStatusEl.textContent = `Raise met ${raiseTo}.`;
       pkRender();
       pokerAdvanceTurn();
     };
