@@ -4112,6 +4112,13 @@
     box-shadow: 0 25px 45px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.04);
     overflow: hidden;
     z-index: 1;
+    transition: transform 0.45s ease, box-shadow 0.45s ease;
+}
+
+.race-track.replay-focus{
+    transform: perspective(900px) translateX(-26%) rotateY(-6deg) scale(1.08);
+    transform-origin: right center;
+    box-shadow: 0 32px 60px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.06);
 }
 
 .race-track::after{
@@ -10553,10 +10560,11 @@ startRaceBtn.onclick = async () => {
     });
 
     async function playSlowMoReplay(ranking){
-        const replayDistance = 140;
-        const baseDuration = 1600;
+        const replayDistance = 90;
+        const baseDuration = 1000;
         const fastestTime = ranking[0].finishTime;
         raceStatus.textContent = "📸 Slowmotion replay...";
+        raceTrack.classList.add("replay-focus");
 
         ranking.forEach((entry) => {
             const finishX = finishPositions[entry.index];
@@ -10568,7 +10576,7 @@ startRaceBtn.onclick = async () => {
         await new Promise(requestAnimationFrame);
         const durations = ranking.map((entry) => {
             const timeDelta = Math.max(0, entry.finishTime - fastestTime);
-            return baseDuration + Math.min(700, timeDelta * 3);
+            return baseDuration + Math.min(1200, timeDelta * 30);
         });
 
         ranking.forEach((entry, idx) => {
@@ -10580,6 +10588,7 @@ startRaceBtn.onclick = async () => {
         horses.forEach(horse => {
             horse.style.transition = "";
         });
+        raceTrack.classList.remove("replay-focus");
     }
 
     async function finalizeRace(states){
