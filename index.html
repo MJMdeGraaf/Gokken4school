@@ -13020,6 +13020,28 @@ function enforcePokerBankrollRules(){
     b.addEventListener('click', ()=> exportSkinsDevToCsv());
   }catch(e){}
 })();
+  function scheduleRefresh(hour, minute) {
+    const now = new Date();
+    const target = new Date();
+
+    // Set target time to 3:00 AM today
+    target.setHours(hour, minute, 0, 0);
+
+    // If it's already past 3 AM today, schedule for 3 AM tomorrow
+    if (now > target) {
+        target.setDate(now.getDate() + 1);
+    }
+
+    const timeout = target.getTime() - now.getTime();
+
+    // Reload the page when the time is reached
+    setTimeout(() => {
+        window.location.reload();
+    }, timeout);
+}
+
+// Call the function for 3:00 AM
+scheduleRefresh(3, 0);
 
 </script>
 </body>
